@@ -15,7 +15,7 @@ class ProdukController extends Controller
 {
     public function index()
     {
-        $data = Produk::with(['katalog', 'ukuran', 'warna'])->get();
+        $data = Produk::with(['katalog', 'ukuran', 'warnaProduk'])->get();
         return view('admin.produk.index', compact('data'));
     }
 
@@ -126,12 +126,15 @@ class ProdukController extends Controller
 
     public function show(Produk $produk)
     {
-        $produk->load(['katalog', 'ukuran', 'warna']);
+        $produk->load(['katalog', 'ukuran', 'warnaProduk']);
+
         return view('admin.produk.detail', compact('produk'));
     }
 
     public function edit(Produk $produk)
     {
+        $produk->load(['katalog', 'ukuran', 'warnaProduk']);
+
         $katalog = Katalog::all();
         return view('admin.produk.edit', compact('produk', 'katalog'));
     }
@@ -142,14 +145,40 @@ class ProdukController extends Controller
         $validated = $request->validate([
             'katalog_id' => 'required|exists:katalog,id',
             'nama' => 'required|string|max:50',
-            'deskripsi' => 'nullable|string',
+            'deskripsi' => 'required|string',
+            'warna' => 'required',
             'harga' => 'required|numeric|min:0',
             'stok' => 'required|integer|min:0',
-            'ukuran' => 'required|array|min:1',
+            'ukuran' => 'required|min:1',
             'ukuran.*' => 'required|string|max:50',
-            'warna' => 'required|array|min:1',
+            'warna' => 'required|min:1',
             'warna.*' => 'required|string|max:50',
-            'gambar' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048'
+            'gambar' => 'image|mimes:jpeg,png,jpg,gif|max:10240'
+        ], [
+            'katalog_id.required' => 'Katalog harus dipilih.',
+            'nama.required' => 'Nama produk harus diisi.',
+            'nama.max' => 'Nama produk tidak boleh lebih dari 50 karakter.',
+            'deskripsi.required' => 'Deskripsi produk harus diisi.',
+            'warna.required' => 'Warna produk harus diisi.',
+            'harga.required' => 'Harga produk harus diisi.',
+            'harga.numeric' => 'Harga harus berupa angka.',
+            'harga.min' => 'Harga tidak boleh kurang dari 0.',
+            'stok.required' => 'Stok produk harus diisi.',
+            'stok.integer' => 'Stok harus berupa angka bulat.',
+            'stok.min' => 'Stok tidak boleh kurang dari 0.',
+            'ukuran.required' => 'Ukuran produk harus diisi.',
+            'ukuran.min' => 'Minimal satu ukuran harus diisi.',
+            'ukuran.*.required' => 'Ukuran harus diisi.',
+            'ukuran.*.string' => 'Ukuran harus berupa teks.',
+            'ukuran.*.max' => 'Ukuran tidak boleh lebih dari 50 karakter.',
+            'warna.required' => 'Warna produk harus diisi.',
+            'warna.min' => 'Minimal satu warna harus diisi.',
+            'warna.*.required' => 'Warna harus diisi.',
+            'warna.*.string' => 'Warna harus berupa teks.',
+            'warna.*.max' => 'Warna tidak boleh lebih dari 50 karakter.',
+            'gambar.image' => 'File yang diunggah harus berupa gambar.',
+            'gambar.mimes' => 'Gambar harus berformat jpeg, png, jpg, atau gif.',
+            'gambar.max' => 'Ukuran gambar tidak boleh lebih dari 10mb.'
         ]);
 
         try {
@@ -186,6 +215,7 @@ class ProdukController extends Controller
                 'nama' => $validated['nama'],
                 'slug' => $validated['slug'] ?? $produk->slug,
                 'deskripsi' => $validated['deskripsi'],
+                'warna' => $validated['warna'],
                 'harga' => $validated['harga'],
                 'stok' => $validated['stok'],
                 'gambar' => $validated['gambar'] ?? $produk->gambar

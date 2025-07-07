@@ -37,14 +37,17 @@
                                     <td>Rp {{ number_format($item->harga, 0, ',', '.') }}</td>
                                     <td>{{ $item->stok }}</td>
                                     <td>
-                                        <a href="{{ route('katalog.edit', $item->id) }}" class="btn btn-warning btn-sm">
+                                        <a href="{{ route('produk.edit', $item->id) }}" class="btn btn-warning btn-sm">
                                             Edit
                                         </a>
-                                        <form action="{{ route('katalog.destroy', $item->id) }}" method="POST" style="display:inline;">
+                                        <a href="{{ route('produk.show', $item->id) }}" class="btn btn-info btn-sm">
+                                            Detail
+                                        </a>
+                                        <form action="{{ route('produk.destroy', $item->id) }}" method="POST" style="display:inline;">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="btn btn-danger btn-sm"
-                                                    onclick="return confirm('Apakah Anda yakin ingin menghapus katalog ini?')">
+                                                    onclick="return confirm('Apakah Anda yakin ingin menghapus produk ini?')">
                                                 Hapus
                                             </button>
                                         </form>

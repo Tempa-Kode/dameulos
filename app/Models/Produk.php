@@ -25,11 +25,11 @@ class Produk extends Model
 
     public function ukuran()
     {
-        return $this->hasMany(UkuranProduk::class);
+        return $this->hasMany(UkuranProduk::class, 'produk_id', 'id');
     }
 
-    public function warna()
+    public function warnaProduk()
     {
-        return $this->hasMany(WarnaProduk::class);
+        return $this->hasMany(WarnaProduk::class, 'produk_id', 'id');
     }
 }
