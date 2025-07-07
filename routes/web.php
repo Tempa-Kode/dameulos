@@ -26,5 +26,6 @@ Route::resource('produk', ProdukController::class)->middleware(['auth', 'adminMa
 Route::resource('katalog', KatalogController::class)->middleware(['auth', 'adminManajer']);
 Route::resource('transaksi', TransaksiController::class)->middleware(['auth', 'adminManajer']);
 Route::resource('pengiriman', PengirimanController::class)->middleware(['auth', 'adminManajer']);
+Route::resource('admin', \App\Http\Controllers\AdminController::class)->middleware(['auth', 'adminManajer']);
 
 require __DIR__.'/auth.php';
