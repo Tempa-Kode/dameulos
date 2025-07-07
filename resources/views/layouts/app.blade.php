@@ -22,6 +22,8 @@
         <!-- [Template CSS Files] -->
         <link rel="stylesheet" href="{{ asset('css/style.css') }}" id="main-style-link" >
         <link rel="stylesheet" href="{{ asset('css/style-preset.css') }}" >
+        <!-- data tables css -->
+        <link rel="stylesheet" href="{{ asset('css/plugins/dataTables.bootstrap5.min.css') }}">
     </head>
     <body data-pc-preset="preset-1" data-pc-direction="ltr" data-pc-theme="light">
 
@@ -35,15 +37,6 @@
 
         <div class="min-h-screen bg-gray-100">
             @include('layouts.navigation')
-
-            <!-- Page Heading -->
-            @isset($header)
-                <header class="bg-white shadow">
-                    <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
-                        {{ $header }}
-                    </div>
-                </header>
-            @endisset
 
             <!-- [ Main Content ] start -->
             <div class="pc-container">
@@ -61,6 +54,11 @@
                                         <li class="breadcrumb-item"><a href="javascript: void(0)">@yield('halaman')</a></li>
                                     </ul>
                                 </div>
+                                <div class="col-md-12">
+                                    <div class="page-header-title">
+                                        <h2 class="mb-0">@yield('judul')</h2>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -72,28 +70,15 @@
                 </div>
             </div>
             <!-- [ Main Content ] end -->
-
-            <footer class="pc-footer">
-                <div class="footer-wrapper container-fluid">
-                    <div class="row">
-                        <div class="col-sm my-1">
-                            <p class="m-0">Mantis &#9829; crafted by Team <a
-                                    href="https://themeforest.net/user/codedthemes" target="_blank">Codedthemes</a></p>
-                        </div>
-                        <div class="col-auto my-1">
-                            <ul class="list-inline footer-link mb-0">
-                                <li class="list-inline-item"><a href="../index.html">Home</a></li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-            </footer>
         </div>
 
         <!-- [Page Specific JS] start -->
         <script src="{{ asset('js/plugins/apexcharts.min.js') }}"></script>
         <script src="{{ asset('js/pages/dashboard-default.js') }}"></script>
         <!-- [Page Specific JS] end -->
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+        <script src="{{ asset('js/plugins/jquery.dataTables.min.js') }}"></script>
+        <script src="{{ asset('js/plugins/dataTables.bootstrap5.min.js') }}"></script>
         <!-- Required Js -->
         <script src="{{ asset('js/plugins/popper.min.js') }}"></script>
         <script src="{{ asset('js/plugins/simplebar.min.js') }}"></script>
@@ -101,6 +86,9 @@
         <script src="{{ asset('js/fonts/custom-font.js') }}"></script>
         <script src="{{ asset('js/pcoded.js') }}"></script>
         <script src="{{ asset('js/plugins/feather.min.js') }}"></script>
+        <script>
+            var table = $('#dom-jqry').DataTable();
+        </script>
         <script> layout_change('light'); </script>
         <script>change_box_container('false');</script>
         <script>layout_rtl_change('false');</script>

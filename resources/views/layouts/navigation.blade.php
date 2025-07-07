@@ -2,7 +2,7 @@
  <nav class="pc-sidebar">
      <div class="navbar-wrapper">
          <div class="m-header">
-             <a href="../dashboard/index.html" class="b-brand text-primary">
+             <a href="{{ route('dashboard') }}" class="b-brand text-primary">
                  <!-- ========   Change your logo from here   ============ -->
                  <img src="{{ asset('images/logo-icon.svg') }}" class="img-fluid logo-lg" alt="logo">
              </a>
@@ -10,7 +10,7 @@
          <div class="navbar-content">
              <ul class="pc-navbar">
                  <li class="pc-item">
-                     <a href="../dashboard/index.html" class="pc-link">
+                     <a href="{{ route('dashboard') }}" class="pc-link">
                          <span class="pc-micon"><i class="ti ti-dashboard"></i></span>
                          <span class="pc-mtext">Dashboard</span>
                      </a>
@@ -21,13 +21,13 @@
                      <i class="ti ti-dashboard"></i>
                  </li>
                  <li class="pc-item">
-                     <a href="../elements/bc_typography.html" class="pc-link">
+                     <a href="{{ route('produk.index') }}" class="pc-link">
                         <span class="pc-micon"><i class="ti ti-brand-codesandbox"></i></span>
                         <span class="pc-mtext">Produk</span>
                      </a>
                  </li>
                  <li class="pc-item">
-                     <a href="../elements/bc_color.html" class="pc-link">
+                     <a href="{{ route('katalog.index') }}" class="pc-link">
                          <span class="pc-micon"><i class="ti ti-package"></i></span>
                          <span class="pc-mtext">Katalog</span>
                      </a>
