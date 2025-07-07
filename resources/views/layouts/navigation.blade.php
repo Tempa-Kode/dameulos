@@ -33,7 +33,7 @@
                      </a>
                  </li>
                  <li class="pc-item">
-                     <a href="../elements/icon-tabler.html" class="pc-link">
+                     <a href="{{ route('transaksi.index') }}" class="pc-link">
                          <span class="pc-micon"><i class="ti ti-cash"></i></span>
                          <span class="pc-mtext">Transaksi</span>
                      </a>

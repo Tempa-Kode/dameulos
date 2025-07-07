@@ -7,12 +7,10 @@ use Illuminate\Http\Request;
 
 class TransaksiController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        $data = Transaksi::with('user')->get();
+        return view('admin.transaksi.index', compact('data'));
     }
 
     /**
