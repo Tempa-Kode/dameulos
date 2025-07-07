@@ -56,7 +56,7 @@
                      </a>
                  </li>
                  <li class="pc-item">
-                     <a href="../pages/register.html" class="pc-link">
+                     <a href="{{ route('manajer.index') }}" class="pc-link">
                          <span class="pc-micon"><i class="ti ti-user-plus"></i></span>
                          <span class="pc-mtext">Manajer</span>
                      </a>
