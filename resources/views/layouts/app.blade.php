@@ -9,7 +9,7 @@
         <title>{{ config('app.name', 'Laravel') }}</title>
 
          <!-- [Favicon] icon -->
-        <link rel="icon" href="{{ asset('images/favicon.svg') }}" type="image/x-icon"> <!-- [Google Font] Family -->
+         <link rel="icon" href="{{ asset('images/favicon.svg') }}" type="image/x-icon"> <!-- [Google Font] Family -->
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700&display=swap" id="main-font-link">
         <!-- [Tabler Icons] https://tablericons.com -->
         <link rel="stylesheet" href="{{ asset('fonts/tabler-icons.min.css') }}" >
@@ -24,6 +24,7 @@
         <link rel="stylesheet" href="{{ asset('css/style-preset.css') }}" >
         <!-- data tables css -->
         <link rel="stylesheet" href="{{ asset('css/plugins/dataTables.bootstrap5.min.css') }}">
+        @stack('styles')
     </head>
     <body data-pc-preset="preset-1" data-pc-direction="ltr" data-pc-theme="light">
 
@@ -94,5 +95,6 @@
         <script>layout_rtl_change('false');</script>
         <script>preset_change("preset-1");</script>
         <script>font_change("Public-Sans");</script>
+        @stack('scripts')
     </body>
 </html>

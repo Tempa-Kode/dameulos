@@ -15,18 +15,21 @@ class Produk extends Model
         'deskripsi',
         'harga',
         'stok',
-        'ukuran',
-        'warna',
         'gambar'
-    ];
-
-    protected $casts = [
-        'ukuran' => 'array',
-        'warna' => 'array'
     ];
 
     public function katalog()
     {
         return $this->belongsTo(Katalog::class);
+    }
+
+    public function ukuran()
+    {
+        return $this->hasMany(UkuranProduk::class);
+    }
+
+    public function warna()
+    {
+        return $this->hasMany(WarnaProduk::class);
     }
 }
