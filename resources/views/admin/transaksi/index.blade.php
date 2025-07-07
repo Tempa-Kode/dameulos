@@ -7,6 +7,12 @@
 @section('content')
     <div class="col-sm-12">
         <div class="card">
+            <div class="card-header">
+                <button class="btn btn-success float-end">
+                    <span class="pc-micon"><i class="ti ti-download me-2"></i></span>
+                    Download Report
+                </button>
+            </div>
             <div class="card-body">
                 {{-- Include komponen alert --}}
                 @include('components.alert')
