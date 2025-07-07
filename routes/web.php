@@ -28,5 +28,6 @@ Route::resource('transaksi', TransaksiController::class)->middleware(['auth', 'a
 Route::resource('pengiriman', PengirimanController::class)->middleware(['auth', 'adminManajer']);
 Route::resource('admin', \App\Http\Controllers\AdminController::class)->middleware(['auth', 'adminManajer']);
 Route::resource('manajer', \App\Http\Controllers\ManajerController::class)->middleware(['auth', 'adminManajer']);
+Route::resource('pelanggan', \App\Http\Controllers\PelangganController::class)->middleware(['auth', 'adminManajer']);
 
 require __DIR__.'/auth.php';
