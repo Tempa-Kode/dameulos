@@ -51,6 +51,15 @@
                                 <h3 class="mb-0"><b>Login</b></h3>
                                 <a href="{{ route('register') }}" class="link-primary">Tidak memiliki akun?</a>
                             </div>
+                            @if ($errors->any())
+                                <div class="alert alert-warning alert-dismissible fade show" role="alert">
+                                    <ul class="mb-0">
+                                        @foreach ($errors->all() as $error)
+                                            <li>{{ $error }}</li>
+                                        @endforeach
+                                    </ul>
+                                </div>
+                            @endif
                             <div class="form-group mb-3">
                                 <label class="form-label">Email</label>
                                 <input type="email" class="form-control" placeholder="Email" name="email">
