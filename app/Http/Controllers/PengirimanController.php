@@ -7,12 +7,10 @@ use Illuminate\Http\Request;
 
 class PengirimanController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        $data = Pengiriman::all();
+        return view('admin.pengiriman.index', compact('data'));
     }
 
     /**

@@ -39,7 +39,7 @@
                      </a>
                  </li>
                  <li class="pc-item">
-                     <a href="../elements/icon-tabler.html" class="pc-link">
+                     <a href="{{ route('pengiriman.index') }}" class="pc-link">
                          <span class="pc-micon"><i class="ti ti-brand-telegram"></i></span>
                          <span class="pc-mtext">Pengiriman</span>
                      </a>

@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\KatalogController;
+use App\Http\Controllers\PengirimanController;
 use App\Http\Controllers\ProdukController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TransaksiController;
@@ -24,5 +25,6 @@ Route::middleware('auth')->group(function () {
 Route::resource('produk', ProdukController::class)->middleware(['auth', 'adminManajer']);
 Route::resource('katalog', KatalogController::class)->middleware(['auth', 'adminManajer']);
 Route::resource('transaksi', TransaksiController::class)->middleware(['auth', 'adminManajer']);
+Route::resource('pengiriman', PengirimanController::class)->middleware(['auth', 'adminManajer']);
 
 require __DIR__.'/auth.php';
