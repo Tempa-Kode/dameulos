@@ -37,6 +37,7 @@ Route::prefix('admin')->middleware(['auth', 'adminManajer'])->group(function () 
 Route::get('/', [AksesPelangganController::class, 'index'])->name('pelanggan.home');
 Route::get('/katalog', [AksesPelangganController::class, 'katalog'])->name('pelanggan.katalog');
 Route::get('/katalog/{katalog:slug}', [AksesPelangganController::class, 'katalogBySlug'])->name('pelanggan.katalogBySlug');
+Route::get('/produk/{produk:slug}', [AksesPelangganController::class, 'produkBySlug'])->name('pelanggan.produkBySlug');
 
 require __DIR__.'/auth.php';
 

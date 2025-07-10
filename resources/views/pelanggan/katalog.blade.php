@@ -77,7 +77,7 @@
                                 </div>
                                 <div class="product__item__text">
                                     <h6>{{ $item->nama }}</h6>
-                                    <a href="#" class="add-cart">
+                                    <a href="{{ route('pelanggan.produkBySlug', $item->slug) }}" class="add-cart">
                                         Lihat Detail
                                     </a>
                                     <h5>Rp {{ number_format($item->harga, 0, ',', '.') }}</h5>

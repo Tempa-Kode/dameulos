@@ -29,4 +29,14 @@ class AksesPelangganController extends Controller
         $produk = Produk::where('katalog_id', $katalog->id)->paginate(20);
         return view('pelanggan.katalog', compact('kategori', 'produk'));
     }
+
+    public function produkBySlug(Produk $produk)
+    {
+        $produk->load(['katalog', 'ukuran', 'warna']);
+        $produkTerkait = Produk::where('katalog_id', $produk->katalog_id)
+            ->where('id', '!=', $produk->id)
+            ->limit(4)
+            ->get();
+        return view('pelanggan.produk-detail', compact('produk', 'produkTerkait'));
+    }
 }
