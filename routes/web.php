@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AksesPelangganController;
 use App\Http\Controllers\KatalogController;
 use App\Http\Controllers\PengirimanController;
 use App\Http\Controllers\ProdukController;
@@ -33,6 +34,7 @@ Route::prefix('admin')->middleware(['auth', 'adminManajer'])->group(function () 
     Route::resource('pelanggan', \App\Http\Controllers\PelangganController::class)->middleware(['auth', 'adminManajer']);
 });
 
+Route::get('/', [AksesPelangganController::class, 'index'])->name('pelanggan.index');
 
 require __DIR__.'/auth.php';
 
