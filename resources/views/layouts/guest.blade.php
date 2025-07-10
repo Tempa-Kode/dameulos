@@ -43,8 +43,8 @@
                 <div class="col-lg-6 col-md-6">
                     <nav class="header__menu mobile-menu">
                         <ul>
-                            <li class="active"><a href="/">Home</a></li>
-                            <li><a href="./shop.html">Katalog</a></li>
+                            <li class="{{ Route::currentRouteName() == 'pelanggan.home' ? 'active' : '' }}"><a href="/">Home</a></li>
+                            <li class="{{ Route::currentRouteName() == 'pelanggan.katalog' ? 'active' : '' }}"><a href="{{ route('pelanggan.katalog') }}">Katalog</a></li>
                             <li><a href="./about.html">Tentang Kami</a></li>
                             <li><a href="#">Pages</a>
                                 <ul class="dropdown">

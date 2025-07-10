@@ -30,14 +30,14 @@ class ProdukController extends Controller
         $validated = $request->validate([
             'katalog_id' => 'required|exists:katalog,id',
             'nama' => 'required|string|max:50',
-            'deskripsi' => 'required|string',
-            'warna' => 'required',
+            'deskripsi' => 'nullable|string',
+            'warna' => 'nullable',
             'harga' => 'required|numeric|min:0',
             'stok' => 'required|integer|min:0',
-            'ukuran' => 'required|min:1',
-            'ukuran.*' => 'required|string|max:50',
-            'warna' => 'required|min:1',
-            'warna.*' => 'required|string|max:50',
+            'ukuran' => 'nullable|min:1',
+            'ukuran.*' => 'nullable|string|max:50',
+            'warna' => 'nullable|min:1',
+            'warna.*' => 'nullable|string|max:50',
             'gambar' => 'required|image|mimes:jpeg,png,jpg,gif|max:10240'
         ], [
             'katalog_id.required' => 'Katalog harus dipilih.',
@@ -145,14 +145,14 @@ class ProdukController extends Controller
         $validated = $request->validate([
             'katalog_id' => 'required|exists:katalog,id',
             'nama' => 'required|string|max:50',
-            'deskripsi' => 'required|string',
-            'warna' => 'required',
+            'deskripsi' => 'nullable|string',
+            'warna' => 'nullable',
             'harga' => 'required|numeric|min:0',
             'stok' => 'required|integer|min:0',
-            'ukuran' => 'required|min:1',
-            'ukuran.*' => 'required|string|max:50',
-            'warna' => 'required|min:1',
-            'warna.*' => 'required|string|max:50',
+            'ukuran' => 'nullable|min:1',
+            'ukuran.*' => 'nullable|string|max:50',
+            'warna' => 'nullable|min:1',
+            'warna.*' => 'nullable|string|max:50',
             'gambar' => 'image|mimes:jpeg,png,jpg,gif|max:10240'
         ], [
             'katalog_id.required' => 'Katalog harus dipilih.',
