@@ -67,7 +67,7 @@
                                 <div class="product__details__option__size">
                                     <span>Ukuran tersedia:</span>
                                     @foreach($produk->ukuran as $ukuran)
-                                    <label for="ukuran-{{ $ukuran->id }}">{{ $ukuran->ukuran }}
+                                    <label class="m-1" for="ukuran-{{ $ukuran->id }}">{{ $ukuran->ukuran }}
                                         <input type="radio" id="ukuran-{{ $ukuran->id }}" name="ukuran" value="{{ $ukuran->id }}">
                                     </label>
                                     @endforeach
@@ -75,12 +75,12 @@
                             </div>
                             @endif
 
-                            @if(isset($produk->warna) && $produk->warna->count() > 0)
+                            @if(isset($produk->jenisWarnaProduk) && $produk->jenisWarnaProduk->count() > 0)
                             <div class="product__details__option">
-                                <div class="product__details__option__color">
+                                <div class="product__details__option__size">
                                     <span>Warna tersedia:</span>
-                                    @foreach($produk->warna as $warna)
-                                    <label style="background: {{ $warna->kode_warna }};" for="warna-{{ $warna->id }}">
+                                    @foreach($produk->jenisWarnaProduk as $warna)
+                                    <label class="m-1" for="warna-{{ $warna->id }}">{{ $warna->warna }}
                                         <input type="radio" id="warna-{{ $warna->id }}" name="warna" value="{{ $warna->id }}">
                                     </label>
                                     @endforeach
@@ -100,6 +100,17 @@
                             <div class="product__details__btns__option">
                                 <a href="{{ route('pelanggan.katalogBySlug', $produk->katalog->slug) }}">Kategori: <span>{{ $produk->katalog->nama }}</a>
                             </div>
+
+                            @if(isset($produk->warnaProduk) && $produk->warnaProduk->count() > 0)
+                            <div class="product__details__option__color">
+                                <span>Family Color:</span>
+                                @foreach($produk->warnaProduk as $warna)
+                                <label style="background-color: #{{ $warna->kode_warna }}" for="kode-{{ $warna->id }}">
+                                    <input type="radio" id="kode-{{ $warna->id }}">
+                                </label>
+                                @endforeach
+                            </div>
+                            @endif
                         </div>
                     </div>
                 </div>
