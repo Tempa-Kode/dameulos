@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\JenisWarnaProduk;
 use App\Models\Katalog;
 use App\Models\Produk;
 use App\Models\Ukuran;
@@ -31,7 +32,8 @@ class ProdukController extends Controller
             'katalog_id' => 'required|exists:katalog,id',
             'nama' => 'required|string|max:50',
             'deskripsi' => 'nullable|string',
-            'warna' => 'nullable',
+            'deskripsi' => 'nullable|string',
+            'jenisWarna' => 'required|min:1',
             'harga' => 'required|numeric|min:0',
             'stok' => 'required|integer|min:0',
             'ukuran' => 'nullable|min:1',
@@ -44,7 +46,8 @@ class ProdukController extends Controller
             'nama.required' => 'Nama produk harus diisi.',
             'nama.max' => 'Nama produk tidak boleh lebih dari 50 karakter.',
             'deskripsi.required' => 'Deskripsi produk harus diisi.',
-            'warna.required' => 'Warna produk harus diisi.',
+            'jenisWarna.required' => 'jenis warna produk harus diisi.',
+            'jenisWarna.min' => 'Minimal satu jenis warna harus diisi.',
             'harga.required' => 'Harga produk harus diisi.',
             'harga.numeric' => 'Harga harus berupa angka.',
             'harga.min' => 'Harga tidak boleh kurang dari 0.',
@@ -107,6 +110,13 @@ class ProdukController extends Controller
                 ]);
             }
 
+            foreach (array_filter($validated['jenisWarna']) as $warna) {
+                $jenisWarna = JenisWarnaProduk::create([
+                    'produk_id' => $produk->id,
+                    'warna' => trim($warna)
+                ]);
+            }
+
             foreach (array_filter($validated['warna']) as $warnaNama) {
                 $warna = WarnaProduk::create([
                     'produk_id' => $produk->id,
@@ -126,14 +136,14 @@ class ProdukController extends Controller
 
     public function show(Produk $produk)
     {
-        $produk->load(['katalog', 'ukuran', 'warnaProduk']);
+        $produk->load(['katalog', 'ukuran', 'warnaProduk', 'jenisWarnaProduk']);
 
         return view('admin.produk.detail', compact('produk'));
     }
 
     public function edit(Produk $produk)
     {
-        $produk->load(['katalog', 'ukuran', 'warnaProduk']);
+        $produk->load(['katalog', 'ukuran', 'warnaProduk', 'jenisWarnaProduk']);
 
         $katalog = Katalog::all();
         return view('admin.produk.edit', compact('produk', 'katalog'));
@@ -146,7 +156,7 @@ class ProdukController extends Controller
             'katalog_id' => 'required|exists:katalog,id',
             'nama' => 'required|string|max:50',
             'deskripsi' => 'nullable|string',
-            'warna' => 'nullable',
+            'jenisWarna' => 'required|min:1',
             'harga' => 'required|numeric|min:0',
             'stok' => 'required|integer|min:0',
             'ukuran' => 'nullable|min:1',
@@ -159,7 +169,8 @@ class ProdukController extends Controller
             'nama.required' => 'Nama produk harus diisi.',
             'nama.max' => 'Nama produk tidak boleh lebih dari 50 karakter.',
             'deskripsi.required' => 'Deskripsi produk harus diisi.',
-            'warna.required' => 'Warna produk harus diisi.',
+            'jenisWarna.required' => 'jenis warna produk harus diisi.',
+            'jenisWarna.min' => 'Minimal satu jenis warna harus diisi.',
             'harga.required' => 'Harga produk harus diisi.',
             'harga.numeric' => 'Harga harus berupa angka.',
             'harga.min' => 'Harga tidak boleh kurang dari 0.',
@@ -221,9 +232,18 @@ class ProdukController extends Controller
                 'gambar' => $validated['gambar'] ?? $produk->gambar
             ]);
 
-            // Hapus ukuran dan warna lama
+            // Hapus ukuran, jenis warna dan warna lama
             UkuranProduk::where('produk_id', $produk->id)->delete();
+            JenisWarnaProduk::where('produk_id', $produk->id)->delete();
             WarnaProduk::where('produk_id', $produk->id)->delete();
+
+            // Tambah jenis warna baru
+            foreach (array_filter($validated['jenisWarna']) as $warna) {
+                JenisWarnaProduk::create([
+                    'produk_id' => $produk->id,
+                    'warna' => trim($warna)
+                ]);
+            }
 
             // Tambah ukuran baru
             foreach (array_filter($validated['ukuran']) as $ukuranNama) {

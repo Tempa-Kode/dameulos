@@ -59,6 +59,54 @@
                     </div>
 
                     <div class="form-group">
+                        <label for="jenisWarna" class="form-label">Jenis Warna</label>
+                        <div id="jenisWarnaContainer">
+                            @php
+                                $jenisWarnaCollection = $produk->jenisWarnaProduk ?? collect();
+                                $oldJenisWarna = old('jenisWarna', $jenisWarnaCollection->pluck('warna')->toArray());
+                            @endphp
+                            @if(count($oldJenisWarna) > 0)
+                                @foreach($oldJenisWarna as $index => $jenisWarna)
+                                    <div class="jenisWarna-item mb-2">
+                                        <div class="input-group">
+                                            <input class="form-control @error('jenisWarna.'.$index) is-invalid @enderror"
+                                                type="text"
+                                                name="jenisWarna[]"
+                                                value="{{ $jenisWarna }}"
+                                                placeholder="Masukkan jenis warna produk (contoh: 108X70, 108X80, dll)">
+                                            <button type="button" class="btn btn-danger hapus-jenisWarna" {{ count($oldJenisWarna) <= 1 ? 'style=display:none;' : '' }}>
+                                                <i class="ti ti-trash"></i>
+                                            </button>
+                                        </div>
+                                        @error('jenisWarna.'.$index)
+                                            <div class="invalid-feedback">{{ $message }}</div>
+                                        @enderror
+                                    </div>
+                                @endforeach
+                            @else
+                                <div class="jenisWarna-item mb-2">
+                                    <div class="input-group">
+                                        <input class="form-control @error('jenisWarna.0') is-invalid @enderror"
+                                            type="text"
+                                            name="jenisWarna[]"
+                                            value=""
+                                            placeholder="Masukkan jenis warna produk (contoh: 108X70, 108X80, dll)">
+                                        <button type="button" class="btn btn-danger hapus-jenisWarna" style="display: none;">
+                                            <i class="ti ti-trash"></i>
+                                        </button>
+                                    </div>
+                                    @error('jenisWarna.0')
+                                        <div class="invalid-feedback">{{ $message }}</div>
+                                    @enderror
+                                </div>
+                            @endif
+                        </div>
+                        <button type="button" id="tambahjenisWarna" class="btn btn-secondary mt-2">
+                            <i class="ti ti-plus me-1"></i>Tambah jenis warna
+                        </button>
+                    </div>
+
+                    <div class="form-group">
                         <label for="harga" class="form-label">Harga</label>
                         <input class="form-control @error('harga') is-invalid @enderror"
                             type="number"
@@ -218,18 +266,51 @@
 
     @php
         // Ensure variables are available for JavaScript
+        $jenisWarnaCount = count($oldJenisWarna ?? []);
         $ukuranCount = count($oldUkuran ?? []);
         $warnaCount = count($oldWarna ?? []);
     @endphp
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            let jenisWarnaIndex = {{ $jenisWarnaCount }};
             let ukuranIndex = {{ $ukuranCount }};
             let warnaIndex = {{ $warnaCount }};
+            const tambahJenisWarnaBtn = document.getElementById('tambahjenisWarna');
             const tambahUkuranBtn = document.getElementById('tambahUkuran');
             const tambahWarnaBtn = document.getElementById('tambahWarna');
+            const jenisWarnaContainer = document.getElementById('jenisWarnaContainer');
             const ukuranContainer = document.getElementById('ukuranContainer');
             const warnaContainer = document.getElementById('warnaContainer');
+
+            // Periksa apakah semua element ditemukan
+            if (!tambahJenisWarnaBtn || !tambahUkuranBtn || !tambahWarnaBtn ||
+                !jenisWarnaContainer || !ukuranContainer || !warnaContainer) {
+                return;
+            }
+
+            // Function untuk menambah jenis warna
+            tambahJenisWarnaBtn.addEventListener('click', function() {
+                const newJeniswarnaItem = document.createElement('div');
+                newJeniswarnaItem.className = 'jenisWarna-item mb-2';
+                newJeniswarnaItem.innerHTML = `
+                    <div class="input-group">
+                        <input class="form-control"
+                            type="text"
+                            name="jenisWarna[]"
+                            placeholder="Masukkan jenis warna produk (contoh: 108X70, 108X80, dll)">
+                        <button type="button" class="btn btn-danger hapus-jenisWarna">
+                            <i class="ti ti-trash"></i>
+                        </button>
+                    </div>
+                `;
+
+                jenisWarnaContainer.appendChild(newJeniswarnaItem);
+                jenisWarnaIndex++;
+
+                // Show hapus button untuk semua item jika ada lebih dari 1
+                updateHapusJenisWarnaButtons();
+            });
 
             // Function untuk menambah ukuran
             tambahUkuranBtn.addEventListener('click', function() {
@@ -277,6 +358,15 @@
                 updateHapusWarnaButtons();
             });
 
+            // Function untuk menghapus jenis warna
+            jenisWarnaContainer.addEventListener('click', function(e) {
+                if (e.target.classList.contains('hapus-jenisWarna') || e.target.closest('.hapus-jenisWarna')) {
+                    const jenisWarnaItem = e.target.closest('.jenisWarna-item');
+                    jenisWarnaItem.remove();
+                    updateHapusJenisWarnaButtons();
+                }
+            });
+
             // Function untuk menghapus ukuran
             ukuranContainer.addEventListener('click', function(e) {
                 if (e.target.classList.contains('hapus-ukuran') || e.target.closest('.hapus-ukuran')) {
@@ -294,6 +384,19 @@
                     updateHapusWarnaButtons();
                 }
             });
+
+            // Function untuk update visibility tombol hapus jenis warna
+            function updateHapusJenisWarnaButtons() {
+                const jenisWarnaItems = jenisWarnaContainer.querySelectorAll('.jenisWarna-item');
+                jenisWarnaItems.forEach(function(item, index) {
+                    const hapusBtn = item.querySelector('.hapus-jenisWarna');
+                    if (jenisWarnaItems.length > 1) {
+                        hapusBtn.style.display = 'block';
+                    } else {
+                        hapusBtn.style.display = 'none';
+                    }
+                });
+            }
 
             // Function untuk update visibility tombol hapus ukuran
             function updateHapusUkuranButtons() {
@@ -322,6 +425,7 @@
             }
 
             // Initialize buttons visibility
+            updateHapusJenisWarnaButtons();
             updateHapusUkuranButtons();
             updateHapusWarnaButtons();
         });

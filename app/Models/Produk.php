@@ -32,4 +32,9 @@ class Produk extends Model
     {
         return $this->hasMany(WarnaProduk::class, 'produk_id', 'id');
     }
+
+    public function jenisWarnaProduk()
+    {
+        return $this->hasMany(JenisWarnaProduk::class, 'produk_id', 'id');
+    }
 }

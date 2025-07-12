@@ -111,6 +111,25 @@
                                 </div>
                             </div>
 
+                            <!-- Jenis Warna -->
+                            <div class="mb-4">
+                                <h5 class="border-bottom pb-2 mb-3">Warna Tersedia</h5>
+                                <div class="size-list">
+                                    @php
+                                        $jenisWarnaData = $produk->jenisWarnaProduk ?? collect();
+                                    @endphp
+                                    @if($jenisWarnaData->count() > 0)
+                                        <div class="d-flex flex-wrap gap-2">
+                                            @foreach($jenisWarnaData as $warna)
+                                                <span class="badge bg-secondary fs-6 py-2 px-3">{{ $warna->warna }}</span>
+                                            @endforeach
+                                        </div>
+                                    @else
+                                        <p class="text-muted fst-italic">Tidak ada warna tersedia.</p>
+                                    @endif
+                                </div>
+                            </div>
+
                             <!-- Warna -->
                             <div class="mb-4">
                                 <h5 class="border-bottom pb-2 mb-3">Kode Warna/Family Color</h5>

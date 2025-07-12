@@ -55,16 +55,27 @@
                         @enderror
                     </div>
                     <div class="form-group">
-                        <label for="warna" class="form-label">Warna</label>
-                        <input class="form-control @error('warna') is-invalid @enderror"
-                            type="text"
-                            id="warna"
-                            name="warna"
-                            value="{{ old('warna') }}"
-                            placeholder="Masukkan warna produk">
-                        @error('warna')
-                            <div class="invalid-feedback">{{ $message }}</div>
-                        @enderror
+                        <label for="jenisWarna" class="form-label">Jenis Warna</label>
+                        <div id="jenisWarnaContainer">
+                            <div class="jenisWarna-item mb-2">
+                                <div class="input-group">
+                                    <input class="form-control @error('jenisWarna.0') is-invalid @enderror"
+                                        type="text"
+                                        name="jenisWarna[]"
+                                        value="{{ old('jenisWarna.0') }}"
+                                        placeholder="Masukkan jenis warna produk">
+                                    <button type="button" class="btn btn-danger hapus-jenisWarna" style="display: none;">
+                                        <i class="ti ti-trash"></i>
+                                    </button>
+                                </div>
+                                @error('jenisWarna.0')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
+                        <button type="button" id="tambahjenisWarna" class="btn btn-secondary mt-2">
+                            <i class="ti ti-plus me-1"></i>Tambah jenis warna
+                        </button>
                     </div>
                     <div class="form-group">
                         <label for="harga" class="form-label">Harga</label>
@@ -159,12 +170,38 @@
 
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            let jenisWarnaIndex = 1;
             let ukuranIndex = 1;
             let warnaIndex = 1;
+            const tambahJenisWarnaBtn = document.getElementById('tambahjenisWarna');
             const tambahUkuranBtn = document.getElementById('tambahUkuran');
             const tambahWarnaBtn = document.getElementById('tambahWarna');
+            const jenisWarnaContainer = document.getElementById('jenisWarnaContainer');
             const ukuranContainer = document.getElementById('ukuranContainer');
             const warnaContainer = document.getElementById('warnaContainer');
+
+            // Function untuk menambah jenis warna
+            tambahJenisWarnaBtn.addEventListener('click', function() {
+                const newJeniswarnaItem = document.createElement('div');
+                newJeniswarnaItem.className = 'jenisWarna-item mb-2';
+                newJeniswarnaItem.innerHTML = `
+                    <div class="input-group">
+                        <input class="form-control"
+                            type="text"
+                            name="jenisWarna[]"
+                            placeholder="Masukkan jenis warna produk">
+                        <button type="button" class="btn btn-danger hapus-jenisWarna">
+                            <i class="ti ti-trash"></i>
+                        </button>
+                    </div>
+                `;
+
+                jenisWarnaContainer.appendChild(newJeniswarnaItem);
+                jenisWarnaIndex++;
+
+                // Show hapus button untuk semua item jika ada lebih dari 1
+                updateHapusJenisWarnaButtons();
+            });
 
             // Function untuk menambah ukuran
             tambahUkuranBtn.addEventListener('click', function() {
@@ -175,7 +212,7 @@
                         <input class="form-control"
                             type="text"
                             name="ukuran[]"
-                            placeholder="Masukkan ukuran produk (contoh: S, M, L, XL)">
+                            placeholder="Masukkan ukuran produk (contoh: 108X70, 108X80, dll)">
                         <button type="button" class="btn btn-danger hapus-ukuran">
                             <i class="ti ti-trash"></i>
                         </button>
@@ -212,6 +249,15 @@
                 updateHapusWarnaButtons();
             });
 
+            // Function untuk menghapus jenis warna
+            jenisWarnaContainer.addEventListener('click', function(e) {
+                if (e.target.classList.contains('hapus-jenisWarna') || e.target.closest('.hapus-jenisWarna')) {
+                    const jenisWarnaItem = e.target.closest('.jenisWarna-item');
+                    jenisWarnaItem.remove();
+                    updateHapusJenisWarnaButtons();
+                }
+            });
+
             // Function untuk menghapus ukuran
             ukuranContainer.addEventListener('click', function(e) {
                 if (e.target.classList.contains('hapus-ukuran') || e.target.closest('.hapus-ukuran')) {
@@ -229,6 +275,19 @@
                     updateHapusWarnaButtons();
                 }
             });
+
+            // Function untuk update visibility tombol hapus jenis warna
+            function updateHapusJenisWarnaButtons() {
+                const jenisWarnaItems = jenisWarnaContainer.querySelectorAll('.jenisWarna-item');
+                jenisWarnaItems.forEach(function(item, index) {
+                    const hapusBtn = item.querySelector('.hapus-jenisWarna');
+                    if (jenisWarnaItems.length > 1) {
+                        hapusBtn.style.display = 'block';
+                    } else {
+                        hapusBtn.style.display = 'none';
+                    }
+                });
+            }
 
             // Function untuk update visibility tombol hapus ukuran
             function updateHapusUkuranButtons() {
