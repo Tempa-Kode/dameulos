@@ -31,6 +31,25 @@
         <div class="loader"></div>
     </div>
 
+    <!-- Offcanvas Menu Begin -->
+    <div class="offcanvas-menu-overlay"></div>
+    <div class="offcanvas-menu-wrapper">
+        <div class="offcanvas__option">
+            <div class="offcanvas__links">
+                <a href="#">Login</a>
+                <a href="#">Daftar</a>
+            </div>
+        </div>
+        <div class="offcanvas__nav__option">
+            <a href="#" class="search-switch"><img src="{{ asset('home/img/icon/search.png') }}" alt=""></a>
+            <a href="#"><img src="{{ asset('home/img/icon/heart.png') }}" alt=""></a>
+            <a href="#"><img src="{{ asset('home/img/icon/cart.png') }}" alt=""> <span>0</span></a>
+            <div class="price">$0.00</div>
+        </div>
+        <div id="mobile-menu-wrap"></div>
+    </div>
+    <!-- Offcanvas Menu End -->
+
     <!-- Header Section Begin -->
     <header class="header">
         <div class="container">
