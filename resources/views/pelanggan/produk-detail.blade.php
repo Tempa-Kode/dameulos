@@ -75,7 +75,7 @@
                                 <a href="#" class="primary-btn">Tambahkan ke Keranjang</a>
                             </div>
                             <div class="product__details__btns__option">
-                                <a href="#">Kategori: <span>{{ $produk->katalog->nama }}</a>
+                                <a href="{{ route('pelanggan.katalogBySlug', $produk->katalog->slug) }}">Kategori: <span>{{ $produk->katalog->nama }}</a>
                             </div>
                         </div>
                     </div>
@@ -124,7 +124,7 @@
                 </div>
             </div>
             <div class="row">
-                @foreach($produkTerkait as $terkait)
+                @forelse($produkTerkait as $terkait)
                 <div class="col-lg-3 col-md-6 col-sm-6 col-sm-6">
                     <div class="product__item">
                         <div class="product__item__pic" style="height: 250px; overflow: hidden; display: flex; align-items: center; justify-content: center; background-color: #f8f9fa;">
@@ -138,7 +138,13 @@
                         </div>
                     </div>
                 </div>
-                @endforeach
+                @empty
+                <div class="col-12"></div>
+                    <div class="alert alert-warning text-center w-100">
+                        <strong>Maaf!</strong> Tidak ada produk terkait yang ditemukan.
+                    </div>
+                </div>
+                @endforelse
             </div>
         </div>
     </section>
