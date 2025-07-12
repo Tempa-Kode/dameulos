@@ -2,6 +2,28 @@
 
 @section('title', $produk->nama . ' - Dame Ulos')
 
+@push('styles')
+    <style>
+        .primary-outline-btn {
+            display: inline-block;
+            font-size: 13px;
+            font-weight: 700;
+            text-transform: uppercase;
+            padding: 14px 30px;
+            color: #000000;
+            background: transparent;
+            border: 2px solid #000000;
+            letter-spacing: 4px;
+            transition: all 0.3s ease;
+        }
+
+        .primary-outline-btn:hover {
+            color: #ffffff;
+            background: #000000;
+        }
+    </style>
+@endpush
+
 @section('content')
     <!-- Breadcrumb Section Begin -->
     <section class="breadcrumb-option">
@@ -72,7 +94,8 @@
                                         <input type="text" value="1" id="jumlah">
                                     </div>
                                 </div>
-                                <a href="#" class="primary-btn">Tambahkan ke Keranjang</a>
+                                <a href="#" class="primary-btn">Beli Sekarang</a>
+                                <a href="#" class="primary-outline-btn"><i class="fa-solid fa-cart-plus"></i></a>
                             </div>
                             <div class="product__details__btns__option">
                                 <a href="{{ route('pelanggan.katalogBySlug', $produk->katalog->slug) }}">Kategori: <span>{{ $produk->katalog->nama }}</a>
