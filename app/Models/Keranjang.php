@@ -12,6 +12,8 @@ class Keranjang extends Model
         'user_id',
         'produk_id',
         'jumlah',
+        'ukuran_produk_id',
+        'jenis_warna_produk_id',
     ];
 
     public function user()
@@ -22,5 +24,15 @@ class Keranjang extends Model
     public function produk()
     {
         return $this->belongsTo(Produk::class);
+    }
+
+    public function ukuranProduk()
+    {
+        return $this->belongsTo(UkuranProduk::class, 'ukuran_produk_id');
+    }
+
+    public function jenisWarnaProduk()
+    {
+        return $this->belongsTo(JenisWarnaProduk::class, 'jenis_warna_produk_id');
     }
 }

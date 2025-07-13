@@ -46,5 +46,7 @@ Route::get('/checkout/form', [CheckoutController::class, 'showCheckoutForm'])->n
 Route::post('/checkout/process', [CheckoutController::class, 'processCheckout'])->name('pelanggan.checkout.process');
 Route::get('/checkout/success/{kode_transaksi}', [CheckoutController::class, 'success'])->name('pelanggan.checkout.success');
 
+Route::post('/keranjang', [\App\Http\Controllers\KeranjangController::class, 'create'])->name('pelanggan.keranjang.create');
+
 require __DIR__.'/auth.php';
 

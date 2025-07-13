@@ -79,7 +79,7 @@
                                 <button id="checkout" class="primary-btn">
                                     <span class="btn-text">Beli Sekarang</span>
                                 </button>
-                                <a href="#" class="primary-outline-btn"><i class="fa-solid fa-cart-plus"></i></a>
+                                <button id="keranjang" class="primary-outline-btn"><i class="fa-solid fa-cart-plus"></i></button>
                             </div>
                             <div class="product__details__btns__option">
                                 <a href="{{ route('pelanggan.katalogBySlug', $produk->katalog->slug) }}">Kategori: <span>{{ $produk->katalog->nama }}</a>
@@ -251,6 +251,83 @@
                 }
             });
         });
+
+        $('#keranjang').on('click', function(e){
+            e.preventDefault();
+            const jumlah = $('#jumlah').val();
+            const ukuranId = $('input[name="ukuran"]:checked').val();
+            const warnaId = $('input[name="warna"]:checked').val();
+
+            // Validation
+            if (!jumlah || jumlah < 1) {
+                showValidationError('Jumlah produk minimal 1');
+                return;
+            }
+
+            if (jumlah > {{ $produk->stok }}) {
+                showValidationError('Jumlah melebihi stok yang tersedia ({{ $produk->stok }} item)');
+                return;
+            }
+
+            if (!ukuranId) {
+                showValidationError('Silakan pilih ukuran produk.');
+                return;
+            }
+
+            if (!warnaId) {
+                showValidationError('Silakan pilih warna produk.');
+                return;
+            }
+
+            const Toast = Swal.mixin({
+                toast: true,
+                position: "top-end",
+                showConfirmButton: false,
+                timer: 3000,
+                timerProgressBar: true,
+                didOpen: (toast) => {
+                    toast.onmouseenter = Swal.stopTimer;
+                    toast.onmouseleave = Swal.resumeTimer;
+                }
+            });
+
+            // Send AJAX request
+            $.ajax({
+                url: '{{ route("pelanggan.keranjang.create") }}',
+                method: 'POST',
+                data: {
+                    produk_id: {{ $produk->id }},
+                    ukuran_id: ukuranId,
+                    warna_id: warnaId,
+                    jumlah: jumlah,
+                    _token: '{{ csrf_token() }}'
+                },
+                success: function(response) {
+                    if (response.success) {
+                        Toast.fire({
+                            icon: "success",
+                            title: "Berhasil ditambahkan ke keranjang"
+                        });
+                    } else {
+                        showErrorState($button, $buttonText, originalText);
+                        alert(response.message || 'Terjadi kesalahan saat memproses pesanan.');
+                    }
+                },
+                error: function(xhr) {
+                    showErrorState($button, $buttonText, originalText);
+
+                    let errorMessage = 'Terjadi kesalahan saat memproses pesanan.';
+
+                    if (xhr.responseJSON && xhr.responseJSON.message) {
+                        errorMessage = xhr.responseJSON.message;
+                    } else if (xhr.responseJSON && xhr.responseJSON.errors) {
+                        errorMessage = Object.values(xhr.responseJSON.errors).flat().join('\n');
+                    }
+
+                    alert(errorMessage);
+                }
+            });
+        })
 
         // Add loading overlay to body
         $('body').append('<div class="loading-overlay"></div>');
