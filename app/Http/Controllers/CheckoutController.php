@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Produk;
+use App\Models\Keranjang;
 use App\Models\Transaksi;
 use App\Models\DetailTransaksi;
 use App\Models\Pembayaran;
@@ -165,6 +166,7 @@ class CheckoutController extends Controller
 
         $checkoutData = session('checkout_data');
         $totals = session('checkout_totals');
+        $checkoutSource = session('checkout_source'); // 'cart' or null
 
         if (!$checkoutData || !$totals) {
             return redirect()->route('pelanggan.katalog')
@@ -230,14 +232,37 @@ class CheckoutController extends Controller
 
             DB::commit();
 
+            // If checkout came from cart, clear cart items
+            if ($checkoutSource === 'cart') {
+                $keranjangIds = collect($checkoutData)->pluck('keranjang_id')->filter();
+                if ($keranjangIds->isNotEmpty()) {
+                    Keranjang::whereIn('id', $keranjangIds)->delete();
+                }
+            }
+
             // Clear checkout session data
-            session()->forget(['checkout_data', 'checkout_totals']);
+            session()->forget(['checkout_data', 'checkout_totals', 'checkout_source']);
+
+            if (request()->ajax()) {
+                return response()->json([
+                    'success' => true,
+                    'redirect' => route('pelanggan.checkout.success', $transaksi->kode_transaksi),
+                    'message' => 'Pesanan berhasil dibuat!'
+                ]);
+            }
 
             return redirect()->route('pelanggan.checkout.success', $transaksi->kode_transaksi)
                 ->with('success', 'Pesanan berhasil dibuat!');
 
         } catch (\Exception $e) {
             DB::rollBack();
+
+            if (request()->ajax()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Terjadi kesalahan saat memproses pesanan: ' . $e->getMessage()
+                ], 500);
+            }
 
             return redirect()->back()
                 ->with('error', 'Terjadi kesalahan saat memproses pesanan: ' . $e->getMessage())
@@ -260,5 +285,70 @@ class CheckoutController extends Controller
         $pengiriman = Pengiriman::where('transaksi_id', $transaksi->id)->first();
 
         return view('pelanggan.checkout-success', compact('transaksi', 'pembayaran', 'pengiriman'));
+    }
+
+    /**
+     * Checkout from cart - prepare cart items for checkout
+     */
+    public function checkoutFromCart()
+    {
+        if (!Auth::check()) {
+            return redirect()->route('login')
+                ->with('error', 'Anda harus login untuk melanjutkan checkout.');
+        }
+
+        // Get all cart items for current user
+        $keranjangItems = Keranjang::where('user_id', Auth::id())
+            ->with(['produk.katalog', 'ukuranProduk', 'jenisWarnaProduk'])
+            ->get();
+
+        if ($keranjangItems->isEmpty()) {
+            return redirect()->route('pelanggan.keranjang.index')
+                ->with('error', 'Keranjang Anda kosong. Silakan tambahkan produk terlebih dahulu.');
+        }
+
+        $checkoutData = [];
+        $totalHarga = 0;
+
+        foreach ($keranjangItems as $item) {
+            // Check stock availability
+            if ($item->produk->stok < $item->jumlah) {
+                return redirect()->route('pelanggan.keranjang.index')
+                    ->with('error', "Stok produk {$item->produk->nama} tidak mencukupi. Stok tersedia: {$item->produk->stok}");
+            }
+
+            $subtotal = $item->produk->harga * $item->jumlah;
+            $totalHarga += $subtotal;
+
+            $checkoutData[] = [
+                'produk' => $item->produk,
+                'ukuran' => $item->ukuranProduk,
+                'warna' => $item->jenisWarnaProduk,
+                'jumlah' => $item->jumlah,
+                'harga_satuan' => $item->produk->harga,
+                'subtotal' => $subtotal,
+                'produk_id' => $item->produk_id,
+                'ukuran_id' => $item->ukuran_produk_id,
+                'warna_id' => $item->jenis_warna_produk_id,
+                'keranjang_id' => $item->id, // Store cart item ID for later cleanup
+            ];
+        }
+
+        // Calculate shipping cost
+        $ongkir = 15000 + (count($checkoutData) - 1) * 5000;
+        $grandTotal = $totalHarga + $ongkir;
+
+        // Store checkout data in session
+        session([
+            'checkout_data' => $checkoutData,
+            'checkout_totals' => [
+                'subtotal' => $totalHarga,
+                'ongkir' => $ongkir,
+                'total' => $grandTotal
+            ],
+            'checkout_source' => 'cart' // Mark that this checkout came from cart
+        ]);
+
+        return redirect()->route('pelanggan.checkout.form');
     }
 }

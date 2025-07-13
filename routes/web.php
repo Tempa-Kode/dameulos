@@ -43,12 +43,17 @@ Route::get('/produk/{produk:slug}', [AksesPelangganController::class, 'produkByS
 // Checkout routes
 Route::post('/checkout', [CheckoutController::class, 'checkout'])->name('pelanggan.checkout');
 Route::get('/checkout/form', [CheckoutController::class, 'showCheckoutForm'])->name('pelanggan.checkout.form');
+Route::get('/checkout/from-cart', [CheckoutController::class, 'checkoutFromCart'])->name('pelanggan.checkout.from-cart');
 Route::post('/checkout/process', [CheckoutController::class, 'processCheckout'])->name('pelanggan.checkout.process');
 Route::get('/checkout/success/{kode_transaksi}', [CheckoutController::class, 'success'])->name('pelanggan.checkout.success');
 
 Route::get('/keranjang', [\App\Http\Controllers\KeranjangController::class, 'index'])->name('pelanggan.keranjang.index');
 Route::post('/keranjang', [\App\Http\Controllers\KeranjangController::class, 'create'])->name('pelanggan.keranjang.create');
 Route::delete('/keranjang/{keranjang:id}', [\App\Http\Controllers\KeranjangController::class, 'destroy'])->name('pelanggan.keranjang.destroy');
+
+// API Cek Lokasi Pengiriman
+Route::get('/api/proxy/destination', [PengirimanController::class, 'cekDestinasiTujuan'])->name('proxy.destination');
+Route::post('/api/proxy/ongkir', [PengirimanController::class, 'cekOngkir'])->name('proxy.ongkir');
 
 require __DIR__.'/auth.php';
 

@@ -87,7 +87,11 @@
                         <ul>
                             <li>Total <span>Rp. {{ number_format($totalHarga, 0, ',', '.') }}</span></li>
                         </ul>
-                        <a href="#" class="primary-btn">Lanjutkan ke pembayaran</a>
+                        @if($keranjang->count() > 0)
+                            <a href="{{ route('pelanggan.checkout.from-cart') }}" class="primary-btn">Lanjutkan ke pembayaran</a>
+                        @else
+                            <p class="text-muted">Keranjang kosong</p>
+                        @endif
                     </div>
                 </div>
             </div>
