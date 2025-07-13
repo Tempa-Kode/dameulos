@@ -10,11 +10,13 @@ class Transaksi extends Model
 
     protected $fillable = [
         'user_id',
-        'keranjang_id',
-        'total_harga',
+        'kode_transaksi',
         'status',
+        'subtotal',
+        'ongkir',
+        'total_harga',
+        'catatan',
         'alamat_pengiriman',
-        'tanggal_transaksi',
     ];
 
     public function user()
@@ -25,5 +27,15 @@ class Transaksi extends Model
     public function pembayaran()
     {
         return $this->hasOne(Pembayaran::class);
+    }
+
+    public function pengiriman()
+    {
+        return $this->hasOne(Pengiriman::class);
+    }
+
+    public function detailTransaksi()
+    {
+        return $this->hasMany(DetailTransaksi::class);
     }
 }

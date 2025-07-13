@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\AksesPelangganController;
+use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\KatalogController;
 use App\Http\Controllers\PengirimanController;
 use App\Http\Controllers\ProdukController;
@@ -38,6 +39,12 @@ Route::get('/', [AksesPelangganController::class, 'index'])->name('pelanggan.hom
 Route::get('/katalog', [AksesPelangganController::class, 'katalog'])->name('pelanggan.katalog');
 Route::get('/katalog/{katalog:slug}', [AksesPelangganController::class, 'katalogBySlug'])->name('pelanggan.katalogBySlug');
 Route::get('/produk/{produk:slug}', [AksesPelangganController::class, 'produkBySlug'])->name('pelanggan.produkBySlug');
+
+// Checkout routes
+Route::post('/checkout', [CheckoutController::class, 'checkout'])->name('pelanggan.checkout');
+Route::get('/checkout/form', [CheckoutController::class, 'showCheckoutForm'])->name('pelanggan.checkout.form');
+Route::post('/checkout/process', [CheckoutController::class, 'processCheckout'])->name('pelanggan.checkout.process');
+Route::get('/checkout/success/{kode_transaksi}', [CheckoutController::class, 'success'])->name('pelanggan.checkout.success');
 
 require __DIR__.'/auth.php';
 

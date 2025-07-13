@@ -171,6 +171,7 @@
     <script src="{{ asset('home/js/mixitup.min.js') }}"></script>
     <script src="{{ asset('home/js/owl.carousel.min.js') }}"></script>
     <script src="{{ asset('home/js/main.js') }}"></script>
+    @stack('scripts')
 </body>
 
 </html>
