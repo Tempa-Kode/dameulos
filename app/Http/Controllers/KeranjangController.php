@@ -7,25 +7,29 @@ use Illuminate\Http\Request;
 
 class KeranjangController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
     public function index()
     {
-        //
+        // Ambil semua produk di keranjang untuk user yang sedang login
+        $keranjang = Keranjang::where('user_id', auth()->id())
+            ->with(['produk', 'ukuranProduk', 'jenisWarnaProduk'])
+            ->get();
+
+        // Hitung total harga
+        $totalHarga = $keranjang->sum(function ($keranjang) {
+            return $keranjang->jumlah * $keranjang->produk->harga;
+        });
+        // dd($keranjang);
+        return view('pelanggan.keranjang', compact('keranjang', 'totalHarga'));
     }
 
-    /**
-     * tambah produk ke keranjang
-     */
     public function create(Request $request)
     {
         // Validasi input
         $request->validate([
             'produk_id' => 'required|exists:produk,id',
             'jumlah' => 'required|integer|min:1',
-            'ukuran_id' => 'required|exists:ukuran_produk,id',
-            'warna_id' => 'required|exists:jenis_warna_produk,id',
+            'ukuran_id' => 'nullable|exists:ukuran_produk,id',
+            'warna_id' => 'nullable|exists:jenis_warna_produk,id',
         ]);
 
         // Cek apakah produk sudah ada di keranjang
@@ -93,11 +97,15 @@ class KeranjangController extends Controller
         //
     }
 
-    /**
-     * Remove the specified resource from storage.
-     */
     public function destroy(Keranjang $keranjang)
     {
-        //
+        // Hapus entri keranjang
+        $keranjang->delete();
+
+        return response()->json([
+            'success' => true,
+            'message' => 'Produk berhasil dihapus dari keranjang.',
+            'keranjang_count' => Keranjang::where('user_id', auth()->id())->count(),
+        ]);
     }
 }

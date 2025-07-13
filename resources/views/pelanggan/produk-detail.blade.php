@@ -199,16 +199,6 @@
                 return;
             }
 
-            if (!ukuranId) {
-                showValidationError('Silakan pilih ukuran produk.');
-                return;
-            }
-
-            if (!warnaId) {
-                showValidationError('Silakan pilih warna produk.');
-                return;
-            }
-
             // Show loading state with animation
             showLoadingState($button, $buttonText);
 
@@ -266,16 +256,6 @@
 
             if (jumlah > {{ $produk->stok }}) {
                 showValidationError('Jumlah melebihi stok yang tersedia ({{ $produk->stok }} item)');
-                return;
-            }
-
-            if (!ukuranId) {
-                showValidationError('Silakan pilih ukuran produk.');
-                return;
-            }
-
-            if (!warnaId) {
-                showValidationError('Silakan pilih warna produk.');
                 return;
             }
 

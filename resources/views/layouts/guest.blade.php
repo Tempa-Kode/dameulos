@@ -86,7 +86,7 @@
                 </div>
                 <div class="col-lg-3 col-md-3">
                     <div class="header__nav__option">
-                        <a href="#"><img src="{{ asset('home/img/icon/cart.png') }}" alt=""><span>{{ $keranjang }}</span></a>
+                        <a href="{{ route('pelanggan.keranjang.index') }}"><img src="{{ asset('home/img/icon/cart.png') }}" alt=""><span>{{ $keranjang }}</span></a>
                     </div>
                 </div>
             </div>
