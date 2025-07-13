@@ -1,3 +1,9 @@
+@php
+    $keranjang = 0; // Default value
+    if (Auth::check() && Auth::user()->role == 'pelanggan') {
+        $keranjang = App\Models\Keranjang::where('user_id', Auth::user()->id)->count();
+    }
+@endphp
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
@@ -45,7 +51,7 @@
         <div class="offcanvas__nav__option">
             <a href="#" class="search-switch"><img src="{{ asset('home/img/icon/search.png') }}" alt=""></a>
             <a href="#"><img src="{{ asset('home/img/icon/heart.png') }}" alt=""></a>
-            <a href="#"><img src="{{ asset('home/img/icon/cart.png') }}" alt=""> <span>0</span></a>
+            <a href="#"><img src="{{ asset('home/img/icon/cart.png') }}" alt=""> <span>{{ $keranjang }}</span></a>
             <div class="price">$0.00</div>
         </div>
         <div id="mobile-menu-wrap"></div>
@@ -80,10 +86,7 @@
                 </div>
                 <div class="col-lg-3 col-md-3">
                     <div class="header__nav__option">
-                        <a href="#" class="search-switch"><img src="{{ asset('home/img/icon/search.png') }}" alt=""></a>
-                        <a href="#"><img src="{{ asset('home/img/icon/heart.png') }}" alt=""></a>
-                        <a href="#"><img src="{{ asset('home/img/icon/cart.png') }}" alt=""> <span>0</span></a>
-                        <div class="price">$0.00</div>
+                        <a href="#"><img src="{{ asset('home/img/icon/cart.png') }}" alt=""><span>{{ $keranjang }}</span></a>
                     </div>
                 </div>
             </div>
