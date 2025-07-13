@@ -3,184 +3,7 @@
 @section('title', $produk->nama . ' - Dame Ulos')
 
 @push('styles')
-    <style>
-        .primary-outline-btn {
-            display: inline-block;
-            font-size: 13px;
-            font-weight: 700;
-            text-transform: uppercase;
-            padding: 14px 30px;
-            color: #000000;
-            background: transparent;
-            border: 2px solid #000000;
-            letter-spacing: 4px;
-            transition: all 0.3s ease;
-        }
-
-        .primary-outline-btn:hover {
-            color: #ffffff;
-            background: #000000;
-        }
-
-        /* Loading Animation */
-        .btn-loading {
-            position: relative;
-            pointer-events: none;
-            overflow: hidden;
-        }
-
-        .btn-loading::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 20px;
-            height: 20px;
-            margin: -10px 0 0 -10px;
-            border: 2px solid transparent;
-            border-top: 2px solid #ffffff;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-            z-index: 1;
-        }
-
-        .btn-loading .btn-text {
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-
-        .btn-loading.with-text::before {
-            left: 20px;
-            margin-left: 0;
-        }
-
-        .btn-loading.with-text .btn-text {
-            opacity: 1;
-            padding-left: 30px;
-        }
-
-        @keyframes spin {
-            0% { transform: rotate(0deg); }
-            100% { transform: rotate(360deg); }
-        }
-
-        /* Button pulse effect */
-        .primary-btn.pulse {
-            animation: pulse 0.6s ease-in-out;
-        }
-
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-            100% { transform: scale(1); }
-        }
-
-        /* Success animation */
-        .btn-success {
-            background-color: #28a745 !important;
-            border-color: #28a745 !important;
-            transition: all 0.3s ease;
-        }
-
-        .btn-success::before {
-            content: '✓';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            font-size: 18px;
-            color: white;
-            z-index: 1;
-        }
-
-        /* Shimmer effect for loading */
-        .btn-loading.shimmer {
-            background: linear-gradient(90deg, #ca1515 25%, #e53e3e 50%, #ca1515 75%);
-            background-size: 200% 100%;
-            animation: shimmer 1.5s infinite;
-        }
-
-        @keyframes shimmer {
-            0% { background-position: -200% 0; }
-            100% { background-position: 200% 0; }
-        }
-
-        /* Disabled state styling */
-        .primary-btn:disabled {
-            opacity: 0.7;
-            cursor: not-allowed;
-        }
-
-        /* Custom validation alert */
-        .validation-alert {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            z-index: 9999;
-            display: none;
-            max-width: 400px;
-        }
-
-        .alert-content {
-            background: linear-gradient(135deg, #ff6b6b, #ee5a52);
-            color: white;
-            padding: 15px 20px;
-            border-radius: 8px;
-            box-shadow: 0 4px 20px rgba(238, 90, 82, 0.3);
-            display: flex;
-            align-items: center;
-            animation: slideInRight 0.3s ease;
-        }
-
-        .alert-content i {
-            margin-right: 10px;
-            font-size: 18px;
-        }
-
-        .alert-content span {
-            font-weight: 500;
-            font-size: 14px;
-        }
-
-        @keyframes slideInRight {
-            0% {
-                opacity: 0;
-                transform: translateX(100%);
-            }
-            100% {
-                opacity: 1;
-                transform: translateX(0);
-            }
-        }
-
-        /* Loading overlay effect */
-        .loading-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.1);
-            z-index: 9998;
-            display: none;
-        }
-
-        /* Enhance primary button hover effect */
-        .primary-btn {
-            transition: all 0.3s ease;
-            transform: translateY(0);
-        }
-
-        .primary-btn:hover:not(:disabled) {
-            transform: translateY(-2px);
-            box-shadow: 0 4px 15px rgba(202, 21, 21, 0.3);
-        }
-
-        .primary-btn:active:not(:disabled) {
-            transform: translateY(0);
-            transition: all 0.1s ease;
-        }
-    </style>
+    <link rel="stylesheet" href="{{ asset('home/css/app.css') }}">
 @endpush
 
 @section('content')
@@ -236,7 +59,7 @@
 
                             @if(isset($produk->jenisWarnaProduk) && $produk->jenisWarnaProduk->count() > 0)
                             <div class="product__details__option">
-                                <div class="product__details__option__size">
+                                <div class="product__details__option__jenwarna">
                                     <span>Warna tersedia:</span>
                                     @foreach($produk->jenisWarnaProduk as $warna)
                                     <label class="m-1" for="warna-{{ $warna->id }}">{{ $warna->warna }}
@@ -348,6 +171,12 @@
 
 @push('scripts')
     <script type="text/javascript">
+
+        $(".product__color__select label, .shop__sidebar__size label, .product__details__option__jenwarna label").on('click', function () {
+            $(".product__color__select label, .shop__sidebar__size label, .product__details__option__jenwarna label").removeClass('active');
+            $(this).addClass('active');
+        });
+
         $('#checkout').on('click', function(e) {
             e.preventDefault();
 
