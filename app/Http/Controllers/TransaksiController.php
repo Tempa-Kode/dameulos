@@ -191,9 +191,9 @@ class TransaksiController extends Controller
         // Update status pembayaran jika ada
         if ($transaksi->pembayaran) {
             $paymentStatus = match($transactionStatus) {
-                'settlement', 'capture' => 'paid',
+                'settlement', 'capture' => 'dibayar',
                 'pending' => 'pending',
-                'deny', 'expire', 'cancel' => 'failed',
+                'deny', 'expire', 'cancel' => 'gagal',
                 default => $transaksi->pembayaran->status
             };
 

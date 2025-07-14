@@ -390,6 +390,7 @@
                 // Reset button state
                 button.html(originalText);
                 button.prop('disabled', false);
+                console.log('Payment data:', data);
 
                 if(data.snap_token.snap_token){
                     // Initialize Snap payment in the container

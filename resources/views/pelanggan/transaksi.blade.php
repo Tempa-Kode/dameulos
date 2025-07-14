@@ -99,7 +99,7 @@
                                                         @if($item->status == 'pending')
                                                             <span class="badge badge-warning">Menunggu</span>
                                                         @elseif($item->status == 'dibayar')
-                                                            <span class="badge badge-info">Diproses</span>
+                                                            <span class="badge badge-info">Dibayar</span>
                                                         @elseif($item->status == 'berhasil')
                                                             <span class="badge badge-primary">Dikirim</span>
                                                         @elseif($item->status == 'dikirim')
@@ -146,9 +146,9 @@
                                                 <h6 class="text-primary">Status Pembayaran:</h6>
                                                 @if($item->pembayaran->status == 'pending')
                                                     <span class="badge badge-warning">Menunggu Pembayaran</span>
-                                                @elseif($item->pembayaran->status == 'paid')
+                                                @elseif($item->pembayaran->status == 'dibayar')
                                                     <span class="badge badge-success">Sudah Dibayar</span>
-                                                @elseif($item->pembayaran->status == 'failed')
+                                                @elseif($item->pembayaran->status == 'gagal')
                                                     <span class="badge badge-danger">Gagal</span>
                                                 @endif
                                             </div>
