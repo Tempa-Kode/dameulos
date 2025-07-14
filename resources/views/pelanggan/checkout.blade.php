@@ -177,6 +177,61 @@
         #ongkir {
             position: relative;
         }
+
+        /* Animasi untuk ongkir selection */
+        .ongkir-selection {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 8px;
+            padding: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .ongkir-option-card {
+            transition: all 0.3s ease;
+            opacity: 0;
+            margin-top: 10px;
+            background: white;
+        }
+
+        .ongkir-option-card:hover {
+            box-shadow: 0 4px 12px rgba(127, 173, 57, 0.2);
+            transform: translateY(-2px);
+        }
+
+        .ongkir-option-card.selected {
+            border-color: #7fad39 !important;
+            background-color: #f8fff8 !important;
+            box-shadow: 0 4px 15px rgba(127, 173, 57, 0.3);
+        }
+
+        .pulse-animation {
+            animation: pulse 0.6s ease-in-out;
+        }
+
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        .cursor-pointer {
+            cursor: pointer;
+        }
+
+        /* Loading spinner animation */
+        .fa-spinner {
+            animation: fa-spin 1s infinite linear;
+        }
+
+        @keyframes fa-spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(359deg); }
+        }
+
+        /* Smooth transitions untuk total harga */
+        .checkout__total__all li span {
+            transition: all 0.3s ease;
+        }
     </style>
 @endpush
 @section('content')
@@ -226,7 +281,7 @@
                                 <select name="destination" id="destination" class="form-control d-none" style="width: 100%">
                                     <option value="">Cari tujuan domestik...</option>
                                 </select>
-                                <input type="text" name="alamat" placeholder="alamat lengkap (cth : Jl. Setia Budi)" required>
+                                <input type="text" name="alamat" placeholder="alamat lengkap (cth : Jl. Setia Budi)" required style="margin-top: 10px;">
                             </div>
                             <div class="checkout__input" style="margin-top: 10px;">
                                 <p>Provinsi<span>*</span></p>
@@ -302,7 +357,7 @@
                                 <ul class="checkout__total__all">
                                     <li>Subtotal <span>Rp {{ number_format($totalHarga, 0, ',', '.') }} </span></li>
                                     <li id="ongkir">Ongkir <span>-</span></li>
-                                    <li>Total <span>Rp {{ number_format($grandTotal, 0, ',', '.') }}</span></li>
+                                    <li id="total">Total <span>Rp {{ number_format($grandTotal, 0, ',', '.') }}</span></li>
                                 </ul>
 
                                 <!-- Hidden inputs for shipping -->
@@ -396,6 +451,156 @@
                 $('#city_name').val(data.city_name || '');
                 $('#zip_code').val(data.zip_code || '');
                 $('#destination_id').val(data.id);
+
+                $.ajaxSetup({
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    }
+                });
+                // Show loading state dengan animasi
+                const ongkirContainer = $('#ongkir');
+                ongkirContainer.fadeOut(200, function() {
+                    $(this).html('<span><i class="fa fa-spinner fa-spin text-primary"></i> Menghitung ongkir...</span>').fadeIn(300);
+                });
+
+                $.ajax({
+                    url: '{{ route("proxy.ongkir") }}',
+                    method: 'POST',
+                    data: {
+                        destination: data.id,
+                    },
+                    success: function (response) {
+                        console.log('Ongkir Response:', response);
+
+                        if (response.data && response.data.length > 0) {
+                            const hasil = response.data;
+                            let selectedOngkir = hasil[0]; // Default pilih yang pertama
+                            let totalOngkir = selectedOngkir.cost;
+
+                            // Update hidden inputs
+                            $('#ongkir_cost').val(totalOngkir);
+                            $('#ongkir_service').val(`${selectedOngkir.name} - ${selectedOngkir.service}`);
+
+
+
+                            // Animasi fade out loading, kemudian tampilkan hasil
+                            ongkirContainer.fadeOut(300, function() {
+                                // Update tampilan ongkir utama
+                                const ongkirDisplay = `Ongkir <span class="text-success font-weight-bold">Rp ${totalOngkir.toLocaleString()}</span>`;
+
+                                // Buat pilihan ongkir dengan animasi
+                                let ongkirOptionsHtml = '<div class="ongkir-selection mt-2" style="display: none;">';
+                                ongkirOptionsHtml += '<small class="text-muted d-block mb-2"><i class="fa fa-truck"></i> Pilihan Pengiriman:</small>';
+
+                                hasil.forEach((item, index) => {
+                                    const isSelected = index === 0 ? 'selected' : '';
+                                    const selectedClass = index === 0 ? 'border-success bg-light' : '';
+
+                                    ongkirOptionsHtml += `
+                                        <div class="ongkir-option-card mb-2 p-2 border rounded cursor-pointer ${selectedClass}"
+                                             data-cost="${item.cost}"
+                                             data-service="${item.name} - ${item.description}"
+                                             data-etd="${item.etd || 'N/A'}"
+                                             style="transition: all 0.3s ease; cursor: pointer;">
+                                            <div class="d-flex justify-content-between align-items-center">
+                                                <div>
+                                                    <strong class="text-primary">${item.name}</strong>
+                                                    <span class="badge badge-secondary ml-1">${item.description}</span>
+                                                    <br>
+                                                    <small class="text-muted">
+                                                        <i class="fa fa-clock"></i> ${item.etd || 'N/A'} hari
+                                                    </small>
+                                                </div>
+                                                <div class="text-right">
+                                                    <strong class="text-success">Rp ${item.cost.toLocaleString()}</strong>
+                                                    ${index === 0 ? '<br><small class="text-success"><i class="fa fa-check"></i> Dipilih</small>' : ''}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    `;
+                                });
+                                ongkirOptionsHtml += '</div>';
+
+                                // Update container dengan animasi slide down
+                                ongkirContainer.html(ongkirDisplay + ongkirOptionsHtml).fadeIn(400, function() {
+                                    // Animasi slide down untuk pilihan ongkir
+                                    $('.ongkir-selection').slideDown(500, function() {
+                                        // Animasi untuk setiap card ongkir
+                                        $('.ongkir-option-card').each(function(index) {
+                                            $(this).delay(index * 100).animate({
+                                                opacity: 1,
+                                                marginTop: '0px'
+                                            }, 300);
+                                        });
+                                    });
+                                });
+
+                                // Update total dengan animasi
+                                const subtotal = {{ $totalHarga }};
+                                const grandTotal = subtotal + totalOngkir;
+                                const totalElement = $('#total').find('span');
+
+                                totalElement.fadeOut(200, function() {
+                                    $(this).html(`Rp ${grandTotal.toLocaleString()}`).fadeIn(300);
+                                });
+
+                                // Handle click untuk ganti pilihan ongkir dengan animasi
+                                $('.ongkir-option-card').on('click', function() {
+                                    const newCost = parseInt($(this).data('cost'));
+                                    const newService = $(this).data('service');
+                                    const newEtd = $(this).data('etd');
+                                    const newGrandTotal = subtotal + newCost;
+
+                                    // Animasi perubahan selection
+                                    $('.ongkir-option-card').removeClass('selected border-success bg-light')
+                                        .find('small:contains("Dipilih")').fadeOut(200);
+
+                                    $(this).addClass('selected border-success bg-light')
+                                        .append('<br><small class="text-success" style="display: none;"><i class="fa fa-check"></i> Dipilih</small>');
+
+                                    $(this).find('small:contains("Dipilih")').fadeIn(300);
+
+                                    // Update hidden inputs
+                                    $('#ongkir_cost').val(newCost);
+                                    $('#ongkir_service').val(newService);
+
+                                    // Update tampilan dengan animasi
+                                    ongkirContainer.find('span').fadeOut(200, function() {
+                                        $(this).html(`Rp ${newCost.toLocaleString()}`).fadeIn(300);
+                                    });
+
+                                    $('#total').find('span').fadeOut(200, function() {
+                                        $(this).html(`Rp ${newGrandTotal.toLocaleString()}`).fadeIn(300);
+                                    });
+
+                                    // Efek pulse untuk card yang dipilih
+                                    $(this).addClass('pulse-animation');
+                                    setTimeout(() => {
+                                        $(this).removeClass('pulse-animation');
+                                    }, 600);
+                                });
+                            });
+
+                        } else {
+                            // Jika tidak ada hasil ongkir
+                            ongkirContainer.fadeOut(300, function() {
+                                $(this).html('<span class="text-warning"><i class="fa fa-exclamation-triangle"></i> Ongkir tidak tersedia</span>').fadeIn(400);
+                            });
+                        }
+                    },
+                    error: function (xhr) {
+                        console.error('Error:', xhr);
+
+                        ongkirContainer.fadeOut(300, function() {
+                            let errorMsg = 'Gagal mengambil ongkir';
+                            if (xhr.responseJSON && xhr.responseJSON.meta && xhr.responseJSON.meta.message) {
+                                errorMsg = xhr.responseJSON.meta.message;
+                            }
+                            $(this).html(`<span class="text-danger"><i class="fa fa-times-circle"></i> ${errorMsg}</span>`).fadeIn(400);
+                        });
+                    }
+                });
+
             });
 
             // Handle form submission
