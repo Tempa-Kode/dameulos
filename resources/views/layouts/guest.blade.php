@@ -1,4 +1,5 @@
 @php
+    use Illuminate\Support\Facades\Auth;
     $keranjang = 0; // Default value
     if (Auth::check() && Auth::user()->role == 'pelanggan') {
         $keranjang = App\Models\Keranjang::where('user_id', Auth::user()->id)->count();
@@ -31,6 +32,90 @@
     <link rel="stylesheet" href="{{ asset('home/css/slicknav.min.css') }}" type="text/css">
     <link rel="stylesheet" href="{{ asset('home/css/style.css') }}" type="text/css">
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <style>
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+        .dropdown-menu {
+            display: none;
+            position: absolute;
+            right: 0;
+            background-color: white;
+            min-width: 180px;
+            box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+            z-index: 1000;
+            border-radius: 8px;
+            border: 1px solid #e9ecef;
+            margin-top: 5px;
+        }
+        .dropdown.show .dropdown-menu {
+            display: block;
+        }
+        .dropdown-item {
+            color: #333;
+            padding: 12px 16px;
+            text-decoration: none;
+            display: block;
+            font-size: 14px;
+            transition: background-color 0.3s ease;
+        }
+        .dropdown-item:hover {
+            background-color: #f8f9fa;
+            color: #ca1515;
+            text-decoration: none;
+        }
+        .dropdown-item i {
+            margin-right: 8px;
+            width: 16px;
+            text-align: center;
+        }
+        .dropdown-divider {
+            height: 1px;
+            background-color: #e9ecef;
+            margin: 8px 0;
+        }
+        .header__nav__option a {
+            margin-right: 15px;
+            color: #333;
+            font-size: 16px;
+            text-decoration: none;
+        }
+        .header__nav__option a:hover {
+            color: #ca1515;
+        }
+        .dropdown-toggle:after {
+            display: none;
+        }
+        .dropdown-toggle {
+            border: none;
+            background: none;
+            cursor: pointer;
+        }
+        .dropdown-toggle:focus {
+            outline: none;
+        }
+
+        /* Mobile Menu Styles */
+        .mobile-menu-item {
+            display: block;
+            padding: 10px 15px;
+            color: #333;
+            text-decoration: none;
+            border-bottom: 1px solid #eee;
+            font-size: 14px;
+        }
+        .mobile-menu-item:hover {
+            background-color: #f8f9fa;
+            color: #ca1515;
+            text-decoration: none;
+        }
+        .mobile-menu-item i {
+            margin-right: 8px;
+            width: 16px;
+            text-align: center;
+        }
+    </style>
     @stack('styles')
 </head>
 
@@ -45,16 +130,48 @@
     <div class="offcanvas-menu-wrapper">
         <div class="offcanvas__option">
             <div class="offcanvas__links">
-                <a href="#">Login</a>
-                <a href="#">Daftar</a>
+                <!-- Link tambahan bisa ditambahkan di sini -->
             </div>
         </div>
         <div class="offcanvas__nav__option">
             <a href="#" class="search-switch"><img src="{{ asset('home/img/icon/search.png') }}" alt=""></a>
             <a href="#"><img src="{{ asset('home/img/icon/heart.png') }}" alt=""></a>
-            <a href="#"><img src="{{ asset('home/img/icon/cart.png') }}" alt=""> <span>{{ $keranjang }}</span></a>
+            <a href="{{ route('pelanggan.keranjang.index') }}"><img src="{{ asset('home/img/icon/cart.png') }}" alt=""> <span>{{ $keranjang }}</span></a>
             <div class="price">$0.00</div>
         </div>
+
+        <!-- Mobile Menu User Options -->
+        @if(Auth::check())
+            <div class="mobile-user-menu" style="border-top: 1px solid #eee; margin-top: 15px; padding-top: 15px;">
+                <div style="padding: 0 15px 10px; font-weight: bold; color: #333;">
+                    <i class="fa fa-user"></i> {{ Auth::user()->name }}
+                </div>
+                @if(Auth::user()->role == 'pelanggan')
+                    <a href="{{ route('pelanggan.transaksi') }}" class="mobile-menu-item">
+                        <i class="fa fa-file-text-o"></i> Transaksi Saya
+                    </a>
+                @endif
+                <a href="{{ route('profile.edit') }}" class="mobile-menu-item">
+                    <i class="fa fa-user-circle-o"></i> Profile
+                </a>
+                <form method="POST" action="{{ route('logout') }}" style="margin: 0;">
+                    @csrf
+                    <a href="#" class="mobile-menu-item" onclick="event.preventDefault(); this.closest('form').submit();">
+                        <i class="fa fa-sign-out"></i> Logout
+                    </a>
+                </form>
+            </div>
+        @else
+            <div class="mobile-user-menu" style="border-top: 1px solid #eee; margin-top: 15px; padding-top: 15px;">
+                <a href="{{ route('login') }}" class="mobile-menu-item">
+                    <i class="fa fa-sign-in"></i> Login
+                </a>
+                <a href="{{ route('register') }}" class="mobile-menu-item">
+                    <i class="fa fa-user-plus"></i> Daftar
+                </a>
+            </div>
+        @endif
+
         <div id="mobile-menu-wrap"></div>
     </div>
     <!-- Offcanvas Menu End -->
@@ -88,6 +205,33 @@
                 <div class="col-lg-3 col-md-3">
                     <div class="header__nav__option">
                         <a href="{{ route('pelanggan.keranjang.index') }}"><img src="{{ asset('home/img/icon/cart.png') }}" alt=""><span>{{ $keranjang }}</span></a>
+                        @if(Auth::check())
+                            <div class="dropdown" style="display: inline-block;">
+                                <a href="#" class="dropdown-toggle" id="userDropdown" style="text-decoration: none;">
+                                    <i class="fa fa-user"></i> {{ Auth::user()->name }}
+                                </a>
+                                <div class="dropdown-menu" id="userDropdownMenu">
+                                    @if(Auth::user()->role == 'pelanggan')
+                                        <a class="dropdown-item" href="{{ route('pelanggan.transaksi') }}">
+                                            <i class="fa fa-file-text-o"></i> Transaksi Saya
+                                        </a>
+                                        <div class="dropdown-divider"></div>
+                                    @endif
+                                    <a class="dropdown-item" href="{{ route('profile.edit') }}">
+                                        <i class="fa fa-user-circle-o"></i> Profile
+                                    </a>
+                                    <div class="dropdown-divider"></div>
+                                    <form method="POST" action="{{ route('logout') }}">
+                                        @csrf
+                                        <a class="dropdown-item" href="#" onclick="event.preventDefault(); this.closest('form').submit();">
+                                            <i class="fa fa-sign-out"></i> Logout
+                                        </a>
+                                    </form>
+                                </div>
+                            </div>
+                        @else
+                            <a href="{{ route('login') }}" style="margin-left: 10px;">Login</a>
+                        @endif
                     </div>
                 </div>
             </div>
@@ -180,6 +324,24 @@
     <script type="text/javascript">
         $(document).ready(function() {
             $('.js-example-basic-single').select2();
+
+            // Dropdown click functionality
+            $('#userDropdown').click(function(e) {
+                e.preventDefault();
+                $(this).parent('.dropdown').toggleClass('show');
+            });
+
+            // Close dropdown when clicking outside
+            $(document).click(function(e) {
+                if (!$(e.target).closest('.dropdown').length) {
+                    $('.dropdown').removeClass('show');
+                }
+            });
+
+            // Prevent dropdown from closing when clicking inside
+            $('.dropdown-menu').click(function(e) {
+                e.stopPropagation();
+            });
         });
     </script>
     @stack('scripts')

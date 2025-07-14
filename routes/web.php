@@ -58,7 +58,10 @@ Route::post('/api/proxy/ongkir', [PengirimanController::class, 'cekOngkir'])->na
 
 // Pembayaran Midtrans
 Route::post('/checkout/bayar', [PembayaranController::class, 'bayar'])->middleware(['auth'])->name('pembayaran');
-Route::get('/payment-status', [PembayaranController::class, 'status'])->name('pembayaran.status');
+
+Route::get('/transaksi', [TransaksiController::class, 'transaksiSaya'])->middleware(['auth'])->name('pelanggan.transaksi');
+Route::post('/transaksi/update-status/{kode_transaksi}', [TransaksiController::class, 'updateStatus'])->middleware(['auth'])->name('transaksi.update-status');
+
 
 require __DIR__.'/auth.php';
 

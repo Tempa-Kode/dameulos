@@ -172,6 +172,54 @@
         .payment-info strong {
             color: #002752;
         }
+
+        .payment-container {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 30px;
+            text-align: left;
+            border: 2px solid #ca1515;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .payment-container h4 {
+            color: #ca1515;
+            margin-bottom: 20px;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        #snap-container {
+            min-height: 400px;
+            width: 100%;
+        }
+
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            #order-details-col {
+                margin-bottom: 30px;
+            }
+
+            .payment-container {
+                margin-top: 20px;
+            }
+        }
+
+        /* Animation for smooth transition */
+        .slide-in {
+            animation: slideIn 0.5s ease-in-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(100%);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
     </style>
 @endpush
 
@@ -199,7 +247,7 @@
     <section class="checkout-success spad">
         <div class="container">
             <div class="row justify-content-center">
-                <div class="col-lg-8">
+                <div class="col-lg-12">
                     <div class="checkout-success">
                         <div class="success-icon">
                             <i class="fa fa-check-circle"></i>
@@ -212,65 +260,78 @@
                             Lakukan pembayaran agar pesanan Anda segera diproses.
                         </p>
 
-                        <div class="order-details">
-                            <h4>Detail Pesanan</h4>
+                        <!-- Main Content Row -->
+                        <div class="row">
+                            <!-- Order Details Column -->
+                            <div class="col-lg-12" id="order-details-col">
+                                <div class="order-details">
+                                    <h4>Detail Pesanan</h4>
 
-                            <div class="order-info">
-                                <span>No. Transaksi:</span>
-                                <span><strong>{{ $transaksi->kode_transaksi }}</strong></span>
-                            </div>
-
-                            <div class="order-info">
-                                <span>Alamat Pengiriman :</span>
-                                <span><strong>{{ $transaksi->alamat_pengiriman }}</strong></span>
-                            </div>
-
-                            <div class="order-info">
-                                <span>Tanggal Pesanan:</span>
-                                <span>{{ $transaksi->created_at->format('d M Y, H:i') }}</span>
-                            </div>
-
-                            <div class="order-info">
-                                <span>Status Pesanan:</span>
-                                <span class="badge badge-warning">{{ ucfirst($transaksi->status) }}</span>
-                            </div>
-
-                            <div class="order-products">
-                                <h5>Produk yang Dipesan:</h5>
-                                @foreach($transaksi->detailTransaksi as $detail)
-                                    <div class="order-product">
-                                        <img src="{{ asset($detail->produk->gambar) }}" alt="{{ $detail->produk->nama }}">
-                                        <div class="order-product-info">
-                                            <h6>{{ $detail->produk->nama }}</h6>
-                                            <span>Ukuran: {{ $detail->ukuranProduk->ukuran }}</span>
-                                            <span>Warna: {{ $detail->jenisWarnaProduk->warna }}</span>
-                                            <span>Satuan: Rp {{ number_format($detail->harga_satuan, 0, ',', '.') }}</span>
-                                            <span>Jumlah: {{ $detail->jumlah }}</span>
-                                        </div>
-                                        <div class="order-product-price">
-                                            Rp {{ number_format($detail->total_harga, 0, ',', '.') }}
-                                        </div>
+                                    <div class="order-info">
+                                        <span>No. Transaksi:</span>
+                                        <span><strong>{{ $transaksi->kode_transaksi }}</strong></span>
                                     </div>
-                                @endforeach
+
+                                    <div class="order-info">
+                                        <span>Alamat Pengiriman :</span>
+                                        <span><strong>{{ $transaksi->alamat_pengiriman }}</strong></span>
+                                    </div>
+
+                                    <div class="order-info">
+                                        <span>Tanggal Pesanan:</span>
+                                        <span>{{ $transaksi->created_at->format('d M Y, H:i') }}</span>
+                                    </div>
+
+                                    <div class="order-info">
+                                        <span>Status Pesanan:</span>
+                                        <span class="badge badge-warning">{{ ucfirst($transaksi->status) }}</span>
+                                    </div>
+
+                                    <div class="order-products">
+                                        <h5>Produk yang Dipesan:</h5>
+                                        @foreach($transaksi->detailTransaksi as $detail)
+                                            <div class="order-product">
+                                                <img src="{{ asset($detail->produk->gambar) }}" alt="{{ $detail->produk->nama }}">
+                                                <div class="order-product-info">
+                                                    <h6>{{ $detail->produk->nama }}</h6>
+                                                    <span>Ukuran: {{ $detail->ukuranProduk->ukuran }}</span>
+                                                    <span>Warna: {{ $detail->jenisWarnaProduk->warna }}</span>
+                                                    <span>Satuan: Rp {{ number_format($detail->harga_satuan, 0, ',', '.') }}</span>
+                                                    <span>Jumlah: {{ $detail->jumlah }}</span>
+                                                </div>
+                                                <div class="order-product-price">
+                                                    Rp {{ number_format($detail->total_harga, 0, ',', '.') }}
+                                                </div>
+                                            </div>
+                                        @endforeach
+                                    </div>
+
+                                    <div class="order-info">
+                                        <span>Subtotal:</span>
+                                        <span>Rp {{ number_format($transaksi->subtotal, 0, ',', '.') }}</span>
+                                    </div>
+
+                                    <div class="order-info">
+                                        <span>Ongkos Kirim:</span>
+                                        <span>Rp {{ number_format($transaksi->ongkir, 0, ',', '.') }}</span>
+                                    </div>
+
+                                    <div class="order-info">
+                                        <span>Total Pembayaran:</span>
+                                        <span>Rp {{ number_format($transaksi->total, 0, ',', '.') }}</span>
+                                    </div>
+                                </div>
                             </div>
 
-                            <div class="order-info">
-                                <span>Subtotal:</span>
-                                <span>Rp {{ number_format($transaksi->subtotal, 0, ',', '.') }}</span>
-                            </div>
-
-                            <div class="order-info">
-                                <span>Ongkos Kirim:</span>
-                                <span>Rp {{ number_format($transaksi->ongkir, 0, ',', '.') }}</span>
-                            </div>
-
-                            <div class="order-info">
-                                <span>Total Pembayaran:</span>
-                                <span>Rp {{ number_format($transaksi->total, 0, ',', '.') }}</span>
+                            <!-- Payment Container Column -->
+                            <div class="col-lg-4" id="payment-col" style="display: none;">
+                                <div class="payment-container">
+                                    <h4>Pembayaran</h4>
+                                    <div id="snap-container"></div>
+                                </div>
                             </div>
                         </div>
 
-                        {{-- <div id="snap-container"></div> --}}
                         <div class="action-buttons">
                             <a href="{{ route('pelanggan.katalog') }}" class="btn-outline-primary">
                                 <i class="fa fa-shopping-bag"></i> Lanjut Belanja
@@ -297,9 +358,21 @@
     <script type="text/javascript" >
         $('#bayar').click(function (event) {
             event.preventDefault();
+
+            // Show payment column and adjust layout
+            $('#payment-col').show().addClass('slide-in');
+            $('#order-details-col').removeClass('col-lg-12').addClass('col-lg-8');
+
+            // Change button text to loading state
+            const button = $(this);
+            const originalText = button.html();
+            button.html('<i class="fa fa-spinner fa-spin"></i> Memproses...');
+            button.prop('disabled', true);
+
             const transaksiId = {{ $transaksi->id }};
             const kodeTransaksi = "{{ $transaksi->kode_transaksi }}";
             const totalPembayaran = {{ $transaksi->total }};
+
             console.table({
                 transaksiId: transaksiId,
                 kodeTransaksi: kodeTransaksi,
@@ -314,15 +387,75 @@
                 total_pembayaran: totalPembayaran,
             },
             function (data, status) {
+                // Reset button state
+                button.html(originalText);
+                button.prop('disabled', false);
+
                 if(data.snap_token.snap_token){
-                    window.snap.pay(data.snap_token.snap_token);
+                    // Initialize Snap payment in the container
+                    window.snap.embed(data.snap_token.snap_token, {
+                        embedId: 'snap-container',
+                        onSuccess: function(result) {
+                            console.log('Payment success:', result);
+                            Swal.fire({
+                                title: "Pembayaran Berhasil!",
+                                text: "Terima kasih, pembayaran Anda telah berhasil diproses.",
+                                icon: "success",
+                                confirmButtonText: "OK"
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    window.location.href = "{{ route('pelanggan.transaksi') }}";
+                                }
+                            });
+                        },
+                        onPending: function(result) {
+                            console.log('Payment pending:', result);
+                            Swal.fire({
+                                title: "Pembayaran Tertunda",
+                                text: "Pembayaran Anda sedang diproses. Silakan cek status pembayaran secara berkala.",
+                                icon: "info",
+                                confirmButtonText: "OK"
+                            });
+                        },
+                        onError: function(result) {
+                            console.log('Payment error:', result);
+                            Swal.fire({
+                                title: "Pembayaran Gagal",
+                                text: "Terjadi kesalahan saat memproses pembayaran.",
+                                icon: "error",
+                                confirmButtonText: "OK"
+                            });
+                        },
+                        onClose: function() {
+                            console.log('Payment popup closed');
+                        }
+                    });
                 } else {
                     Swal.fire({
                         title: "Pembayaran Gagal",
                         text: "Terjadi kesalahan saat memproses pembayaran.",
                         icon: "error",
                     });
+
+                    // Hide payment column if error
+                    $('#payment-col').hide();
+                    $('#order-details-col').removeClass('col-lg-8').addClass('col-lg-12');
                 }
+            })
+            .fail(function() {
+                // Reset button state
+                button.html(originalText);
+                button.prop('disabled', false);
+
+                Swal.fire({
+                    title: "Pembayaran Gagal",
+                    text: "Terjadi kesalahan saat menghubungi server pembayaran.",
+                    icon: "error",
+                });
+
+                // Hide payment column if error
+                $('#payment-col').hide();
+                $('#order-details-col').removeClass('col-lg-8').addClass('col-lg-12');
             });
         });
     </script>
