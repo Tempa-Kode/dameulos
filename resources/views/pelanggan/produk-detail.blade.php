@@ -177,6 +177,28 @@
             $(this).addClass('active');
         });
 
+        /*-------------------
+                Quantity change
+            --------------------- */
+            var proQty = $('.pro-qty');
+            proQty.prepend('<span class="fa fa-angle-up dec qtybtn"></span>');
+            proQty.append('<span class="fa fa-angle-down inc qtybtn"></span>');
+            proQty.on('click', '.qtybtn', function () {
+                var $button = $(this);
+                var oldValue = $button.parent().find('input').val();
+                if ($button.hasClass('inc')) {
+                    var newVal = parseFloat(oldValue) + 1;
+                } else {
+                    // Don't allow decrementing below zero
+                    if (oldValue > 0) {
+                        var newVal = parseFloat(oldValue) - 1;
+                    } else {
+                        newVal = 0;
+                    }
+                }
+                $button.parent().find('input').val(newVal);
+            });
+
         $('#checkout').on('click', function(e) {
             e.preventDefault();
 
@@ -368,46 +390,46 @@
         }
 
         // Quantity controls
-        $(document).ready(function() {
-            const $jumlahInput = $('#jumlah');
-            const maxStock = {{ $produk->stok }};
+        // $(document).ready(function() {
+        //     const $jumlahInput = $('#jumlah');
+        //     const maxStock = {{ $produk->stok }};
 
-            // Add quantity controls if they don't exist
-            if (!$('.pro-qty .qtybtn').length) {
-                // Create minus button
-                const $minusBtn = $('<button type="button" class="qtybtn">-</button>');
-                $minusBtn.click(function() {
-                    let currentVal = parseInt($jumlahInput.val());
-                    if (currentVal > 1) {
-                        $jumlahInput.val(currentVal - 1);
-                    }
-                });
+        //     // Add quantity controls if they don't exist
+        //     if (!$('.pro-qty .qtybtn').length) {
+        //         // Create minus button
+        //         const $minusBtn = $('<button type="button" class="qtybtn">-</button>');
+        //         $minusBtn.click(function() {
+        //             let currentVal = parseInt($jumlahInput.val());
+        //             if (currentVal > 1) {
+        //                 $jumlahInput.val(currentVal - 1);
+        //             }
+        //         });
 
-                // Create plus button
-                const $plusBtn = $('<button type="button" class="qtybtn">+</button>');
-                $plusBtn.click(function() {
-                    let currentVal = parseInt($jumlahInput.val());
-                    if (currentVal < maxStock) {
-                        $jumlahInput.val(currentVal + 1);
-                    } else {
-                        alert('Stok maksimal adalah ' + maxStock + ' item');
-                    }
-                });
+        //         // Create plus button
+        //         const $plusBtn = $('<button type="button" class="qtybtn">+</button>');
+        //         $plusBtn.click(function() {
+        //             let currentVal = parseInt($jumlahInput.val());
+        //             if (currentVal < maxStock) {
+        //                 $jumlahInput.val(currentVal + 1);
+        //             } else {
+        //                 alert('Stok maksimal adalah ' + maxStock + ' item');
+        //             }
+        //         });
 
-                // Insert buttons
-                $('.pro-qty').prepend($minusBtn).append($plusBtn);
-            }
+        //         // Insert buttons
+        //         $('.pro-qty').prepend($minusBtn).append($plusBtn);
+        //     }
 
-            // Validate manual input
-            $jumlahInput.on('change keyup', function() {
-                let val = parseInt($(this).val());
-                if (isNaN(val) || val < 1) {
-                    $(this).val(1);
-                } else if (val > maxStock) {
-                    $(this).val(maxStock);
-                    alert('Stok maksimal adalah ' + maxStock + ' item');
-                }
-            });
-        });
+        //     // Validate manual input
+        //     $jumlahInput.on('change keyup', function() {
+        //         let val = parseInt($(this).val());
+        //         if (isNaN(val) || val < 1) {
+        //             $(this).val(1);
+        //         } else if (val > maxStock) {
+        //             $(this).val(maxStock);
+        //             alert('Stok maksimal adalah ' + maxStock + ' item');
+        //         }
+        //     });
+        // });
     </script>
 @endpush
