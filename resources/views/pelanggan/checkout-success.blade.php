@@ -209,7 +209,7 @@
 
                         <p class="success-message">
                             Terima kasih telah berbelanja di Dame Ulos. Pesanan Anda telah berhasil diproses.<br>
-                            Kami akan segera menghubungi Anda untuk konfirmasi lebih lanjut.
+                            Lakukan pembayaran agar pesanan Anda segera diproses.
                         </p>
 
                         <div class="order-details">
@@ -218,6 +218,11 @@
                             <div class="order-info">
                                 <span>No. Transaksi:</span>
                                 <span><strong>{{ $transaksi->kode_transaksi }}</strong></span>
+                            </div>
+
+                            <div class="order-info">
+                                <span>Alamat Pengiriman :</span>
+                                <span><strong>{{ $transaksi->alamat_pengiriman }}</strong></span>
                             </div>
 
                             <div class="order-info">
@@ -230,11 +235,6 @@
                                 <span class="badge badge-warning">{{ ucfirst($transaksi->status) }}</span>
                             </div>
 
-                            <div class="order-info">
-                                <span>Metode Pembayaran:</span>
-                                <span>{{ $pembayaran->metode_pembayaran == 'transfer' ? 'Transfer Bank' : 'Cash on Delivery (COD)' }}</span>
-                            </div>
-
                             <div class="order-products">
                                 <h5>Produk yang Dipesan:</h5>
                                 @foreach($transaksi->detailTransaksi as $detail)
@@ -243,11 +243,12 @@
                                         <div class="order-product-info">
                                             <h6>{{ $detail->produk->nama }}</h6>
                                             <span>Ukuran: {{ $detail->ukuranProduk->ukuran }}</span>
-                                            <span>Warna: {{ $detail->jenisWarnaProduk->jenis_warna }}</span>
+                                            <span>Warna: {{ $detail->jenisWarnaProduk->warna }}</span>
+                                            <span>Satuan: Rp {{ number_format($detail->harga_satuan, 0, ',', '.') }}</span>
                                             <span>Jumlah: {{ $detail->jumlah }}</span>
                                         </div>
                                         <div class="order-product-price">
-                                            Rp {{ number_format($detail->subtotal, 0, ',', '.') }}
+                                            Rp {{ number_format($detail->total_harga, 0, ',', '.') }}
                                         </div>
                                     </div>
                                 @endforeach
@@ -255,36 +256,29 @@
 
                             <div class="order-info">
                                 <span>Subtotal:</span>
-                                <span>Rp {{ number_format($transaksi->total_harga - $pengiriman->ongkos_kirim, 0, ',', '.') }}</span>
+                                <span>Rp {{ number_format($transaksi->subtotal, 0, ',', '.') }}</span>
                             </div>
 
                             <div class="order-info">
                                 <span>Ongkos Kirim:</span>
-                                <span>Rp {{ number_format($pengiriman->ongkos_kirim, 0, ',', '.') }}</span>
+                                <span>Rp {{ number_format($transaksi->ongkir, 0, ',', '.') }}</span>
                             </div>
 
                             <div class="order-info">
                                 <span>Total Pembayaran:</span>
-                                <span>Rp {{ number_format($transaksi->total_harga, 0, ',', '.') }}</span>
+                                <span>Rp {{ number_format($transaksi->total, 0, ',', '.') }}</span>
                             </div>
                         </div>
-
-                        @if($pembayaran->metode_pembayaran == 'transfer')
-                            <div class="payment-info">
-                                <h5>Informasi Pembayaran</h5>
-                                <p>Silakan lakukan pembayaran ke rekening berikut:</p>
-                                <p><strong>Bank BCA</strong></p>
-                                <p>No. Rekening: <strong>1234567890</strong></p>
-                                <p>Atas Nama: <strong>Dame Ulos Store</strong></p>
-                                <p>Jumlah: <strong>Rp {{ number_format($transaksi->total_harga, 0, ',', '.') }}</strong></p>
-                                <p><small>Harap sertakan kode transaksi <strong>{{ $transaksi->kode_transaksi }}</strong> sebagai berita transfer.</small></p>
-                            </div>
-                        @endif
 
                         <div class="action-buttons">
                             <a href="{{ route('pelanggan.katalog') }}" class="btn-outline-primary">
                                 <i class="fa fa-shopping-bag"></i> Lanjut Belanja
                             </a>
+                            @if ($transaksi->status == 'pending')
+                            <button id="bayar" class="primary-btn">
+                                <i class="fa-solid fa-money-bill-wave mr-2"></i>Bayar
+                            </button>
+                            @endif
                             <a href="{{ route('pelanggan.home') }}" class="btn-primary">
                                 <i class="fa fa-home"></i> Kembali ke Home
                             </a>

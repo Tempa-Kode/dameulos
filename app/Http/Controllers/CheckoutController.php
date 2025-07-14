@@ -153,15 +153,24 @@ class CheckoutController extends Controller
     public function processCheckout(Request $request)
     {
         $request->validate([
-            'nama_depan' => 'required|string|max:255',
-            'nama_belakang' => 'required|string|max:255',
-            'email' => 'required|email|max:255',
-            'telepon' => 'required|string|max:20',
             'alamat' => 'required|string|max:500',
-            'kota' => 'required|string|max:100',
-            'kode_pos' => 'required|string|max:10',
-            'metode_pembayaran' => 'required|in:transfer,cod',
+            'provinsi' => 'required|string|max:500',
+            'kota' => 'required|string|max:500',
+            'kode_pos' => 'required|string|max:500',
+            'telepon' => 'required|string|max:20',
+            'email' => 'required|email|max:255',
             'catatan' => 'nullable|string|max:1000',
+            'ongkir_cost' => 'required|string|max:1000',
+        ], [
+            'alamat.required' => 'Alamat pengiriman harus diisi.',
+            'provinsi.required' => 'Provinsi harus diisi.',
+            'kota.required' => 'Kota harus diisi.',
+            'kode_pos.required' => 'Kode pos harus diisi.',
+            'telepon.required' => 'Nomor telepon harus diisi.',
+            'email.required' => 'Email harus diisi.',
+            'email.email' => 'Format email tidak valid.',
+            'catatan.max' => 'Catatan tidak boleh lebih dari 1000 karakter.',
+            'ongkir_cost.required' => 'Biaya ongkir harus diisi.',
         ]);
 
         $checkoutData = session('checkout_data');
@@ -177,8 +186,8 @@ class CheckoutController extends Controller
             DB::beginTransaction();
 
             // Create transaction
-            $alamatLengkap = $request->alamat . ', ' . $request->kota . ' ' . $request->kode_pos;
-            $namaPembeli = $request->nama_depan . ' ' . $request->nama_belakang;
+            $alamatLengkap = $request->alamat . ', ' . $request->kota . ', ' . $request->provinsi .' ' . $request->kode_pos;
+            $namaPembeli = Auth::user()->name;
 
             $transaksi = Transaksi::create([
                 'user_id' => Auth::check() ? Auth::id() : null,
@@ -186,7 +195,7 @@ class CheckoutController extends Controller
                 'status' => 'pending',
                 'subtotal' => $totals['subtotal'],
                 'ongkir' => $totals['ongkir'],
-                'total' => $totals['total'],
+                'total' => $totals['total'] + $request->ongkir_cost,
                 'catatan' => $request->catatan,
                 'alamat_pengiriman' => $alamatLengkap,
             ]);
@@ -209,26 +218,26 @@ class CheckoutController extends Controller
             }
 
             // Create payment record
-            Pembayaran::create([
-                'transaksi_id' => $transaksi->id,
-                'metode_pembayaran' => $request->metode_pembayaran,
-                'jumlah' => $totals['total'],
-                'total_pembayaran' => $totals['total'],
-                'status' => 'pending',
-                'tanggal_pembayaran' => null,
-            ]);
+            // Pembayaran::create([
+            //     'transaksi_id' => $transaksi->id,
+            //     'metode_pembayaran' => $request->metode_pembayaran,
+            //     'jumlah' => $totals['total'],
+            //     'total_pembayaran' => $totals['total'],
+            //     'status' => 'pending',
+            //     'tanggal_pembayaran' => null,
+            // ]);
 
-            // Create shipping record
-            Pengiriman::create([
-                'transaksi_id' => $transaksi->id,
-                'nama_penerima' => $namaPembeli,
-                'no_resi' => 'RESI' . strtoupper(Str::random(8)),
-                'ongkir' => $totals['ongkir'],
-                'berat' => count($checkoutData), // 1 kg per item
-                'alamat_pengiriman' => $alamatLengkap,
-                'alamat_penerima' => $alamatLengkap,
-                'catatan' => $request->catatan ?? '',
-            ]);
+            // // Create shipping record
+            // Pengiriman::create([
+            //     'transaksi_id' => $transaksi->id,
+            //     'nama_penerima' => $namaPembeli,
+            //     'no_resi' => 'RESI' . strtoupper(Str::random(8)),
+            //     'ongkir' => $totals['ongkir'],
+            //     'berat' => count($checkoutData), // 1 kg per item
+            //     'alamat_pengiriman' => $alamatLengkap,
+            //     'alamat_penerima' => $alamatLengkap,
+            //     'catatan' => $request->catatan ?? '',
+            // ]);
 
             DB::commit();
 

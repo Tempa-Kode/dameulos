@@ -268,11 +268,8 @@
                             <div class="row">
                                 <div class="col-12">
                                     <div class="checkout__input">
-                                        <p>Nama Depan<span>*</span></p>
+                                        <p>Nama<span>*</span></p>
                                         <input type="text" name="nama_depan" value="{{ old('nama_depan', Auth::user()->name) }}" readonly required>
-                                        @error('nama_depan')
-                                            <span class="text-danger small">{{ $message }}</span>
-                                        @enderror
                                     </div>
                                 </div>
                             </div>
@@ -365,7 +362,7 @@
                                 <input type="hidden" name="ongkir_service" id="ongkir_service" value="">
                                 <input type="hidden" name="destination_id" id="destination_id" value="">
 
-                                <!-- Payment Method Selection -->
+                                {{-- <!-- Payment Method Selection -->
                                 <div class="checkout__payment">
                                     <h6 class="mb-3">Metode Pembayaran</h6>
                                     <div class="checkout__payment__methods">
@@ -389,7 +386,7 @@
                                     @error('metode_pembayaran')
                                         <span class="text-danger small">{{ $message }}</span>
                                     @enderror
-                                </div>
+                                </div> --}}
 
                                 <button type="submit" class="site-btn w-100 mt-3" id="checkout-btn">
                                     <span class="btn-text">Lakukan Pembayaran</span>

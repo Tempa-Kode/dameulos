@@ -14,7 +14,7 @@ class Transaksi extends Model
         'status',
         'subtotal',
         'ongkir',
-        'total_harga',
+        'total',
         'catatan',
         'alamat_pengiriman',
     ];
