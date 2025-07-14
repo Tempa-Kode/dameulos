@@ -25,8 +25,8 @@ class CheckoutController extends Controller
         // Validation rules that work for both single and multiple products
         $rules = [
             'produk_id' => 'required',
-            'ukuran_id' => 'required',
-            'warna_id' => 'required',
+            'ukuran_id' => 'nullable',
+            'warna_id' => 'nullable',
             'jumlah' => 'required'
         ];
 
@@ -34,15 +34,15 @@ class CheckoutController extends Controller
         if (is_array($request->produk_id)) {
             $rules = [
                 'produk_id.*' => 'required|exists:produk,id',
-                'ukuran_id.*' => 'required|exists:ukuran_produk,id',
-                'warna_id.*' => 'required|exists:jenis_warna_produk,id',
+                'ukuran_id.*' => 'nullable|exists:ukuran_produk,id',
+                'warna_id.*' => 'nullable|exists:jenis_warna_produk,id',
                 'jumlah.*' => 'required|integer|min:1',
             ];
         } else {
             $rules = [
                 'produk_id' => 'required|exists:produk,id',
-                'ukuran_id' => 'required|exists:ukuran_produk,id',
-                'warna_id' => 'required|exists:jenis_warna_produk,id',
+                'ukuran_id' => 'nullable|exists:ukuran_produk,id',
+                'warna_id' => 'nullable|exists:jenis_warna_produk,id',
                 'jumlah' => 'required|integer|min:1',
             ];
         }
@@ -50,10 +50,6 @@ class CheckoutController extends Controller
         $request->validate($rules, [
             'produk_id.*.required' => 'Produk harus dipilih.',
             'produk_id.required' => 'Produk harus dipilih.',
-            'ukuran_id.*.required' => 'Ukuran harus dipilih.',
-            'ukuran_id.required' => 'Ukuran harus dipilih.',
-            'warna_id.*.required' => 'Warna harus dipilih.',
-            'warna_id.required' => 'Warna harus dipilih.',
             'jumlah.*.required' => 'Jumlah harus diisi.',
             'jumlah.required' => 'Jumlah harus diisi.',
             'jumlah.*.integer' => 'Jumlah harus berupa angka.',
@@ -73,8 +69,19 @@ class CheckoutController extends Controller
 
         foreach ($produkIds as $index => $produkId) {
             $produk = Produk::with(['katalog'])->findOrFail($produkId);
-            $ukuran = UkuranProduk::findOrFail($ukuranIds[$index]);
-            $warna = JenisWarnaProduk::findOrFail($warnaIds[$index]);
+
+            // Handle optional ukuran and warna
+            $ukuran = null;
+            $warna = null;
+
+            if (!empty($ukuranIds[$index])) {
+                $ukuran = UkuranProduk::findOrFail($ukuranIds[$index]);
+            }
+
+            if (!empty($warnaIds[$index])) {
+                $warna = JenisWarnaProduk::findOrFail($warnaIds[$index]);
+            }
+
             $jumlah = $jumlahs[$index];
 
             // Check stock availability
@@ -96,8 +103,8 @@ class CheckoutController extends Controller
                 'harga_satuan' => $produk->harga,
                 'subtotal' => $subtotal,
                 'produk_id' => $produkId,
-                'ukuran_id' => $ukuranIds[$index],
-                'warna_id' => $warnaIds[$index],
+                'ukuran_id' => $ukuranIds[$index] ?? null,
+                'warna_id' => $warnaIds[$index] ?? null,
             ];
         }
 

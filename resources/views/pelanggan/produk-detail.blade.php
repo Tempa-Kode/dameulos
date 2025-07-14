@@ -221,6 +221,20 @@
                 return;
             }
 
+            // Check if product has size options and validate if required
+            const hasUkuranOptions = $('input[name="ukuran"]').length > 0;
+            if (hasUkuranOptions && !ukuranId) {
+                showValidationError('Silakan pilih ukuran produk');
+                return;
+            }
+
+            // Check if product has color options and validate if required
+            const hasWarnaOptions = $('input[name="warna"]').length > 0;
+            if (hasWarnaOptions && !warnaId) {
+                showValidationError('Silakan pilih warna produk');
+                return;
+            }
+
             // Show loading state with animation
             showLoadingState($button, $buttonText);
 
@@ -230,8 +244,8 @@
                 method: 'POST',
                 data: {
                     produk_id: {{ $produk->id }},
-                    ukuran_id: ukuranId,
-                    warna_id: warnaId,
+                    ukuran_id: ukuranId || null,
+                    warna_id: warnaId || null,
                     jumlah: jumlah,
                     _token: '{{ csrf_token() }}'
                 },
@@ -281,6 +295,20 @@
                 return;
             }
 
+            // Check if product has size options and validate if required
+            const hasUkuranOptions = $('input[name="ukuran"]').length > 0;
+            if (hasUkuranOptions && !ukuranId) {
+                showValidationError('Silakan pilih ukuran produk');
+                return;
+            }
+
+            // Check if product has color options and validate if required
+            const hasWarnaOptions = $('input[name="warna"]').length > 0;
+            if (hasWarnaOptions && !warnaId) {
+                showValidationError('Silakan pilih warna produk');
+                return;
+            }
+
             const Toast = Swal.mixin({
                 toast: true,
                 position: "top-end",
@@ -299,8 +327,8 @@
                 method: 'POST',
                 data: {
                     produk_id: {{ $produk->id }},
-                    ukuran_id: ukuranId,
-                    warna_id: warnaId,
+                    ukuran_id: ukuranId || null,
+                    warna_id: warnaId || null,
                     jumlah: jumlah,
                     _token: '{{ csrf_token() }}'
                 },

@@ -339,8 +339,8 @@
                                             <div class="checkout__order__product__info flex-grow-1">
                                                 <h6 class="mb-2 font-weight-bold">{{ $item['produk']->nama }}</h6>
                                                 <div class="product-details">
-                                                    <p class="text-muted mb-1 small">Uk :{{ $item['ukuran']->ukuran }}</p>
-                                                    <p class="text-muted mb-1 small">{{ $item['warna']->warna }}</p>
+                                                    <p class="text-muted mb-1 small">Uk :{{ $item['ukuran']->ukuran ?? '' }}</p>
+                                                    <p class="text-muted mb-1 small">{{ $item['warna']->warna ?? '' }}</p>
                                                     <p class="text-muted mb-1 small">x{{ $item['jumlah'] }}</p>
                                                     <p class="text-muted mb-0 small">Harga Satuan: Rp {{ number_format($item['harga_satuan'], 0, ',', '.') }}</p>
                                                 </div>
