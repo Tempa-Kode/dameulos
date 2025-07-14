@@ -270,6 +270,7 @@
                             </div>
                         </div>
 
+                        {{-- <div id="snap-container"></div> --}}
                         <div class="action-buttons">
                             <a href="{{ route('pelanggan.katalog') }}" class="btn-outline-primary">
                                 <i class="fa fa-shopping-bag"></i> Lanjut Belanja
@@ -290,3 +291,39 @@
     </section>
     <!-- Success Section End -->
 @endsection
+
+@push('scripts')
+    <script src="https://app.sandbox.midtrans.com/snap/snap.js" data-client-key="{{ config('services.midtrans.clientKey') }}"></script>
+    <script type="text/javascript" >
+        $('#bayar').click(function (event) {
+            event.preventDefault();
+            const transaksiId = {{ $transaksi->id }};
+            const kodeTransaksi = "{{ $transaksi->kode_transaksi }}";
+            const totalPembayaran = {{ $transaksi->total }};
+            console.table({
+                transaksiId: transaksiId,
+                kodeTransaksi: kodeTransaksi,
+                totalPembayaran: totalPembayaran
+            });
+
+            $.post("{{ route('pembayaran') }}", {
+                _method: 'POST',
+                _token: '{{ csrf_token() }}',
+                transaksi_id: transaksiId,
+                kode_transaksi: kodeTransaksi,
+                total_pembayaran: totalPembayaran,
+            },
+            function (data, status) {
+                if(data.snap_token.snap_token){
+                    window.snap.pay(data.snap_token.snap_token);
+                } else {
+                    Swal.fire({
+                        title: "Pembayaran Gagal",
+                        text: "Terjadi kesalahan saat memproses pembayaran.",
+                        icon: "error",
+                    });
+                }
+            });
+        });
+    </script>
+@endpush

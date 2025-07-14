@@ -3,6 +3,7 @@
 use App\Http\Controllers\AksesPelangganController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\KatalogController;
+use App\Http\Controllers\PembayaranController;
 use App\Http\Controllers\PengirimanController;
 use App\Http\Controllers\ProdukController;
 use App\Http\Controllers\ProfileController;
@@ -54,6 +55,10 @@ Route::delete('/keranjang/{keranjang:id}', [\App\Http\Controllers\KeranjangContr
 // API Cek Lokasi Pengiriman
 Route::get('/api/proxy/destination', [PengirimanController::class, 'cekDestinasiTujuan'])->name('proxy.destination');
 Route::post('/api/proxy/ongkir', [PengirimanController::class, 'cekOngkir'])->name('proxy.ongkir');
+
+// Pembayaran Midtrans
+Route::post('/checkout/bayar', [PembayaranController::class, 'bayar'])->middleware(['auth'])->name('pembayaran');
+Route::get('/payment-status', [PembayaranController::class, 'status'])->name('pembayaran.status');
 
 require __DIR__.'/auth.php';
 
