@@ -28,13 +28,13 @@ Route::prefix('admin')->middleware(['auth', 'adminManajer'])->group(function () 
         ->name('dashboard');
 
     Route::resource('produk', ProdukController::class)->middleware(['auth', 'adminManajer']);
-    Route::resource('katalog', KatalogController::class)->middleware(['auth', 'adminManajer']);
-
-    // Route khusus untuk transaksi harus sebelum resource
+    Route::resource('katalog', KatalogController::class)->middleware(['auth', 'adminManajer']);    // Route khusus untuk transaksi harus sebelum resource
     Route::get('/transaksi/download-report', [TransaksiController::class, 'downloadReport'])->name('transaksi.download.report');
     Route::get('/transaksi/preview-report', [TransaksiController::class, 'previewReport'])->name('transaksi.preview.report');
     Route::resource('transaksi', TransaksiController::class)->middleware(['auth', 'adminManajer']);
 
+    // Route khusus untuk pengiriman harus sebelum resource
+    Route::get('/pengiriman/{pengiriman}/print-label', [PengirimanController::class, 'printLabel'])->name('pengiriman.print.label');
     Route::resource('pengiriman', PengirimanController::class)->middleware(['auth', 'adminManajer']);
     Route::resource('admin', \App\Http\Controllers\AdminController::class)->middleware(['auth', 'adminManajer']);
     Route::resource('manajer', \App\Http\Controllers\ManajerController::class)->middleware(['auth', 'adminManajer']);

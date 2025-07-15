@@ -97,4 +97,18 @@ class PengirimanController extends Controller
     {
         //
     }
+
+    /**
+     * Print shipping label
+     */
+    public function printLabel(Pengiriman $pengiriman)
+    {
+        // Load pengiriman dengan relasi yang diperlukan
+        $pengiriman->load([
+            'transaksi.user',
+            'transaksi.detailTransaksi.produk'
+        ]);
+
+        return view('admin.pengiriman.print-label', compact('pengiriman'));
+    }
 }

@@ -60,8 +60,11 @@
                                     <td>Rp {{ number_format($item->ongkir, 0, ',', '.') }}</td>
                                     <td>{{ $item->berat }} kg</td>
                                     <td>
-                                        <a href="{{ route('pengiriman.show', $item->id) }}" class="btn btn-info btn-sm">
+                                        <a href="{{ route('pengiriman.show', $item->id) }}" class="btn btn-info btn-sm me-1">
                                             <i class="ti ti-eye me-1"></i>Detail
+                                        </a>
+                                        <a href="{{ route('pengiriman.print.label', $item->id) }}" class="btn btn-warning btn-sm" target="_blank">
+                                            <i class="ti ti-printer me-1"></i>Label
                                         </a>
                                     </td>
                                 </tr>

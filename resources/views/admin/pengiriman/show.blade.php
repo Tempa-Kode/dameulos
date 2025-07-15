@@ -174,9 +174,11 @@
                         <a href="{{ route('transaksi.show', $pengiriman->transaksi->id) }}" class="btn btn-primary w-100">
                             <i class="ti ti-eye me-2"></i>Lihat Detail Transaksi
                         </a>
-                        <button type="button" class="btn btn-warning w-100" onclick="window.print()">
+                        <a href="{{ route('pengiriman.print.label', $pengiriman->id) }}"
+                           class="btn btn-warning w-100"
+                           target="_blank">
                             <i class="ti ti-printer me-2"></i>Cetak Label Pengiriman
-                        </button>
+                        </a>
                         <a href="{{ route('pengiriman.index') }}" class="btn btn-secondary w-100">
                             <i class="ti ti-arrow-left me-2"></i>Kembali
                         </a>
