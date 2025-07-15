@@ -108,11 +108,13 @@
                                                             <span class="badge badge-danger">Dibatalkan</span>
                                                         @endif
                                                         <br>
+                                                        @if ($item->status == 'pending')
                                                         <small>
                                                             <button type="button" class="btn btn-sm btn-outline-primary mt-2" onclick="updateStatus('{{ $item->kode_transaksi }}')">
                                                                 <i class="fa fa-refresh"></i> Update Status
                                                             </button>
                                                         </small>
+                                                        @endif
                                                     </li>
                                                     <li>Subtotal <span>Rp {{ number_format($item->subtotal, 0, ',', '.') }}</span></li>
                                                     <li>Ongkir <span>Rp {{ number_format($item->ongkir, 0, ',', '.') }}</span></li>
