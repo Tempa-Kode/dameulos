@@ -37,7 +37,16 @@ class TransaksiController extends Controller
      */
     public function show(Transaksi $transaksi)
     {
-        //
+        // Load transaksi dengan relasi yang diperlukan
+        $transaksi->load([
+            'user',
+            'detailTransaksi.produk.katalog',
+            'detailTransaksi.ukuranProduk',
+            'detailTransaksi.jenisWarnaProduk',
+            'pembayaran',
+            'pengiriman'
+        ]);
+        return view('admin.transaksi.show', compact('transaksi'));
     }
 
     /**
@@ -53,7 +62,16 @@ class TransaksiController extends Controller
      */
     public function update(Request $request, Transaksi $transaksi)
     {
-        //
+        $request->validate([
+            'status' => 'required|in:pending,dibayar,dikonfirmasi,diproses,dikirim,batal'
+        ]);
+
+        $transaksi->update([
+            'status' => $request->status
+        ]);
+
+        return redirect()->route('transaksi.show', $transaksi->id)
+            ->with('success', 'Status transaksi berhasil diperbarui.');
     }
 
     /**

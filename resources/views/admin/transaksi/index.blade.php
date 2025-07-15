@@ -45,25 +45,40 @@
                                             <span class="badge text-bg-warning">Dikonfirmasi</span>
                                         @elseif ($item->status == 'diproses')
                                             <span class="badge text-bg-secondary">Diproses</span>
-                                        @elseif ($item->status == 'Dikirim')
+                                        @elseif ($item->status == 'dikirim')
                                             <span class="badge text-bg-success">Dikirim</span>
                                         @else
                                             <span class="badge text-bg-danger">Batal</span>
                                         @endif
+                                    </td>
                                     <td>Rp {{ number_format($item->total, 0, ',', '.') }}</td>
                                     <td>
                                         {{ \Carbon\Carbon::parse($item->created_at)->format('d-m-Y H:i') }}
                                     </td>
                                     <td>
                                         <a href="{{ route('transaksi.show', $item->id) }}" class="btn btn-info btn-sm">
-                                            Detail
+                                            <i class="ti ti-eye me-1"></i>Detail
                                         </a>
-                                        <a href="{{ route('transaksi.show', $item->id) }}" class="btn btn-warning btn-sm">
-                                            Proses
-                                        </a>
-                                        <a href="{{ route('transaksi.show', $item->id) }}" class="btn btn-success btn-sm">
-                                            Kirim
-                                        </a>
+
+
+                                        @if($item->status == 'dibayar')
+                                        <form action="{{ route('transaksi.update', $item->id) }}" method="POST" class="d-inline">
+                                            @csrf
+                                            @method('PUT')
+                                            <input type="hidden" name="status" value="diproses">
+                                            <button type="submit" class="btn btn-info btn-sm">
+                                                <i class="ti ti-settings me-1"></i>Proses
+                                            </button>
+                                        </form>
+                                        <form action="{{ route('transaksi.update', $item->id) }}" method="POST" class="d-inline">
+                                            @csrf
+                                            @method('PUT')
+                                            <input type="hidden" name="status" value="dikirim">
+                                            <button type="submit" class="btn btn-success btn-sm">
+                                                <i class="ti ti-truck me-1"></i>Kirim
+                                            </button>
+                                        </form>
+                                        @endif
                                     </td>
                                 </tr>
                             @endforeach
@@ -75,6 +90,7 @@
                                 <th>Pelanggan</th>
                                 <th>Status</th>
                                 <th>Total</th>
+                                <th>Tanggal</th>
                                 <th>Aksi</th>
                             </tr>
                         </tfoot>
