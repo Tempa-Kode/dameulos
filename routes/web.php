@@ -23,6 +23,21 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::prefix('admin')->middleware(['auth', 'adminManajer'])->group(function () {
+    // Test route sederhana
+    Route::get('/dashboard-test', function () {
+        return "Dashboard test berhasil!";
+    });
+
+    // Test dashboard controller
+    Route::get('/dashboard-debug', function () {
+        try {
+            $controller = new \App\Http\Controllers\DashboardController();
+            return $controller->index();
+        } catch (\Exception $e) {
+            return "Error: " . $e->getMessage() . " in " . $e->getFile() . " at line " . $e->getLine();
+        }
+    });
+
     Route::get('/dashboard', [\App\Http\Controllers\DashboardController::class, 'index'])
         ->middleware(['auth', 'adminManajer', 'verified'])
         ->name('dashboard');

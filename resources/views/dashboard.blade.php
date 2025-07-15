@@ -3,214 +3,495 @@
 @section('halaman', 'Dashboard')
 
 @section('content')
-<!-- [ sample-page ] start -->
-<div class="col-md-6 col-xl-3">
-    <div class="card">
-        <div class="card-body">
-            <h6 class="mb-2 f-w-400 text-muted">Total Pelanggan</h6>
-            <h4 class="mb-3">{{ $totalPelanggan }}</h4>
+<!-- KPI Cards -->
+<div class="row">
+    <div class="col-md-6 col-xl-3">
+        <div class="card bg-primary text-white">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="mb-2 f-w-400 text-white-50">Total Pelanggan</h6>
+                        <h4 class="mb-3 text-white">{{ number_format($totalPelanggan) }}</h4>
+                        <small class="text-white-50">Registered users</small>
+                    </div>
+                    <div class="display-4 text-white-50">
+                        <i class="ti ti-users"></i>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-</div>
-<div class="col-md-6 col-xl-3">
-    <div class="card">
-        <div class="card-body">
-            <h6 class="mb-2 f-w-400 text-muted">Total Jenis Produk</h6>
-            <h4 class="mb-3">{{ $totalJenisProduk }}</h4>
+    <div class="col-md-6 col-xl-3">
+        <div class="card bg-success text-white">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="mb-2 f-w-400 text-white-50">Pendapatan Bulan Ini</h6>
+                        <h4 class="mb-3 text-white">Rp {{ number_format($thisMonthPendapatan, 0, ',', '.') }}</h4>
+                        <small class="text-white-50">
+                            @if($pendapatanGrowth >= 0)
+                                <i class="ti ti-trending-up"></i> +{{ number_format($pendapatanGrowth, 1) }}%
+                            @else
+                                <i class="ti ti-trending-down"></i> {{ number_format($pendapatanGrowth, 1) }}%
+                            @endif
+                        </small>
+                    </div>
+                    <div class="display-4 text-white-50">
+                        <i class="ti ti-currency-dollar"></i>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-</div>
-<div class="col-md-6 col-xl-3">
-    <div class="card">
-        <div class="card-body">
-            <h6 class="mb-2 f-w-400 text-muted">Transaksi Tahun Ini</h6>
-            <h4 class="mb-3">{{ $totalTransaksi }}</h4>
+    <div class="col-md-6 col-xl-3">
+        <div class="card bg-warning text-white">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="mb-2 f-w-400 text-white-50">Transaksi Bulan Ini</h6>
+                        <h4 class="mb-3 text-white">{{ number_format($thisMonthTransaksi) }}</h4>
+                        <small class="text-white-50">
+                            @if($transaksiGrowth >= 0)
+                                <i class="ti ti-trending-up"></i> +{{ number_format($transaksiGrowth, 1) }}%
+                            @else
+                                <i class="ti ti-trending-down"></i> {{ number_format($transaksiGrowth, 1) }}%
+                            @endif
+                        </small>
+                    </div>
+                    <div class="display-4 text-white-50">
+                        <i class="ti ti-shopping-cart"></i>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-</div>
-<div class="col-md-6 col-xl-3">
-    <div class="card">
-        <div class="card-body">
-            <h6 class="mb-2 f-w-400 text-muted">Pendapatan Tahun Ini</h6>
-            <h4 class="mb-3">{{ $totalPendapatan }}</h4>
-        </div>
-    </div>
-</div>
-
-<div class="col-md-12 col-xl-8">
-    <h5 class="mb-3">Transaksi Terakhir</h5>
-    <div class="card tbl-card">
-        <div class="card-body">
-            <div class="table-responsive">
-                <table class="table table-hover table-borderless mb-0">
-                    <thead>
-                        <tr>
-                            <th>KODE TRX</th>
-                            <th>PELANGGAN</th>
-                            <th>ONGKIR</th>
-                            <th>STATUS</th>
-                            <th class="text-end">TOTAL TRANSAKSI</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <tr>
-                            <td><a href="#" class="text-muted">84564564</a></td>
-                            <td>Camera Lens</td>
-                            <td>40</td>
-                            <td>
-                                <span class="d-flex align-items-center gap-2">
-                                    <i class="fas fa-circle text-danger f-10 m-r-5"></i>
-                                    Rejected
-                                </span>
-                            </td>
-                            <td class="text-end">$40,570</td>
-                        </tr>
-                        <tr>
-                            <td><a href="#" class="text-muted">84564564</a></td>
-                            <td>Laptop</td>
-                            <td>300</td>
-                            <td>
-                                <span class="d-flex align-items-center gap-2">
-                                    <i class="fas fa-circle text-warning f-10 m-r-5"></i>
-                                    Pending
-                                </span>
-                            </td>
-                            <td class="text-end">$180,139</td>
-                        </tr>
-                        <tr>
-                            <td><a href="#" class="text-muted">84564564</a></td>
-                            <td>Mobile</td>
-                            <td>355</td>
-                            <td>
-                                <span class="d-flex align-items-center gap-2">
-                                    <i class="fas fa-circle text-success f-10 m-r-5"></i>
-                                    Approved
-                                </span>
-                            </td>
-                            <td class="text-end">$180,139</td>
-                        </tr>
-                        <tr>
-                            <td><a href="#" class="text-muted">84564564</a></td>
-                            <td>Camera Lens</td>
-                            <td>40</td>
-                            <td>
-                                <span class="d-flex align-items-center gap-2">
-                                    <i class="fas fa-circle text-danger f-10 m-r-5"></i>
-                                    Rejected
-                                </span>
-                            </td>
-                            <td class="text-end">$40,570</td>
-                        </tr>
-                        <tr>
-                            <td><a href="#" class="text-muted">84564564</a></td>
-                            <td>Laptop</td>
-                            <td>300</td>
-                            <td>
-                                <span class="d-flex align-items-center gap-2">
-                                    <i class="fas fa-circle text-warning f-10 m-r-5"></i>
-                                    Pending
-                                </span>
-                            </td>
-                            <td class="text-end">$180,139</td>
-                        </tr>
-                        <tr>
-                            <td><a href="#" class="text-muted">84564564</a></td>
-                            <td>Mobile</td>
-                            <td>355</td>
-                            <td>
-                                <span class="d-flex align-items-center gap-2">
-                                    <i class="fas fa-circle text-success f-10 m-r-5"></i>
-                                    Approved
-                                </span>
-                            </td>
-                            <td class="text-end">$180,139</td>
-                        </tr>
-                        <tr>
-                            <td><a href="#" class="text-muted">84564564</a></td>
-                            <td>Camera Lens</td>
-                            <td>40</td>
-                            <td>
-                                <span class="d-flex align-items-center gap-2">
-                                    <i class="fas fa-circle text-danger f-10 m-r-5"></i>
-                                    Rejected
-                                </span>
-                            </td>
-                            <td class="text-end">$40,570</td>
-                        </tr>
-                        <tr>
-                            <td><a href="#" class="text-muted">84564564</a></td>
-                            <td>Laptop</td>
-                            <td>300</td>
-                            <td>
-                                <span class="d-flex align-items-center gap-2">
-                                    <i class="fas fa-circle text-warning f-10 m-r-5"></i>
-                                    Pending
-                                </span>
-                            </td>
-                            <td class="text-end">$180,139</td>
-                        </tr>
-                        <tr>
-                            <td><a href="#" class="text-muted">84564564</a></td>
-                            <td>Mobile</td>
-                            <td>355</td>
-                            <td><span class="d-flex align-items-center gap-2"><i
-                                        class="fas fa-circle text-success f-10 m-r-5"></i>Approved</span>
-                            </td>
-                            <td class="text-end">$180,139</td>
-                        </tr>
-                        <tr>
-                            <td><a href="#" class="text-muted">84564564</a></td>
-                            <td>Mobile</td>
-                            <td>355</td>
-                            <td><span class="d-flex align-items-center gap-2"><i
-                                        class="fas fa-circle text-success f-10 m-r-5"></i>Approved</span>
-                            </td>
-                            <td class="text-end">$180,139</td>
-                        </tr>
-                    </tbody>
-                </table>
+    <div class="col-md-6 col-xl-3">
+        <div class="card bg-info text-white">
+            <div class="card-body">
+                <div class="d-flex justify-content-between align-items-center">
+                    <div>
+                        <h6 class="mb-2 f-w-400 text-white-50">Produk Aktif</h6>
+                        <h4 class="mb-3 text-white">{{ number_format($totalJenisProduk) }}</h4>
+                        <small class="text-white-50">{{ $totalPengiriman }} pengiriman</small>
+                    </div>
+                    <div class="display-4 text-white-50">
+                        <i class="ti ti-package"></i>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
 </div>
-<div class="col-md-12 col-xl-4">
-    <h5 class="mb-3">Income Overview</h5>
-    <div class="card">
-        <div class="card-body">
-            <h6 class="mb-2 f-w-400 text-muted">This Week Statistics</h6>
-            <h3 class="mb-3">$7,650</h3>
-            <div id="income-overview-chart"></div>
+
+<!-- Charts Row -->
+<div class="row mt-4">
+    <!-- Sales Chart -->
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header">
+                <h5>Tren Pendapatan & Transaksi (6 Bulan Terakhir)</h5>
+            </div>
+            <div class="card-body">
+                <canvas id="salesChart" height="100"></canvas>
+            </div>
+        </div>
+    </div>
+
+    <!-- Transaction Status -->
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <h5>Status Transaksi</h5>
+            </div>
+            <div class="card-body">
+                <canvas id="statusChart" height="200"></canvas>
+            </div>
         </div>
     </div>
 </div>
 
-<div class="col-md-12 col-xl-8">
-    <h5 class="mb-3">Sales Report</h5>
-    <div class="card">
-        <div class="card-body">
-            <h6 class="mb-2 f-w-400 text-muted">This Week Statistics</h6>
-            <h3 class="mb-0">$7,650</h3>
-            <div id="sales-report-chart"></div>
+<!-- Data Tables Row -->
+<div class="row mt-4">
+    <!-- Recent Transactions -->
+    <div class="col-md-8">
+        <div class="card">
+            <div class="card-header d-flex justify-content-between align-items-center">
+                <h5>Transaksi Terbaru</h5>
+                <a href="{{ route('transaksi.index') }}" class="btn btn-sm btn-primary">Lihat Semua</a>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-hover">
+                        <thead>
+                            <tr>
+                                <th>Kode Transaksi</th>
+                                <th>Pelanggan</th>
+                                <th>Total</th>
+                                <th>Status</th>
+                                <th>Tanggal</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            @foreach($transaksiTerakhir as $transaksi)
+                            <tr>
+                                <td>
+                                    <a href="{{ route('transaksi.show', $transaksi->id) }}" class="text-primary">
+                                        {{ $transaksi->kode_transaksi }}
+                                    </a>
+                                </td>
+                                <td>{{ $transaksi->user->name ?? 'Guest' }}</td>
+                                <td>Rp {{ number_format($transaksi->total, 0, ',', '.') }}</td>
+                                <td>
+                                    @if ($transaksi->status == 'pending')
+                                        <span class="badge bg-secondary">Pending</span>
+                                    @elseif ($transaksi->status == 'dibayar')
+                                        <span class="badge bg-info">Dibayar</span>
+                                    @elseif ($transaksi->status == 'dikonfirmasi')
+                                        <span class="badge bg-warning">Dikonfirmasi</span>
+                                    @elseif ($transaksi->status == 'diproses')
+                                        <span class="badge bg-primary">Diproses</span>
+                                    @elseif ($transaksi->status == 'dikirim')
+                                        <span class="badge bg-success">Dikirim</span>
+                                    @elseif ($transaksi->status == 'selesai')
+                                        <span class="badge bg-success">Selesai</span>
+                                    @else
+                                        <span class="badge bg-danger">Batal</span>
+                                    @endif
+                                </td>
+                                <td>{{ $transaksi->created_at->format('d M Y') }}</td>
+                            </tr>
+                            @endforeach
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Top Products -->
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-header">
+                <h5>Produk Terlaris</h5>
+            </div>
+            <div class="card-body">
+                @foreach($produkTerlaris as $produk)
+                <div class="d-flex justify-content-between align-items-center mb-3">
+                    <div>
+                        <h6 class="mb-1">{{ $produk->nama }}</h6>
+                        <small class="text-muted">{{ $produk->detail_transaksi_count }} terjual</small>
+                    </div>
+                    <div>
+                        <span class="badge bg-primary">{{ $produk->detail_transaksi_count }}</span>
+                    </div>
+                </div>
+                @if(!$loop->last)
+                    <hr class="my-2">
+                @endif
+                @endforeach
+            </div>
         </div>
     </div>
 </div>
-<div class="col-md-12 col-xl-4">
-    <h5 class="mb-3">Analytics Report</h5>
-    <div class="card">
-        <div class="list-group list-group-flush">
-            <a href="#"
-                class="list-group-item list-group-item-action d-flex align-items-center justify-content-between">Company
-                Finance Growth<span class="h5 mb-0">+45.14%</span></a>
-            <a href="#"
-                class="list-group-item list-group-item-action d-flex align-items-center justify-content-between">Company
-                Expenses Ratio<span class="h5 mb-0">0.58%</span></a>
-            <a href="#"
-                class="list-group-item list-group-item-action d-flex align-items-center justify-content-between">Business
-                Risk Cases<span class="h5 mb-0">Low</span></a>
+
+<!-- Insights Row -->
+<div class="row mt-4">
+    <div class="col-md-4">
+        <div class="card border-left-primary">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h6 class="text-primary">📈 Insight Pendapatan</h6>
+                        <p class="mb-0">
+                            @if($pendapatanGrowth > 0)
+                                <span class="text-success">Pendapatan meningkat {{ number_format($pendapatanGrowth, 1) }}% dari bulan lalu</span>
+                            @elseif($pendapatanGrowth < 0)
+                                <span class="text-danger">Pendapatan menurun {{ number_format(abs($pendapatanGrowth), 1) }}% dari bulan lalu</span>
+                            @else
+                                <span class="text-muted">Pendapatan stabil dari bulan lalu</span>
+                            @endif
+                        </p>
+                    </div>
+                </div>
+            </div>
         </div>
-        <div class="card-body px-2">
-            <div id="analytics-report-chart"></div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card border-left-success">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h6 class="text-success">🛒 Insight Transaksi</h6>
+                        <p class="mb-0">
+                            @if($transaksiGrowth > 0)
+                                <span class="text-success">Transaksi meningkat {{ number_format($transaksiGrowth, 1) }}% dari bulan lalu</span>
+                            @elseif($transaksiGrowth < 0)
+                                <span class="text-danger">Transaksi menurun {{ number_format(abs($transaksiGrowth), 1) }}% dari bulan lalu</span>
+                            @else
+                                <span class="text-muted">Transaksi stabil dari bulan lalu</span>
+                            @endif
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card border-left-warning">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h6 class="text-warning">⚠️ Insight Operasional</h6>
+                        <p class="mb-0">
+                            @if($statusTransaksi['pending'] > 5)
+                                <span class="text-warning">{{ $statusTransaksi['pending'] }} transaksi pending perlu perhatian</span>
+                            @elseif($statusTransaksi['dikonfirmasi'] > 3)
+                                <span class="text-info">{{ $statusTransaksi['dikonfirmasi'] }} transaksi siap diproses</span>
+                            @else
+                                <span class="text-success">Operasional berjalan lancar</span>
+                            @endif
+                        </p>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 </div>
+
+<!-- Predictions & Performance Row -->
+<div class="row mt-4">
+    <div class="col-md-4">
+        <div class="card border-left-info">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h6 class="text-info">🔮 Prediksi Akhir Bulan</h6>
+                        <p class="mb-1">
+                            <small class="text-muted">Estimasi Transaksi:</small><br>
+                            <strong>{{ number_format($predictedTransaksi, 0) }}</strong>
+                        </p>
+                        <p class="mb-0">
+                            <small class="text-muted">Estimasi Pendapatan:</small><br>
+                            <strong>Rp {{ number_format($predictedPendapatan, 0, ',', '.') }}</strong>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card border-left-secondary">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h6 class="text-secondary">📊 Performance Harian</h6>
+                        <p class="mb-1">
+                            <small class="text-muted">Avg Transaksi/Hari:</small><br>
+                            <strong>{{ number_format($avgTransaksiPerDay, 1) }}</strong>
+                        </p>
+                        <p class="mb-0">
+                            <small class="text-muted">Avg Pendapatan/Hari:</small><br>
+                            <strong>Rp {{ number_format($avgPendapatanPerDay, 0, ',', '.') }}</strong>
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="card border-left-dark">
+            <div class="card-body">
+                <div class="d-flex justify-content-between">
+                    <div>
+                        <h6 class="text-dark">🎯 Rekomendasi Aksi</h6>
+                        <p class="mb-0">
+                            @if($statusTransaksi['pending'] > 5)
+                                <span class="text-danger">Prioritas: Proses {{ $statusTransaksi['pending'] }} pending order</span>
+                            @elseif($statusTransaksi['dikonfirmasi'] > 3)
+                                <span class="text-warning">Fokus: Proses {{ $statusTransaksi['dikonfirmasi'] }} order dikonfirmasi</span>
+                            @elseif($transaksiGrowth < -10)
+                                <span class="text-info">Strategi: Tingkatkan promosi produk</span>
+                            @else
+                                <span class="text-success">Pertahankan: Performa operasional baik</span>
+                            @endif
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Quick Actions -->
+<div class="row mt-4">
+    <div class="col-md-12">
+        <div class="card">
+            <div class="card-header">
+                <h5>Aksi Cepat</h5>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-md-2">
+                        <a href="{{ route('transaksi.index') }}" class="btn btn-primary btn-block">
+                            <i class="ti ti-shopping-cart"></i> Kelola Transaksi
+                        </a>
+                    </div>
+                    <div class="col-md-2">
+                        <a href="{{ route('produk.index') }}" class="btn btn-success btn-block">
+                            <i class="ti ti-package"></i> Kelola Produk
+                        </a>
+                    </div>
+                    <div class="col-md-2">
+                        <a href="{{ route('pengiriman.index') }}" class="btn btn-warning btn-block">
+                            <i class="ti ti-truck"></i> Kelola Pengiriman
+                        </a>
+                    </div>
+                    <div class="col-md-2">
+                        <a href="{{ route('transaksi.download.report') }}" class="btn btn-info btn-block">
+                            <i class="ti ti-download"></i> Download Report
+                        </a>
+                    </div>
+                    <div class="col-md-2">
+                        <a href="{{ route('pengiriman.download.report') }}" class="btn btn-secondary btn-block">
+                            <i class="ti ti-file-report"></i> Report Pengiriman
+                        </a>
+                    </div>
+                    <div class="col-md-2">
+                        <a href="{{ route('admin.index') }}" class="btn btn-dark btn-block">
+                            <i class="ti ti-settings"></i> Pengaturan
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
 @endsection
+
+@push('styles')
+<style>
+    .border-left-primary {
+        border-left: 4px solid #007bff !important;
+    }
+    .border-left-success {
+        border-left: 4px solid #28a745 !important;
+    }
+    .border-left-warning {
+        border-left: 4px solid #ffc107 !important;
+    }
+    .border-left-info {
+        border-left: 4px solid #17a2b8 !important;
+    }
+    .border-left-secondary {
+        border-left: 4px solid #6c757d !important;
+    }
+    .border-left-dark {
+        border-left: 4px solid #343a40 !important;
+    }
+    .btn-block {
+        width: 100%;
+        margin-bottom: 10px;
+    }
+</style>
+@endpush
+
+@push('scripts')
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script>
+    // Sales Chart
+    const salesCtx = document.getElementById('salesChart').getContext('2d');
+    const salesChart = new Chart(salesCtx, {
+        type: 'line',
+        data: {
+            labels: {!! json_encode(collect($monthlyStats)->pluck('month')) !!},
+            datasets: [{
+                label: 'Pendapatan (Rp)',
+                data: {!! json_encode(collect($monthlyStats)->pluck('pendapatan')) !!},
+                borderColor: 'rgb(75, 192, 192)',
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                tension: 0.1,
+                yAxisID: 'y'
+            }, {
+                label: 'Transaksi',
+                data: {!! json_encode(collect($monthlyStats)->pluck('transaksi')) !!},
+                borderColor: 'rgb(255, 99, 132)',
+                backgroundColor: 'rgba(255, 99, 132, 0.2)',
+                tension: 0.1,
+                yAxisID: 'y1'
+            }]
+        },
+        options: {
+            responsive: true,
+            interaction: {
+                mode: 'index',
+                intersect: false,
+            },
+            scales: {
+                y: {
+                    type: 'linear',
+                    display: true,
+                    position: 'left',
+                    title: {
+                        display: true,
+                        text: 'Pendapatan (Rp)'
+                    }
+                },
+                y1: {
+                    type: 'linear',
+                    display: true,
+                    position: 'right',
+                    title: {
+                        display: true,
+                        text: 'Jumlah Transaksi'
+                    },
+                    grid: {
+                        drawOnChartArea: false,
+                    },
+                }
+            }
+        }
+    });
+
+    // Status Chart
+    const statusCtx = document.getElementById('statusChart').getContext('2d');
+    const statusChart = new Chart(statusCtx, {
+        type: 'doughnut',
+        data: {
+            labels: ['Pending', 'Dibayar', 'Dikonfirmasi', 'Diproses', 'Dikirim', 'Selesai', 'Batal'],
+            datasets: [{
+                data: [
+                    {{ $statusTransaksi['pending'] }},
+                    {{ $statusTransaksi['dibayar'] }},
+                    {{ $statusTransaksi['dikonfirmasi'] }},
+                    {{ $statusTransaksi['diproses'] }},
+                    {{ $statusTransaksi['dikirim'] }},
+                    {{ $statusTransaksi['selesai'] ?? 0 }},
+                    {{ $statusTransaksi['batal'] }}
+                ],
+                backgroundColor: [
+                    '#6c757d',
+                    '#17a2b8',
+                    '#ffc107',
+                    '#007bff',
+                    '#28a745',
+                    '#20c997',
+                    '#dc3545'
+                ]
+            }]
+        },
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'bottom',
+                }
+            }
+        }
+    });
+</script>
+@endpush
