@@ -12,18 +12,13 @@ use App\Http\Controllers\TransaksiController;
 use App\Models\Katalog;
 use Illuminate\Support\Facades\Route;
 
-// Route::get('/', function () {
-//     return view('welcome');
-// });
-
-
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-Route::prefix('admin')->middleware(['auth', 'adminManajer'])->group(function () {
+Route::prefix('dashboard')->middleware(['auth', 'adminManajer'])->group(function () {
     // Test route sederhana
     Route::get('/dashboard-test', function () {
         return "Dashboard test berhasil!";
