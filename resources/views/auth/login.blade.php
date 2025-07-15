@@ -8,7 +8,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
     <!-- [Favicon] icon -->
-    <link rel="icon" href="{{ asset('images/favicon.svg') }}" type="image/x-icon"> <!-- [Google Font] Family -->
+    <link rel="icon" href="{{ asset('images/favicon.ico') }}" type="image/x-icon"> <!-- [Google Font] Family -->
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700&display=swap"
         id="main-font-link">
@@ -41,7 +41,7 @@
         <div class="auth-wrapper v3">
             <div class="auth-form">
                 <div class="auth-header">
-                    <a href="/"><img src="{{ asset('images/logo-dark.svg') }}" alt="Logo"></a>
+                    <a href="/"><img src="{{ asset('images/logo-dameulos.png') }}" style="width: 60px" alt="Logo"></a>
                 </div>
                 <div class="card my-5">
                     <div class="card-body">

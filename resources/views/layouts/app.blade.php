@@ -9,7 +9,7 @@
         <title>{{ config('app.name', 'Laravel') }}</title>
 
          <!-- [Favicon] icon -->
-         <link rel="icon" href="{{ asset('images/favicon.svg') }}" type="image/x-icon"> <!-- [Google Font] Family -->
+         <link rel="icon" href="{{ asset('images/favicon.ico') }}" type="image/x-icon"> <!-- [Google Font] Family -->
         <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Public+Sans:wght@300;400;500;600;700&display=swap" id="main-font-link">
         <!-- [Tabler Icons] https://tablericons.com -->
         <link rel="stylesheet" href="{{ asset('fonts/tabler-icons.min.css') }}" >
