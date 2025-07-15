@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminProfileController;
 use App\Http\Controllers\AksesPelangganController;
 use App\Http\Controllers\CheckoutController;
 use App\Http\Controllers\KatalogController;
@@ -41,6 +42,11 @@ Route::prefix('admin')->middleware(['auth', 'adminManajer'])->group(function () 
     Route::get('/dashboard', [\App\Http\Controllers\DashboardController::class, 'index'])
         ->middleware(['auth', 'adminManajer', 'verified'])
         ->name('dashboard');
+
+    // Profile routes
+    Route::get('/profile', [AdminProfileController::class, 'edit'])->name('admin.profile.edit');
+    Route::patch('/profile', [AdminProfileController::class, 'update'])->name('admin.profile.update');
+    Route::patch('/profile/password', [AdminProfileController::class, 'updatePassword'])->name('admin.profile.password.update');
 
     Route::resource('produk', ProdukController::class)->middleware(['auth', 'adminManajer']);
     Route::resource('katalog', KatalogController::class)->middleware(['auth', 'adminManajer']);    // Route khusus untuk transaksi harus sebelum resource
