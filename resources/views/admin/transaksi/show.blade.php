@@ -196,9 +196,11 @@
                             </button>
                         </form>
                         @endif
+                        @if($transaksi->status == 'dibayar' || $transaksi->status == 'diproses')
                         <button type="button" class="btn btn-success w-100 mb-2" data-bs-toggle="modal" data-bs-target="#kirimModal">
-                                <i class="ti ti-truck me-2"></i>Kirim Pesanan
+                            <i class="ti ti-truck me-2"></i>Kirim Pesanan
                         </button>
+                        @endif
 
                         <a href="{{ route('transaksi.index') }}" class="btn btn-secondary w-100">
                             <i class="ti ti-arrow-left me-2"></i>Kembali
