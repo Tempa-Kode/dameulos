@@ -294,8 +294,8 @@
                                                 <img src="{{ asset($detail->produk->gambar) }}" alt="{{ $detail->produk->nama }}">
                                                 <div class="order-product-info">
                                                     <h6>{{ $detail->produk->nama }}</h6>
-                                                    <span>Ukuran: {{ $detail->ukuranProduk->ukuran }}</span>
-                                                    <span>Warna: {{ $detail->jenisWarnaProduk->warna }}</span>
+                                                    <span>Ukuran: {{ $detail->ukuranProduk->ukuran ?? '-' }}</span>
+                                                    <span>Warna: {{ $detail->jenisWarnaProduk->warna ?? '-' }}</span>
                                                     <span>Satuan: Rp {{ number_format($detail->harga_satuan, 0, ',', '.') }}</span>
                                                     <span>Jumlah: {{ $detail->jumlah }}</span>
                                                 </div>

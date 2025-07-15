@@ -12,7 +12,7 @@ class PembayaranController extends Controller
     public function bayar(Request $request)
     {
         $pembayaran = Pembayaran::where('kode_transaksi', $request->kode_transaksi)->first();
-        if ($pembayaran->status == 'pending') {
+        if ($pembayaran && $pembayaran->status == 'pending') {
             return response()->json([
                 'status'     => 'success',
                 'data'       => $pembayaran,

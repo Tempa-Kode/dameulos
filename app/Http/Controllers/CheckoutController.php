@@ -195,14 +195,13 @@ class CheckoutController extends Controller
             // Create transaction
             $alamatLengkap = $request->alamat . ', ' . $request->kota . ', ' . $request->provinsi .' ' . $request->kode_pos;
             $namaPembeli = Auth::user()->name;
-
             $transaksi = Transaksi::create([
                 'user_id' => Auth::check() ? Auth::id() : null,
                 'kode_transaksi' => 'TRX' . strtoupper(Str::random(8)),
                 'status' => 'pending',
                 'subtotal' => $totals['subtotal'],
-                'ongkir' => $totals['ongkir'],
-                'total' => $totals['total'] + $request->ongkir_cost,
+                'ongkir' => $request->ongkir_cost,
+                'total' => $totals['subtotal'] + $request->ongkir_cost,
                 'catatan' => $request->catatan,
                 'alamat_pengiriman' => $alamatLengkap,
             ]);
