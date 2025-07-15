@@ -100,7 +100,9 @@
                                                             <span class="badge badge-warning">Menunggu</span>
                                                         @elseif($item->status == 'dibayar')
                                                             <span class="badge badge-info">Dibayar</span>
-                                                        @elseif($item->status == 'berhasil')
+                                                        @elseif($item->status == 'diproses')
+                                                            <span class="badge badge-info">Diproses</span>
+                                                        @elseif($item->status == 'dikirim')
                                                             <span class="badge badge-primary">Dikirim</span>
                                                         @elseif($item->status == 'dikirim')
                                                             <span class="badge badge-success">Selesai</span>
@@ -163,10 +165,10 @@
                                                 <h6 class="text-primary">Informasi Pengiriman:</h6>
                                                 <div class="row">
                                                     <div class="col-md-6">
-                                                        <strong>Kurir:</strong> {{ $item->pengiriman->kurir ?? '-' }}
+                                                        <strong>Kurir:</strong> J&T Express
                                                     </div>
                                                     <div class="col-md-6">
-                                                        <strong>Resi:</strong> {{ $item->pengiriman->resi ?? '-' }}
+                                                        <strong>Resi:</strong> {{ $item->pengiriman->no_resi ?? '-' }}
                                                     </div>
                                                 </div>
                                             </div>
