@@ -34,6 +34,8 @@ Route::prefix('admin')->middleware(['auth', 'adminManajer'])->group(function () 
     Route::resource('transaksi', TransaksiController::class)->middleware(['auth', 'adminManajer']);
 
     // Route khusus untuk pengiriman harus sebelum resource
+    Route::get('/pengiriman/download-report', [PengirimanController::class, 'downloadReport'])->name('pengiriman.download.report');
+    Route::get('/pengiriman/preview-report', [PengirimanController::class, 'previewReport'])->name('pengiriman.preview.report');
     Route::get('/pengiriman/{pengiriman}/print-label', [PengirimanController::class, 'printLabel'])->name('pengiriman.print.label');
     Route::resource('pengiriman', PengirimanController::class)->middleware(['auth', 'adminManajer']);
     Route::resource('admin', \App\Http\Controllers\AdminController::class)->middleware(['auth', 'adminManajer']);

@@ -8,10 +8,16 @@
     <div class="col-sm-12">
         <div class="card">
             <div class="card-header">
-                <button class="btn btn-success">
-                    <span class="pc-micon"><i class="ti ti-download me-2"></i></span>
-                    Download Report
-                </button>
+                <div class="d-flex gap-2">
+                    <a href="{{ route('pengiriman.download.report') }}" class="btn btn-success">
+                        <span class="pc-micon"><i class="ti ti-download me-2"></i></span>
+                        Download Report
+                    </a>
+                    <a href="{{ route('pengiriman.preview.report') }}" class="btn btn-info" target="_blank">
+                        <span class="pc-micon"><i class="ti ti-eye me-2"></i></span>
+                        Preview Report
+                    </a>
+                </div>
             </div>
             <div class="card-body">
                 {{-- Include komponen alert --}}

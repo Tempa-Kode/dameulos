@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Pengiriman;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
+use Barryvdh\DomPDF\Facade\Pdf as PDF;
 
 class PengirimanController extends Controller
 {
@@ -101,14 +102,65 @@ class PengirimanController extends Controller
     /**
      * Print shipping label
      */
-    public function printLabel(Pengiriman $pengiriman)
+    public function printLabel($id)
     {
-        // Load pengiriman dengan relasi yang diperlukan
-        $pengiriman->load([
-            'transaksi.user',
-            'transaksi.detailTransaksi.produk'
-        ]);
+        $pengiriman = Pengiriman::with(['transaksi.user', 'transaksi.detailTransaksi.produk', 'transaksi.detailTransaksi.ukuranProduk', 'transaksi.detailTransaksi.jenisWarnaProduk'])
+            ->findOrFail($id);
 
         return view('admin.pengiriman.print-label', compact('pengiriman'));
+    }
+
+    public function downloadReport()
+    {
+        // Ambil data pengiriman dengan relasi
+        $data = Pengiriman::with(['transaksi.user', 'transaksi.detailTransaksi.produk'])
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        // Hitung statistik
+        $totalPengiriman = $data->count();
+        $totalOngkir = $data->sum('ongkir');
+        $totalBerat = $data->sum('berat');
+
+        // Statistik per status
+        $statusStats = [
+            'pending' => $data->where('transaksi.status', 'pending')->count(),
+            'dibayar' => $data->where('transaksi.status', 'dibayar')->count(),
+            'dikonfirmasi' => $data->where('transaksi.status', 'dikonfirmasi')->count(),
+            'diproses' => $data->where('transaksi.status', 'diproses')->count(),
+            'dikirim' => $data->where('transaksi.status', 'dikirim')->count(),
+            'batal' => $data->where('transaksi.status', 'batal')->count(),
+        ];
+
+        $pdf = PDF::loadView('admin.pengiriman.report-pdf', compact('data', 'totalPengiriman', 'totalOngkir', 'totalBerat', 'statusStats'));
+
+        return $pdf->download('laporan_pengiriman_' . now()->format('Y-m-d_H-i-s') . '.pdf');
+    }
+
+    public function previewReport()
+    {
+        // Ambil data pengiriman dengan relasi
+        $data = Pengiriman::with(['transaksi.user', 'transaksi.detailTransaksi.produk'])
+            ->orderBy('created_at', 'desc')
+            ->get();
+
+        // Hitung statistik
+        $totalPengiriman = $data->count();
+        $totalOngkir = $data->sum('ongkir');
+        $totalBerat = $data->sum('berat');
+
+        // Statistik per status
+        $statusStats = [
+            'pending' => $data->where('transaksi.status', 'pending')->count(),
+            'dibayar' => $data->where('transaksi.status', 'dibayar')->count(),
+            'dikonfirmasi' => $data->where('transaksi.status', 'dikonfirmasi')->count(),
+            'diproses' => $data->where('transaksi.status', 'diproses')->count(),
+            'dikirim' => $data->where('transaksi.status', 'dikirim')->count(),
+            'batal' => $data->where('transaksi.status', 'batal')->count(),
+        ];
+
+        $pdf = PDF::loadView('admin.pengiriman.report-pdf', compact('data', 'totalPengiriman', 'totalOngkir', 'totalBerat', 'statusStats'));
+
+        return $pdf->stream('laporan_pengiriman_' . now()->format('Y-m-d_H-i-s') . '.pdf');
     }
 }
