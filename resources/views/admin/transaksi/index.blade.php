@@ -17,7 +17,7 @@
                 {{-- Include komponen alert --}}
                 @include('components.alert')
 
-                <div class="dt-responsive">
+                <div class="dt-responsive table-responsive">
                     <table id="dom-jqry" class="table table-striped table-bordered nowrap">
                         <thead>
                             <tr>
@@ -26,6 +26,7 @@
                                 <th>Pelanggan</th>
                                 <th>Status</th>
                                 <th>Total</th>
+                                <th>Tanggal</th>
                                 <th>Aksi</th>
                             </tr>
                         </thead>
@@ -37,20 +38,31 @@
                                     <td>{{ $item->user->name }}</td>
                                     <td>
                                         @if ($item->status == 'pending')
-                                            <span class="badge badge-warning">Pending</span>
+                                            <span class="badge text-bg-secondary">Pending</span>
+                                        @elseif ($item->status == 'dibayar')
+                                            <span class="badge text-bg-info">Dibayar</span>
                                         @elseif ($item->status == 'dikonfirmasi')
-                                            <span class="badge badge-success">Dikonfirmasi</span>
+                                            <span class="badge text-bg-warning">Dikonfirmasi</span>
                                         @elseif ($item->status == 'diproses')
-                                            <span class="badge badge-danger">Diproses</span>
-                                        @elseif ($item->status == 'dikirim')
-                                            <span class="badge badge-danger">Dikirim</span>
+                                            <span class="badge text-bg-secondary">Diproses</span>
+                                        @elseif ($item->status == 'Dikirim')
+                                            <span class="badge text-bg-success">Dikirim</span>
                                         @else
-                                            <span class="badge badge-secondary">Unknown</span>
+                                            <span class="badge text-bg-danger">Batal</span>
                                         @endif
-                                    <td>Rp {{ number_format($item->total_harga, 0, ',', '.') }}</td>
+                                    <td>Rp {{ number_format($item->total, 0, ',', '.') }}</td>
+                                    <td>
+                                        {{ \Carbon\Carbon::parse($item->created_at)->format('d-m-Y H:i') }}
+                                    </td>
                                     <td>
                                         <a href="{{ route('transaksi.show', $item->id) }}" class="btn btn-info btn-sm">
                                             Detail
+                                        </a>
+                                        <a href="{{ route('transaksi.show', $item->id) }}" class="btn btn-warning btn-sm">
+                                            Proses
+                                        </a>
+                                        <a href="{{ route('transaksi.show', $item->id) }}" class="btn btn-success btn-sm">
+                                            Kirim
                                         </a>
                                     </td>
                                 </tr>
