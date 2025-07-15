@@ -334,7 +334,7 @@
                 <h5>Aksi Cepat</h5>
             </div>
             <div class="card-body">
-                <div class="row">
+                <div class="row justify-content-between">
                     <div class="col-md-2">
                         <a href="{{ route('transaksi.index') }}" class="btn btn-primary btn-block">
                             <i class="ti ti-shopping-cart"></i> Kelola Transaksi
@@ -358,11 +358,6 @@
                     <div class="col-md-2">
                         <a href="{{ route('pengiriman.download.report') }}" class="btn btn-secondary btn-block">
                             <i class="ti ti-file-report"></i> Report Pengiriman
-                        </a>
-                    </div>
-                    <div class="col-md-2">
-                        <a href="{{ route('admin.index') }}" class="btn btn-dark btn-block">
-                            <i class="ti ti-settings"></i> Pengaturan
                         </a>
                     </div>
                 </div>
