@@ -70,6 +70,7 @@
                             </div>
                             @endif
 
+                            @if (Auth::check())
                             <div class="product__details__cart__option">
                                 <div class="quantity">
                                     <div class="pro-qty">
@@ -84,6 +85,11 @@
                             <div class="product__details__btns__option">
                                 <a href="{{ route('pelanggan.katalogBySlug', $produk->katalog->slug) }}">Kategori: <span>{{ $produk->katalog->nama }}</a>
                             </div>
+                            @else
+                                <div class="alert alert-warning" role="alert">
+                                    Silahkan login terlebih dahulu untuk melakukan pembelian.
+                                </div>
+                            @endif
 
                             @if(isset($produk->warnaProduk) && $produk->warnaProduk->count() > 0)
                             <div class="product__details__option__color">

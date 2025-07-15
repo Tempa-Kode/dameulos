@@ -156,9 +156,9 @@
                 </a>
                 <form method="POST" action="{{ route('logout') }}" style="margin: 0;">
                     @csrf
-                    <a href="#" class="mobile-menu-item" onclick="event.preventDefault(); this.closest('form').submit();">
+                    <button type="submit" class="mobile-menu-item">
                         <i class="fa fa-sign-out"></i> Logout
-                    </a>
+                    </button>
                 </form>
             </div>
         @else
@@ -223,9 +223,9 @@
                                     <div class="dropdown-divider"></div>
                                     <form method="POST" action="{{ route('logout') }}">
                                         @csrf
-                                        <a class="dropdown-item" href="#" onclick="event.preventDefault(); this.closest('form').submit();">
+                                        <button type="submit" class="dropdown-item">
                                             <i class="fa fa-sign-out"></i> Logout
-                                        </a>
+                                        </button>
                                     </form>
                                 </div>
                             </div>
