@@ -3,6 +3,7 @@
 use App\Http\Controllers\AdminProfileController;
 use App\Http\Controllers\AksesPelangganController;
 use App\Http\Controllers\CheckoutController;
+use App\Http\Controllers\CustomerProfileController;
 use App\Http\Controllers\KatalogController;
 use App\Http\Controllers\PembayaranController;
 use App\Http\Controllers\PengirimanController;
@@ -16,6 +17,11 @@ Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
+
+    // Customer profile routes
+    Route::get('/customer/profile', [CustomerProfileController::class, 'edit'])->name('customer.profile.edit');
+    Route::patch('/customer/profile', [CustomerProfileController::class, 'update'])->name('customer.profile.update');
+    Route::patch('/customer/profile/password', [CustomerProfileController::class, 'updatePassword'])->name('customer.profile.password.update');
 });
 
 Route::prefix('dashboard')->middleware(['auth', 'adminManajer'])->group(function () {

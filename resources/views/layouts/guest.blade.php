@@ -152,7 +152,7 @@
                         <i class="fa fa-file-text-o"></i> Transaksi Saya
                     </a>
                 @endif
-                <a href="{{ route('profile.edit') }}" class="mobile-menu-item">
+                <a href="{{ route('customer.profile.edit') }}" class="mobile-menu-item">
                     <i class="fa fa-user-circle-o"></i> Profile
                 </a>
                 <form method="POST" action="{{ route('logout') }}" style="margin: 0;">
@@ -209,10 +209,9 @@
                                             <i class="fa fa-file-text-o"></i> Transaksi Saya
                                         </a>
                                         <div class="dropdown-divider"></div>
-                                    @endif
-                                    <a class="dropdown-item" href="{{ route('profile.edit') }}">
-                                        <i class="fa fa-user-circle-o"></i> Profile
-                                    </a>
+                                    @endif                    <a class="dropdown-item" href="{{ route('customer.profile.edit') }}">
+                        <i class="fa fa-user-circle-o"></i> Profile
+                    </a>
                                     <div class="dropdown-divider"></div>
                                     <form method="POST" action="{{ route('logout') }}">
                                         @csrf
