@@ -4,13 +4,51 @@ namespace App\Http\Controllers;
 
 use App\Models\Katalog;
 use App\Models\Produk;
+use App\Models\DetailTransaksi;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Log;
 
 class AksesPelangganController extends Controller
 {
     public function index()
     {
-        return view('pelanggan.index');
+        // Debug: Check if we have any transactions
+        $totalTransaksi = \App\Models\Transaksi::count();
+        $totalDetailTransaksi = \App\Models\DetailTransaksi::count();
+        $totalProduk = \App\Models\Produk::count();
+
+        // Debug: Get all transaction statuses
+        $statusList = \App\Models\Transaksi::distinct('status')->pluck('status')->toArray();
+
+        // Log debug info (you can remove this later)
+        Log::info("Debug info: Transactions: {$totalTransaksi}, Detail Transactions: {$totalDetailTransaksi}, Products: {$totalProduk}");
+        Log::info("Transaction statuses: " . implode(', ', $statusList));
+
+        // Get best-selling products based on transaction quantity
+        // Try all statuses except 'pending' and 'dibatalkan'
+        $produkTerlaris = Produk::select('produk.*', DB::raw('COALESCE(SUM(detail_transaksi.jumlah), 0) as total_terjual'))
+            ->leftJoin('detail_transaksi', 'produk.id', '=', 'detail_transaksi.produk_id')
+            ->leftJoin('transaksi', function($join) {
+                $join->on('detail_transaksi.transaksi_id', '=', 'transaksi.id')
+                     ->whereNotIn('transaksi.status', ['pending', 'dibatalkan']); // Exclude pending and cancelled
+            })
+            ->groupBy('produk.id')
+            ->having('total_terjual', '>', 0) // Only show products that have been sold
+            ->orderBy('total_terjual', 'desc')
+            ->limit(8) // Show top 8 best-selling products
+            ->get();
+
+        // If no best-selling products, show some random products as fallback
+        if ($produkTerlaris->isEmpty()) {
+            $produkTerlaris = Produk::inRandomOrder()->limit(8)->get();
+            // Add a default total_terjual of 0 for display
+            $produkTerlaris->each(function($produk) {
+                $produk->total_terjual = 0;
+            });
+        }
+
+        return view('pelanggan.index', compact('produkTerlaris'));
     }
 
     public function katalog(Request $request)
