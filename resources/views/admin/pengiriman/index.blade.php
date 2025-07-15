@@ -24,6 +24,8 @@
                                 <th>No</th>
                                 <th>No Resi</th>
                                 <th>Nama Penerima</th>
+                                <th>Kode Transaksi</th>
+                                <th>Status Transaksi</th>
                                 <th>Ongkir</th>
                                 <th>Berat</th>
                                 <th>Aksi</th>
@@ -35,11 +37,31 @@
                                     <td>{{ $loop->iteration }}</td>
                                     <td>{{ $item->no_resi }}</td>
                                     <td>{{ $item->nama_penerima }}</td>
-                                    <td>Rp {{ number_format($item->ongkir, 0, ',', '.') }}</td>
-                                    <td>{{ $item->berat }}</td>
+                                    <td>{{ $item->transaksi->kode_transaksi ?? '-' }}</td>
                                     <td>
-                                        <a href="{{ route('transaksi.show', $item->id) }}" class="btn btn-info btn-sm">
-                                            Detail
+                                        @if($item->transaksi)
+                                            @if ($item->transaksi->status == 'pending')
+                                                <span class="badge text-bg-secondary">Pending</span>
+                                            @elseif ($item->transaksi->status == 'dibayar')
+                                                <span class="badge text-bg-info">Dibayar</span>
+                                            @elseif ($item->transaksi->status == 'dikonfirmasi')
+                                                <span class="badge text-bg-warning">Dikonfirmasi</span>
+                                            @elseif ($item->transaksi->status == 'diproses')
+                                                <span class="badge text-bg-secondary">Diproses</span>
+                                            @elseif ($item->transaksi->status == 'dikirim')
+                                                <span class="badge text-bg-success">Dikirim</span>
+                                            @else
+                                                <span class="badge text-bg-danger">Batal</span>
+                                            @endif
+                                        @else
+                                            <span class="badge text-bg-secondary">-</span>
+                                        @endif
+                                    </td>
+                                    <td>Rp {{ number_format($item->ongkir, 0, ',', '.') }}</td>
+                                    <td>{{ $item->berat }} kg</td>
+                                    <td>
+                                        <a href="{{ route('pengiriman.show', $item->id) }}" class="btn btn-info btn-sm">
+                                            <i class="ti ti-eye me-1"></i>Detail
                                         </a>
                                     </td>
                                 </tr>
@@ -48,10 +70,12 @@
                         <tfoot>
                             <tr>
                                 <th>No</th>
-                                <th>Pelangggan</th>
                                 <th>No Resi</th>
+                                <th>Nama Penerima</th>
+                                <th>Kode Transaksi</th>
+                                <th>Status Transaksi</th>
                                 <th>Ongkir</th>
-                                <th>Alamat Pengiriman</th>
+                                <th>Berat</th>
                                 <th>Aksi</th>
                             </tr>
                         </tfoot>

@@ -10,7 +10,7 @@ class PengirimanController extends Controller
 {
     public function index()
     {
-        $data = Pengiriman::all();
+        $data = Pengiriman::with('transaksi')->get();
         return view('admin.pengiriman.index', compact('data'));
     }
 
@@ -62,7 +62,16 @@ class PengirimanController extends Controller
      */
     public function show(Pengiriman $pengiriman)
     {
-        //
+        // Load pengiriman dengan relasi transaksi dan detailnya
+        $pengiriman->load([
+            'transaksi.user',
+            'transaksi.detailTransaksi.produk.katalog',
+            'transaksi.detailTransaksi.ukuranProduk',
+            'transaksi.detailTransaksi.jenisWarnaProduk',
+            'transaksi.pembayaran'
+        ]);
+
+        return view('admin.pengiriman.show', compact('pengiriman'));
     }
 
     /**
