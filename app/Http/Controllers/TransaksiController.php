@@ -63,12 +63,26 @@ class TransaksiController extends Controller
     public function update(Request $request, Transaksi $transaksi)
     {
         $request->validate([
-            'status' => 'required|in:pending,dibayar,dikonfirmasi,diproses,dikirim,batal'
+            'status' => 'required|in:pending,dibayar,dikonfirmasi,diproses,dikirim,batal',
+            'no_resi' => 'nullable|string|max:255',
         ]);
 
         $transaksi->update([
             'status' => $request->status
         ]);
+
+        if ($request->status == 'dikirim') {
+            $transaksi->pengiriman()->updateOrCreate([
+                'transaksi_id' => $transaksi->id,
+                'nama_penerima' => $transaksi->user->name,
+                'no_resi' => $request->no_resi,
+                'ongkir' => $transaksi->ongkir,
+                'berat' => 10,
+                'alamat_pengiriman' => 'SaiTnihuta, Banjarnahor, Hutatoruan V, Kec. Tarutung, Kabupaten Tapanuli Utara, Sumatera Utara 22411',
+                'alamat_penerima' => $transaksi->alamat_pengiriman,
+                'catatan' => $transaksi->catatan ?? '-',
+            ]);
+        }
 
         return redirect()->route('transaksi.show', $transaksi->id)
             ->with('success', 'Status transaksi berhasil diperbarui.');

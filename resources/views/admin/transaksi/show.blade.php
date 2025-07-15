@@ -196,14 +196,9 @@
                             </button>
                         </form>
                         @endif
-                        <form action="{{ route('transaksi.update', $transaksi->id) }}" method="POST" class="d-inline">
-                            @csrf
-                            @method('PUT')
-                            <input type="hidden" name="status" value="dikirim">
-                            <button type="submit" class="btn btn-success w-100 mb-2">
+                        <button type="button" class="btn btn-success w-100 mb-2" data-bs-toggle="modal" data-bs-target="#kirimModal">
                                 <i class="ti ti-truck me-2"></i>Kirim Pesanan
-                            </button>
-                        </form>
+                        </button>
 
                         <a href="{{ route('transaksi.index') }}" class="btn btn-secondary w-100">
                             <i class="ti ti-arrow-left me-2"></i>Kembali
@@ -213,4 +208,29 @@
             </div>
         </div>
     </div>
+
+    {{-- Modal Kirim Pesanan --}}
+    <div class="modal fade" id="kirimModal" tabindex="-1" aria-labelledby="kirimModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form action="{{ route('transaksi.update', $transaksi->id) }}" method="POST" class="d-inline">
+                    <div class="modal-header">
+                        <h1 class="modal-title fs-5" id="kirimModalLabel">Kirim Pesanan</h1>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        @csrf
+                        @method('PUT')
+                        <input type="hidden" name="status" value="dikirim">
+                        <input type="text" name="no_resi" class="form-control mb-2" placeholder="Nomor Resi" required>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-primary"><i class="ti ti-truck me-2"></i>Kirim</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    {{-- Modal Kirim Pesanan --}}
 @endsection
