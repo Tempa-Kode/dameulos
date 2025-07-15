@@ -195,6 +195,7 @@
                                 <i class="ti ti-settings me-2"></i>Proses Pesanan
                             </button>
                         </form>
+                        @endif
                         <form action="{{ route('transaksi.update', $transaksi->id) }}" method="POST" class="d-inline">
                             @csrf
                             @method('PUT')
@@ -203,7 +204,6 @@
                                 <i class="ti ti-truck me-2"></i>Kirim Pesanan
                             </button>
                         </form>
-                        @endif
 
                         <a href="{{ route('transaksi.index') }}" class="btn btn-secondary w-100">
                             <i class="ti ti-arrow-left me-2"></i>Kembali

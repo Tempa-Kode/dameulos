@@ -70,6 +70,7 @@
                                                 <i class="ti ti-settings me-1"></i>Proses
                                             </button>
                                         </form>
+                                        @endif
                                         <form action="{{ route('transaksi.update', $item->id) }}" method="POST" class="d-inline">
                                             @csrf
                                             @method('PUT')
@@ -78,7 +79,6 @@
                                                 <i class="ti ti-truck me-1"></i>Kirim
                                             </button>
                                         </form>
-                                        @endif
                                     </td>
                                 </tr>
                             @endforeach
