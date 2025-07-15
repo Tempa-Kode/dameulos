@@ -39,4 +39,9 @@ class AksesPelangganController extends Controller
             ->get();
         return view('pelanggan.produk-detail', compact('produk', 'produkTerkait'));
     }
+
+    public function tentangKami()
+    {
+        return view('pelanggan.tentang-kami');
+    }
 }

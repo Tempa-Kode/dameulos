@@ -191,7 +191,7 @@
                         <ul>
                             <li class="{{ Route::currentRouteName() == 'pelanggan.home' ? 'active' : '' }}"><a href="/">Home</a></li>
                             <li class="{{ Route::currentRouteName() == 'pelanggan.katalog' ? 'active' : '' }}"><a href="{{ route('pelanggan.katalog') }}">Katalog</a></li>
-                            <li><a href="./about.html">Tentang Kami</a></li>
+                            <li class="{{ Route::currentRouteName() == 'pelanggan.tentang-kami' ? 'active' : '' }}"><a href="{{ route('pelanggan.tentang-kami') }}">Tentang Kami</a></li>
                         </ul>
                     </nav>
                 </div>

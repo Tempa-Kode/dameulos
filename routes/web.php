@@ -69,6 +69,7 @@ Route::get('/', [AksesPelangganController::class, 'index'])->name('pelanggan.hom
 Route::get('/katalog', [AksesPelangganController::class, 'katalog'])->name('pelanggan.katalog');
 Route::get('/katalog/{katalog:slug}', [AksesPelangganController::class, 'katalogBySlug'])->name('pelanggan.katalogBySlug');
 Route::get('/produk/{produk:slug}', [AksesPelangganController::class, 'produkBySlug'])->name('pelanggan.produkBySlug');
+Route::get('/tentang-kami', [AksesPelangganController::class, 'tentangKami'])->name('pelanggan.tentang-kami');
 
 // Checkout routes
 Route::post('/checkout', [CheckoutController::class, 'checkout'])->name('pelanggan.checkout');
