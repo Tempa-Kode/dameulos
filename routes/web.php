@@ -40,7 +40,7 @@ Route::prefix('dashboard')->middleware(['auth', 'adminManajer'])->group(function
         }
     });
 
-    Route::get('/dashboard', [\App\Http\Controllers\DashboardController::class, 'index'])
+    Route::get('/', [\App\Http\Controllers\DashboardController::class, 'index'])
         ->middleware(['auth', 'adminManajer', 'verified'])
         ->name('dashboard');
 
