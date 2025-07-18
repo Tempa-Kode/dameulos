@@ -61,10 +61,10 @@
                     </div>
                 </div>
             </div>
-            <div class="row">
+            <div class="row row-cols-1 row-cols-md-3">
             @forelse($produk as $item)
-                <div class="col-lg-4 col-md-6 col-sm-6">
-                    <div class="product__item">
+                <div class="col">
+                    <div class="product__item card p-3">
                         <div class="product__item__pic" style="height: 250px; overflow: hidden; display: flex; align-items: center; justify-content: center; background-color: #f8f9fa;">
                             <img src="{{ asset($item->gambar ?? 'images/no-image.png') }}" alt="{{ $item->nama ?? 'gambar' }}" style="max-width: 100%; max-height: 100%; object-fit: cover;">
                         </div>
