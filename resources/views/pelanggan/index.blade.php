@@ -34,6 +34,7 @@
                                 <h5>Rp {{ number_format($item->harga, 0, ',', '.') }}</h5>
                                 <span class="badge badge-light">{{ $item->katalog->nama ?? 'Tidak ada kategori' }}</span>
                             </div>
+                            <a href="{{ route('pelanggan.produkBySlug', $item->slug) }}" class="primary-btn text-center">Beli Sekarang</a>
                         </div>
                     </div>
                 @empty
@@ -76,6 +77,7 @@
                             <h5>Rp {{ number_format($item->harga ?? 0, 0, ',', '.') }}</h5>
                             <span class="badge badge-light">{{ $item->katalog->nama ?? 'Tidak ada kategori' }}</span>
                         </div>
+                        <a href="{{ route('pelanggan.produkBySlug', $item->slug) }}" class="primary-btn text-center">Beli Sekarang</a>
                     </div>
                 </div>
             @empty
