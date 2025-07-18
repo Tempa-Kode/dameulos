@@ -13,18 +13,7 @@ class AksesPelangganController extends Controller
 {
     public function index()
     {
-        // Debug: Check if we have any transactions
-        $totalTransaksi = \App\Models\Transaksi::count();
-        $totalDetailTransaksi = \App\Models\DetailTransaksi::count();
-        $totalProduk = \App\Models\Produk::count();
-
-        // Debug: Get all transaction statuses
-        $statusList = \App\Models\Transaksi::distinct('status')->pluck('status')->toArray();
-
-        // Log debug info (you can remove this later)
-        Log::info("Debug info: Transactions: {$totalTransaksi}, Detail Transactions: {$totalDetailTransaksi}, Products: {$totalProduk}");
-        Log::info("Transaction statuses: " . implode(', ', $statusList));
-
+        $produk = Produk::with('katalog')->paginate(20);
         // Get best-selling products based on transaction quantity
         // Try all statuses except 'pending' and 'dibatalkan'
         $produkTerlaris = Produk::select('produk.*', DB::raw('COALESCE(SUM(detail_transaksi.jumlah), 0) as total_terjual'))
@@ -48,7 +37,7 @@ class AksesPelangganController extends Controller
             });
         }
 
-        return view('pelanggan.index', compact('produkTerlaris'));
+        return view('pelanggan.index', compact('produkTerlaris', 'produk'));
     }
 
     public function katalog(Request $request)

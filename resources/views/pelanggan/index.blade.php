@@ -1,5 +1,4 @@
 @extends('layouts.guest')
-
 @section('title', 'Galeri Dame Ulos')
 
 @section('content')
@@ -18,24 +17,22 @@
                 </div>
             </div>
             <div class="row justify-content-around">
-                @forelse($produkTerlaris as $produk)
+                @forelse($produkTerlaris as $item)
                     <div class="col-lg-3 col-md-6 col-sm-6">
                         <div class="product__item">
-                            <div class="product__item">
-                                <div class="product__item__pic" style="height: 250px; overflow: hidden; display: flex; align-items: center; justify-content: center; background-color: #f8f9fa;">
-                                    <div class="product__label">
-                                    <span class="sale">Terlaris</span>
-                                     </div>
-                                    <img src="{{ asset($produk->gambar) }}" alt="{{ $produk->nama }}" style="max-width: 100%; max-height: 100%; object-fit: cover;">
-                                </div>
-                                <div class="product__item__text">
-                                    <h6>{{ $produk->nama }}</h6>
-                                    <a href="{{ route('pelanggan.produkBySlug', $produk->slug) }}" class="add-cart">
-                                        Lihat Detail
-                                    </a>
-                                    <h5>Rp {{ number_format($produk->harga, 0, ',', '.') }}</h5>
-                                    <span class="badge badge-light">{{ $produk->katalog->nama }}</span>
-                                </div>
+                            <div class="product__item__pic" style="height: 250px; overflow: hidden; display: flex; align-items: center; justify-content: center; background-color: #f8f9fa;">
+                                <div class="product__label">
+                                <span class="sale">Terlaris</span>
+                                 </div>
+                                <img src="{{ asset($item->gambar ?? 'images/no-image.png') }}" alt="{{ $item->nama }}" style="max-width: 100%; max-height: 100%; object-fit: cover;">
+                            </div>
+                            <div class="product__item__text">
+                                <h6>{{ $item->nama }}</h6>
+                                <a href="{{ route('pelanggan.produkBySlug', $item->slug) }}" class="add-cart">
+                                    Lihat Detail
+                                </a>
+                                <h5>Rp {{ number_format($item->harga, 0, ',', '.') }}</h5>
+                                <span class="badge badge-light">{{ $item->katalog->nama ?? 'Tidak ada kategori' }}</span>
                             </div>
                         </div>
                     </div>
@@ -53,6 +50,73 @@
     </section>
     <!-- Best Selling Products Section End -->
 
+    {{-- Produk --}}
+    <section class="product spad py-3">
+        <div class="container">
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="section-title">
+                        <span>Semua Produk</span>
+                        <h2>Produk Lengkap Yang Ditawarkan</h2>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+            @forelse($produk as $item)
+                <div class="col-lg-4 col-md-6 col-sm-6">
+                    <div class="product__item">
+                        <div class="product__item__pic" style="height: 250px; overflow: hidden; display: flex; align-items: center; justify-content: center; background-color: #f8f9fa;">
+                            <img src="{{ asset($item->gambar ?? 'images/no-image.png') }}" alt="{{ $item->nama ?? 'gambar' }}" style="max-width: 100%; max-height: 100%; object-fit: cover;">
+                        </div>
+                        <div class="product__item__text">
+                            <h6>{{ $item->nama ?? 'title' }}</h6>
+                            <a href="{{ route('pelanggan.produkBySlug', $item->slug ?? '1') }}" class="add-cart">
+                                Lihat Detail
+                            </a>
+                            <h5>Rp {{ number_format($item->harga ?? 0, 0, ',', '.') }}</h5>
+                            <span class="badge badge-light">{{ $item->katalog->nama ?? 'Tidak ada kategori' }}</span>
+                        </div>
+                    </div>
+                </div>
+            @empty
+                <div class="col-lg-12">
+                    <div class="text-center">
+                        <img src="{{ asset('images/no-products.png') }}" alt="No Products" style="width: 200px; opacity: 0.5;">
+                        <h5 class="mt-3 text-muted">Belum ada produk tersedia</h5>
+                        <p class="text-muted">Produk akan segera ditambahkan</p>
+                    </div>
+                </div>
+            @endforelse
+            </div>
+            <div class="row">
+                <div class="col-lg-6 col-md-6 col-sm-6">
+                    <div class="shop__product__option__left">
+                        <p>Menampilkan {{ $produk->firstItem() }}–{{ $produk->lastItem() }} dari {{ $produk->total() }} hasil</p>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-lg-12">
+                    <div class="product__pagination">
+                        @if ($produk->onFirstPage())
+                            <a class="active" href="{{ $produk->url(1) }}">1</a>
+                        @endif
+
+                        @foreach ($produk->links()->elements[0] as $page => $url)
+                            @if ($page != 1 || !$produk->onFirstPage())
+                                <a class="{{ $page == $produk->currentPage() ? 'active' : '' }}" href="{{ $url }}">{{ $page }}</a>
+                            @endif
+                        @endforeach
+
+                        @if ($produk->hasMorePages())
+                            <a href="{{ $produk->nextPageUrl() }}">Next</a>
+                        @endif
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    {{-- Produk --}}
 @endsection
 
 @push('styles')
