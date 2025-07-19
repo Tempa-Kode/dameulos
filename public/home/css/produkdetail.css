@@ -1,0 +1,75 @@
+.gallery-thumb {
+    cursor: pointer;
+    border: 2px solid transparent;
+    transition: border 0.3s ease;
+    border-radius: 8px;
+    height: 80px;
+    object-fit: cover;
+}
+
+.gallery-thumb:hover {
+    border: 2px solid #ca1515;
+}
+
+.product__details__pic__slider {
+    margin-top: 15px;
+}
+
+.product__details__pic__slider .owl-nav {
+    margin-top: 0;
+}
+
+.product__details__pic__slider .owl-nav button {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: rgba(0,0,0,0.5) !important;
+    color: white !important;
+    border: none !important;
+    border-radius: 3px;
+    width: 30px;
+    height: 30px;
+    line-height: 30px;
+}
+
+.product__details__pic__slider .owl-nav .owl-prev {
+    left: -15px;
+}
+
+.product__details__pic__slider .owl-nav .owl-next {
+    right: -15px;
+}
+
+.color-item {
+    margin-bottom: 15px;
+    padding: 15px;
+    border: 1px solid #dee2e6;
+    border-radius: 5px;
+    background-color: #f8f9fa;
+}
+
+.color-item:not(:last-child) {
+    margin-bottom: 10px;
+}
+
+.input-group .form-control[type="color"] {
+    width: 60px;
+    height: 38px;
+    padding: 1px 2px;
+    border-radius: 4px 0 0 4px;
+}
+
+.remove-color:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+#addColor {
+    background-color: #28a745;
+    border-color: #28a745;
+}
+
+#addColor:hover {
+    background-color: #218838;
+    border-color: #1e7e34;
+}

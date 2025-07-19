@@ -97,6 +97,9 @@
                                 <button id="checkout" class="primary-btn">
                                     <span class="btn-text">Beli Sekarang</span>
                                 </button>
+                                <button id="requestWarna" class="primary-outline-btn" data-toggle="modal" data-target="#exampleModal" data-placement="top" title="Request Warna">
+                                    <i class="fa-solid fa-palette"></i>
+                                </button>
                                 <button id="keranjang" class="primary-outline-btn"><i class="fa-solid fa-cart-plus"></i></button>
                             </div>
                             <div class="product__details__btns__option">
@@ -190,37 +193,55 @@
         </div>
     </section>
     <!-- Related Section End -->
+
+    <!-- Modal Request Warna -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Pilih Warna</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div id="colorContainer">
+                    <div class="color-item" data-index="0">
+                        <div class="form-group">
+                            <label for="colorPicker_0">Pilih Warna 1:</label>
+                            <div class="input-group">
+                                <input type="color" name="warna_custom[]" id="colorPicker_0" class="form-control color-picker" value="#000000">
+                                <div class="input-group-append">
+                                    <button type="button" class="btn btn-danger remove-color" disabled>
+                                        <i class="fa fa-trash"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <small class="form-text text-muted">Kode Hex: <span class="hex-value">#000000</span></small>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="text-center mt-3">
+                    <button type="button" class="btn btn-primary" id="addColor">
+                        <i class="fa fa-plus"></i> Tambah Warna
+                    </button>
+                </div>
+
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn primary-outline-btn" data-dismiss="modal">Batal</button>
+                <button type="button" class="btn primary-btn">Pre-Order</button>
+            </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal Request Warna -->
 @endsection
 
 @push('scripts')
+    <script src="{{ asset('home/js/ProdukDetail.js') }}"></script>
     <script type="text/javascript">
-
-        $(".product__color__select label, .shop__sidebar__size label, .product__details__option__jenwarna label").on('click', function () {
-            $(".product__color__select label, .shop__sidebar__size label, .product__details__option__jenwarna label").removeClass('active');
-            $(this).addClass('active');
-        });
-
-        /*-------------------
-                Quantity change
-            --------------------- */
-            var proQty = $('.pro-qty');
-            proQty.prepend('<span class="fa fa-angle-up dec qtybtn"></span>');
-            proQty.append('<span class="fa fa-angle-down inc qtybtn"></span>');
-            proQty.on('click', '.qtybtn', function () {
-                var $button = $(this);
-                var oldValue = $button.parent().find('input').val();
-                if ($button.hasClass('inc')) {
-                    var newVal = parseFloat(oldValue) + 1;
-                } else {
-                    // Don't allow decrementing below zero
-                    if (oldValue > 0) {
-                        var newVal = parseFloat(oldValue) - 1;
-                    } else {
-                        newVal = 0;
-                    }
-                }
-                $button.parent().find('input').val(newVal);
-            });
 
         $('#checkout').on('click', function(e) {
             e.preventDefault();
@@ -382,106 +403,6 @@
             });
         })
 
-        // Add loading overlay to body
-        $('body').append('<div class="loading-overlay"></div>');
-
-        // Show overlay during AJAX request
-        $(document).ajaxStart(function() {
-            $('.loading-overlay').fadeIn(200);
-        });
-
-        $(document).ajaxStop(function() {
-            $('.loading-overlay').fadeOut(200);
-        });
-
-        // Helper functions for button states
-        function showLoadingState($button, $buttonText) {
-            $button.prop('disabled', true)
-                   .addClass('btn-loading shimmer with-text');
-            $buttonText.text('Memproses...');
-
-            // Add pulse effect
-            $button.addClass('pulse');
-            setTimeout(() => $button.removeClass('pulse'), 600);
-        }
-
-        function showSuccessState($button, $buttonText) {
-            $button.removeClass('btn-loading shimmer with-text')
-                   .addClass('btn-success');
-            $buttonText.text('Berhasil!');
-        }
-
-        function showErrorState($button, $buttonText, originalText) {
-            $button.prop('disabled', false)
-                   .removeClass('btn-loading shimmer with-text btn-success');
-            $buttonText.text(originalText);
-        }
-
-        function showValidationError(message) {
-            // Create custom alert with animation
-            const alertHtml = `
-                <div class="validation-alert">
-                    <div class="alert-content">
-                        <i class="fa fa-exclamation-triangle"></i>
-                        <span>${message}</span>
-                    </div>
-                </div>
-            `;
-
-            if ($('.validation-alert').length === 0) {
-                $('body').append(alertHtml);
-                $('.validation-alert').fadeIn(300);
-
-                setTimeout(() => {
-                    $('.validation-alert').fadeOut(300, function() {
-                        $(this).remove();
-                    });
-                }, 3000);
-            }
-        }
-
-        // Quantity controls
-        // $(document).ready(function() {
-        //     const $jumlahInput = $('#jumlah');
-        //     const maxStock = {{ $produk->stok }};
-
-        //     // Add quantity controls if they don't exist
-        //     if (!$('.pro-qty .qtybtn').length) {
-        //         // Create minus button
-        //         const $minusBtn = $('<button type="button" class="qtybtn">-</button>');
-        //         $minusBtn.click(function() {
-        //             let currentVal = parseInt($jumlahInput.val());
-        //             if (currentVal > 1) {
-        //                 $jumlahInput.val(currentVal - 1);
-        //             }
-        //         });
-
-        //         // Create plus button
-        //         const $plusBtn = $('<button type="button" class="qtybtn">+</button>');
-        //         $plusBtn.click(function() {
-        //             let currentVal = parseInt($jumlahInput.val());
-        //             if (currentVal < maxStock) {
-        //                 $jumlahInput.val(currentVal + 1);
-        //             } else {
-        //                 alert('Stok maksimal adalah ' + maxStock + ' item');
-        //             }
-        //         });
-
-        //         // Insert buttons
-        //         $('.pro-qty').prepend($minusBtn).append($plusBtn);
-        //     }
-
-        //     // Validate manual input
-        //     $jumlahInput.on('change keyup', function() {
-        //         let val = parseInt($(this).val());
-        //         if (isNaN(val) || val < 1) {
-        //             $(this).val(1);
-        //         } else if (val > maxStock) {
-        //             $(this).val(maxStock);
-        //             alert('Stok maksimal adalah ' + maxStock + ' item');
-        //         }
-        //     });
-        // });
     </script>
 
     <script>
@@ -516,47 +437,5 @@
 @endpush
 
 @push('styles')
-    <style>
-        .gallery-thumb {
-            cursor: pointer;
-            border: 2px solid transparent;
-            transition: border 0.3s ease;
-            border-radius: 8px;
-            height: 80px;
-            object-fit: cover;
-        }
-
-        .gallery-thumb:hover {
-            border: 2px solid #ca1515;
-        }
-
-        .product__details__pic__slider {
-            margin-top: 15px;
-        }
-
-        .product__details__pic__slider .owl-nav {
-            margin-top: 0;
-        }
-
-        .product__details__pic__slider .owl-nav button {
-            position: absolute;
-            top: 50%;
-            transform: translateY(-50%);
-            background: rgba(0,0,0,0.5) !important;
-            color: white !important;
-            border: none !important;
-            border-radius: 3px;
-            width: 30px;
-            height: 30px;
-            line-height: 30px;
-        }
-
-        .product__details__pic__slider .owl-nav .owl-prev {
-            left: -15px;
-        }
-
-        .product__details__pic__slider .owl-nav .owl-next {
-            right: -15px;
-        }
-    </style>
+<link rel="stylesheet" href="{{ asset('home/css/produkdetail.css') }}">
 @endpush
