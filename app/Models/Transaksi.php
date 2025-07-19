@@ -38,4 +38,9 @@ class Transaksi extends Model
     {
         return $this->hasMany(DetailTransaksi::class);
     }
+
+    public function requestWarna()
+    {
+        return $this->hasOne(RequestWarna::class);
+    }
 }
