@@ -18,11 +18,9 @@ class PengirimanController extends Controller
     public function cekDestinasiTujuan(Request $request)
     {
         $response = Http::withHeaders([
-            'key' => env('KOMERCE_API_KEY') // disarankan simpan di .env
+            'key' => env('KOMERCE_API_KEY', "ew0ZJZz513ba1d44c4878df9wHk40hkr")
         ])->get('https://rajaongkir.komerce.id/api/v1/destination/domestic-destination', [
             'search' => $request->query('search'),
-            // 'limit' => $request->query('limit', 10),
-            // 'offset' => $request->query('offset', 0),
         ]);
 
         return response()->json($response->json(), $response->status());
@@ -31,12 +29,12 @@ class PengirimanController extends Controller
     public function cekOngkir(Request $request)
     {
         $response = Http::withHeaders([
-            'key' => env('KOMERCE_API_KEY'),
+            'key' => env('KOMERCE_API_KEY', "ew0ZJZz513ba1d44c4878df9wHk40hkr"),
         ])->asForm()->post('https://rajaongkir.komerce.id/api/v1/calculate/domestic-cost', [
-            'origin' => env('ORIGIN_LOCATION_ID'),
+            'origin' => env('ORIGIN_LOCATION_ID', "28400"),
             'destination' => $request->destination,
-            'weight' => env('KOMERCE_WEIGHT'),
-            'courier' => env('KOMERCE_COURIER'),
+            'weight' => env('KOMERCE_WEIGHT', 10),
+            'courier' => env('KOMERCE_COURIER', 'jnt'),
         ]);
 
         return response()->json($response->json());

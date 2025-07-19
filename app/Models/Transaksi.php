@@ -15,6 +15,7 @@ class Transaksi extends Model
         'subtotal',
         'ongkir',
         'total',
+        'preorder',
         'catatan',
         'alamat_pengiriman',
     ];

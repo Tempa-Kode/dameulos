@@ -47,6 +47,9 @@
                                                     <i class="fa fa-receipt"></i>
                                                     {{ $item->kode_transaksi }}
                                                 </a>
+                                                @if ($item->preorder == 1)
+                                                    <span class="badge badge-warning ml-2">Pre-Order</span>
+                                                @endif
                                             </h5>
                                         </div>
                                         <div class="col-md-6 text-right">

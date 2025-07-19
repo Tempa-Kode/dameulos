@@ -10,6 +10,8 @@ use App\Models\Pembayaran;
 use App\Models\Pengiriman;
 use App\Models\UkuranProduk;
 use App\Models\JenisWarnaProduk;
+use App\Models\RequestWarna;
+use App\Models\KodeWarnaRequest;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
@@ -27,6 +29,9 @@ class CheckoutController extends Controller
             'produk_id' => 'required',
             'ukuran_id' => 'nullable',
             'warna_id' => 'nullable',
+            'kode_warna' => 'nullable|array',
+            'kode_warna.*' => 'nullable|string|max:7',
+            'pre_order' => 'nullable|boolean',
             'jumlah' => 'required'
         ];
 
@@ -105,12 +110,12 @@ class CheckoutController extends Controller
                 'produk_id' => $produkId,
                 'ukuran_id' => $ukuranIds[$index] ?? null,
                 'warna_id' => $warnaIds[$index] ?? null,
+                'kode_warna' => $request->kode_warna ?? null,
+                'pre_order' => $request->pre_order ?? false,
             ];
         }
 
-        // Calculate shipping cost (example: 15000 for single item, 5000 for each additional item)
-        $ongkir = 15000 + (count($checkoutData) - 1) * 5000;
-        $grandTotal = $totalHarga + $ongkir;
+        $grandTotal = $totalHarga;
 
         // If AJAX request, return checkout page URL
         if ($request->ajax()) {
@@ -119,7 +124,6 @@ class CheckoutController extends Controller
                 'checkout_data' => $checkoutData,
                 'checkout_totals' => [
                     'subtotal' => $totalHarga,
-                    'ongkir' => $ongkir,
                     'total' => $grandTotal
                 ]
             ]);
@@ -149,7 +153,6 @@ class CheckoutController extends Controller
         return view('pelanggan.checkout', [
             'checkoutData' => $checkoutData,
             'totalHarga' => $totals['subtotal'],
-            'ongkir' => $totals['ongkir'],
             'grandTotal' => $totals['total']
         ]);
     }
@@ -207,6 +210,10 @@ class CheckoutController extends Controller
             ]);
 
             // Create transaction details
+            $hasRequestWarna = false;
+            $requestWarnaData = [];
+            $isPreOrder = false;
+
             foreach ($checkoutData as $item) {
                 DetailTransaksi::create([
                     'transaksi_id' => $transaksi->id,
@@ -218,12 +225,43 @@ class CheckoutController extends Controller
                     'jenis_warna_produk_id' => $item['warna_id'],
                 ]);
 
+                // Check if this item has custom color request
+                if (!empty($item['kode_warna']) && is_array($item['kode_warna'])) {
+                    $hasRequestWarna = true;
+                    $requestWarnaData = $item['kode_warna'];
+                }
+
+                // Check if this is pre-order
+                if ($item['pre_order']) {
+                    $isPreOrder = true;
+                }
+
                 // Update product stock
                 $produk = Produk::findOrFail($item['produk_id']);
                 $produk->decrement('stok', $item['jumlah']);
             }
 
-            // Create payment record
+            // Update transaction status if it's pre-order
+            if ($isPreOrder || $hasRequestWarna) {
+                $transaksi->update(['preorder' => true]);
+            }
+
+            // Create request warna if there are custom colors
+            if ($hasRequestWarna && !empty($requestWarnaData)) {
+                $requestWarna = RequestWarna::create([
+                    'transaksi_id' => $transaksi->id,
+                ]);
+
+                // Create kode warna request for each color
+                foreach ($requestWarnaData as $kodeWarna) {
+                    if (!empty($kodeWarna)) {
+                        KodeWarnaRequest::create([
+                            'request_warna_id' => $requestWarna->id,
+                            'kode_warna' => $kodeWarna,
+                        ]);
+                    }
+                }
+            }            // Create payment record
             // Pembayaran::create([
             //     'transaksi_id' => $transaksi->id,
             //     'metode_pembayaran' => $request->metode_pembayaran,
@@ -293,7 +331,8 @@ class CheckoutController extends Controller
         $transaksi = Transaksi::with([
             'detailTransaksi.produk',
             'detailTransaksi.ukuranProduk',
-            'detailTransaksi.jenisWarnaProduk'
+            'detailTransaksi.jenisWarnaProduk',
+            'requestWarna.kodeWarnaRequests'
         ])->where('kode_transaksi', $kode_transaksi)->firstOrFail();
 
         $pembayaran = Pembayaran::where('transaksi_id', $transaksi->id)->first();
@@ -346,6 +385,8 @@ class CheckoutController extends Controller
                 'ukuran_id' => $item->ukuran_produk_id,
                 'warna_id' => $item->jenis_warna_produk_id,
                 'keranjang_id' => $item->id, // Store cart item ID for later cleanup
+                'pre_order' => false, // Default false untuk checkout dari keranjang
+                'kode_warna' => null, // Default null untuk checkout dari keranjang
             ];
         }
 

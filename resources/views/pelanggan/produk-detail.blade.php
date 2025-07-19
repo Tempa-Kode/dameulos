@@ -231,7 +231,7 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn primary-outline-btn" data-dismiss="modal">Batal</button>
-                <button type="button" class="btn primary-btn">Pre-Order</button>
+                <button type="button" id="preorder" class="btn primary-btn">Pre-Order</button>
             </div>
             </div>
         </div>
@@ -321,6 +321,82 @@
                 }
             });
         });
+
+        $('#preorder').on('click', function(e) {
+            e.preventDefault();
+
+            const $button = $(this);
+            const $buttonText = $button.find('.btn-text');
+            const originalText = $buttonText.text();
+
+            const jumlah = $('#jumlah').val();
+            const ukuranId = $('input[name="ukuran"]:checked').val();
+            const warnaId = $('input[name="warna"]:checked').val();
+            const kodeWarna = $('.color-picker').map(function() {
+                return this.value;
+            }).get();
+
+            // Validation
+            if (!jumlah || jumlah < 1) {
+                showValidationError('Jumlah produk minimal 1');
+                return;
+            }
+
+            if (jumlah > {{ $produk->stok }}) {
+                showValidationError('Jumlah melebihi stok yang tersedia ({{ $produk->stok }} item)');
+                return;
+            }
+
+            // Check if product has size options and validate if required
+            const hasUkuranOptions = $('input[name="ukuran"]').length > 0;
+            if (hasUkuranOptions && !ukuranId) {
+                showValidationError('Silakan pilih ukuran produk');
+                return;
+            }
+
+            // Show loading state with animation
+            showLoadingState($button, $buttonText);
+
+            $.ajax({
+                url: '{{ route("pelanggan.checkout") }}',
+                method: 'POST',
+                data: {
+                    produk_id: {{ $produk->id }},
+                    ukuran_id: ukuranId || null,
+                    warna_id: warnaId || null,
+                    jumlah: jumlah,
+                    kode_warna: kodeWarna,
+                    pre_order: true,
+                    _token: '{{ csrf_token() }}'
+                },
+                success: function(response) {
+                    if (response.success) {
+                        showSuccessState($button, $buttonText);
+
+                        // Redirect after showing success animation
+                        setTimeout(function() {
+                            window.location.href = response.redirect_url;
+                        }, 800);
+                    } else {
+                        showErrorState($button, $buttonText, originalText);
+                        alert(response.message || 'Terjadi kesalahan saat memproses pesanan.');
+                    }
+                },
+                error: function(xhr) {
+                    showErrorState($button, $buttonText, originalText);
+
+                    let errorMessage = 'Terjadi kesalahan saat memproses pesanan.';
+
+                    if (xhr.responseJSON && xhr.responseJSON.message) {
+                        errorMessage = xhr.responseJSON.message;
+                    } else if (xhr.responseJSON && xhr.responseJSON.errors) {
+                        errorMessage = Object.values(xhr.responseJSON.errors).flat().join('\n');
+                    }
+
+                    alert(errorMessage);
+                }
+            });
+        })
 
         $('#keranjang').on('click', function(e){
             e.preventDefault();

@@ -232,6 +232,57 @@
         .checkout__total__all li span {
             transition: all 0.3s ease;
         }
+
+        /* Pre-order badge styling */
+        .badge-warning {
+            background-color: #ffc107;
+            color: #212529;
+            font-size: 11px;
+            font-weight: 600;
+            border-radius: 12px;
+            animation: pulse-badge 2s infinite;
+        }
+
+        @keyframes pulse-badge {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        /* Custom color preview styling */
+        .custom-colors {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 10px;
+            border-left: 3px solid #7fad39;
+        }
+
+        .color-preview-container {
+            gap: 8px;
+        }
+
+        .color-preview-item {
+            background: white;
+            padding: 5px 8px;
+            border-radius: 15px;
+            border: 1px solid #e1e1e1;
+            font-size: 12px;
+            transition: all 0.3s ease;
+        }
+
+        .color-preview-item:hover {
+            box-shadow: 0 2px 5px rgba(127, 173, 57, 0.2);
+            transform: translateY(-1px);
+        }
+
+        .color-box {
+            box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+            transition: transform 0.2s ease;
+        }
+
+        .color-box:hover {
+            transform: scale(1.1);
+        }
     </style>
 @endpush
 @section('content')
@@ -332,15 +383,65 @@
                         <div class="col-lg-6 col-md-6">
                             <div class="checkout__order">
                                 <h4 class="order__title text-center">Pesanan Anda</h4>
+
+                                @php
+                                    $hasPreOrder = collect($checkoutData)->contains(function($item) {
+                                        return isset($item['pre_order']) && $item['pre_order'] == true;
+                                    });
+                                @endphp
+
+                                @if($hasPreOrder)
+                                    <div class="alert alert-warning mb-3" style="border-left: 4px solid #ffc107; background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);">
+                                        <div class="d-flex align-items-center">
+                                            <i class="fa fa-clock fa-2x text-warning mr-3"></i>
+                                            <div>
+                                                <h6 class="alert-heading mb-1 font-weight-bold">
+                                                    <i class="fa fa-info-circle"></i> Pre-Order
+                                                </h6>
+                                                <p class="mb-0 small">
+                                                    Pesanan ini mengandung item <strong>pre-order</strong> dengan kostume warna.
+                                                    Estimasi pengerjaan <strong>7-14 hari kerja</strong> setelah pembayaran dikonfirmasi.
+                                                </p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endif
+
                                 <div class="checkout__order__products">Produk <span>Total</span></div>
                                 <ul class="checkout__total__products">
                                     @foreach($checkoutData as $item)
                                         <div class="checkout__order__product d-flex justify-content-between align-items-start p-3 mb-3 border-bottom">
                                             <div class="checkout__order__product__info flex-grow-1">
-                                                <h6 class="mb-2 font-weight-bold">{{ $item['produk']->nama }}</h6>
+                                                <div class="d-flex align-items-center mb-2">
+                                                    <h6 class="mb-0 font-weight-bold">{{ $item['produk']->nama }}</h6>
+                                                    @if(isset($item['pre_order']) && $item['pre_order'] == true)
+                                                        <span class="badge badge-warning ml-2 px-2 py-1">
+                                                            <i class="fa fa-clock"></i> PRE-ORDER
+                                                        </span>
+                                                    @endif
+                                                </div>
                                                 <div class="product-details">
                                                     <p class="text-muted mb-1 small">Uk :{{ $item['ukuran']->ukuran ?? '' }}</p>
                                                     <p class="text-muted mb-1 small">{{ $item['warna']->warna ?? '' }}</p>
+
+                                                    @if(isset($item['pre_order']) && $item['pre_order'] == true && isset($item['kode_warna']) && !empty($item['kode_warna']))
+                                                        <div class="custom-colors mb-2">
+                                                            <p class="text-muted mb-1 small font-weight-bold">
+                                                                <i class="fa fa-palette"></i> Warna yang dipilih:
+                                                            </p>
+                                                            <div class="color-preview-container d-flex flex-wrap">
+                                                                @foreach($item['kode_warna'] as $index => $warna)
+                                                                    <div class="color-preview-item mr-2 mb-1 d-flex align-items-center">
+                                                                        <div class="color-box"
+                                                                             style="width: 20px; height: 20px; background-color: {{ $warna }}; border: 1px solid #ddd; border-radius: 3px; margin-right: 5px;">
+                                                                        </div>
+                                                                        <small class="text-muted">{{ $warna }}</small>
+                                                                    </div>
+                                                                @endforeach
+                                                            </div>
+                                                        </div>
+                                                    @endif
+
                                                     <p class="text-muted mb-1 small">x{{ $item['jumlah'] }}</p>
                                                     <p class="text-muted mb-0 small">Harga Satuan: Rp {{ number_format($item['harga_satuan'], 0, ',', '.') }}</p>
                                                 </div>

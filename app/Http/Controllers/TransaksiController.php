@@ -45,7 +45,8 @@ class TransaksiController extends Controller
             'detailTransaksi.ukuranProduk',
             'detailTransaksi.jenisWarnaProduk',
             'pembayaran',
-            'pengiriman'
+            'pengiriman',
+            'requestWarna.kodeWarnaRequests'
         ]);
         return view('admin.transaksi.show', compact('transaksi'));
     }

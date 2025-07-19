@@ -80,6 +80,38 @@
                             </tbody>
                         </table>
                     </div>
+
+                    @if($transaksi->requestWarna && $transaksi->requestWarna->kodeWarnaRequests->count() > 0)
+                        <hr>
+                        <!-- Request Warna Custom -->
+                        <h6 class="text-muted mb-3">Request Warna Custom (Pre-Order)</h6>
+                        <div class="alert alert-warning">
+                            <div class="d-flex align-items-center mb-2">
+                                <i class="fa fa-palette me-2"></i>
+                                <strong>Pesanan ini menggunakan warna custom</strong>
+                            </div>
+                            <p class="mb-2">Pelanggan telah request warna custom untuk pesanan ini. Berikut adalah kode warna yang diminta:</p>
+
+                            <div class="custom-colors-container">
+                                @foreach($transaksi->requestWarna->kodeWarnaRequests as $index => $kodeWarna)
+                                    <div class="color-item d-inline-flex align-items-center me-3 mb-2">
+                                        <div class="color-preview"
+                                             style="width: 30px; height: 30px; background-color: {{ $kodeWarna->kode_warna }}; border: 2px solid #ddd; border-radius: 5px; margin-right: 8px;">
+                                        </div>
+                                        <span class="color-code fw-bold">{{ $kodeWarna->kode_warna }}</span>
+                                    </div>
+                                @endforeach
+                            </div>
+
+                            <div class="mt-3">
+                                <small class="text-muted">
+                                    <i class="fa fa-info-circle"></i>
+                                    Total {{ $transaksi->requestWarna->kodeWarnaRequests->count() }} warna custom diminta.
+                                    Waktu pengerjaan pre-order: 7-14 hari kerja.
+                                </small>
+                            </div>
+                        </div>
+                    @endif
                 </div>
             </div>
         </div>
@@ -117,8 +149,7 @@
                 <div class="card-body">
                     <p class="mb-1"><strong>Status:</strong>
                         @if ($transaksi->pembayaran->status == 'pending')
-                            <span class="badge text-bg-warning">Pending</span>
-                        @elseif ($transaksi->pembayaran->status == 'dibayar')
+                            <span class="badge text-bg-warning">Pe         @elseif ($transaksi->pembayaran->status == 'dibayar')
                             <span class="badge text-bg-success">Dibayar</span>
                         @else
                             <span class="badge text-bg-danger">Gagal</span>

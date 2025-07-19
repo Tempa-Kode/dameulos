@@ -220,6 +220,58 @@
                 transform: translateX(0);
             }
         }
+
+        /* Pre-order badge animation */
+        .preorder-badge {
+            animation: pulse-preorder 2s infinite;
+        }
+
+        @keyframes pulse-preorder {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+            100% { transform: scale(1); }
+        }
+
+        /* Custom colors styling */
+        .custom-colors-container {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+            border-left: 4px solid #7fad39;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .color-item {
+            background: white;
+            padding: 12px 18px;
+            border-radius: 25px;
+            border: 1px solid #dee2e6;
+            display: flex;
+            align-items: center;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            margin: 5px;
+        }
+
+        .color-item:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(127, 173, 57, 0.2);
+        }
+
+        .color-circle {
+            width: 28px;
+            height: 28px;
+            border: 2px solid #333;
+            border-radius: 50%;
+            margin-right: 12px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.3);
+            transition: transform 0.2s ease;
+        }
+
+        .color-circle:hover {
+            transform: scale(1.1);
+        }
     </style>
 @endpush
 
@@ -287,6 +339,23 @@
                                         <span class="badge badge-warning">{{ ucfirst($transaksi->status) }}</span>
                                     </div>
 
+                                    @if($transaksi->preorder == 1)
+                                        <div class="order-info" style="background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%); padding: 15px; border-radius: 8px; border-left: 4px solid #ffc107; margin: 15px 0;">
+                                            <div style="display: flex; align-items: center;">
+                                                <i class="fa fa-clock fa-2x text-warning" style="margin-right: 15px;"></i>
+                                                <div style="flex: 1;">
+                                                    <h6 style="margin: 0; color: #856404; font-weight: bold;">
+                                                        <i class="fa fa-info-circle"></i> Pesanan Pre-Order
+                                                    </h6>
+                                                    <p style="margin: 5px 0 0 0; color: #856404; font-size: 14px;">
+                                                        Pesanan ini adalah <strong>pre-order</strong> dengan kustome warna.
+                                                        Estimasi pengerjaan <strong>7-14 hari kerja</strong> setelah pembayaran dikonfirmasi.
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @endif
+
                                     <div class="order-products">
                                         <h5>Produk yang Dipesan:</h5>
                                         @foreach($transaksi->detailTransaksi as $detail)
@@ -305,6 +374,25 @@
                                             </div>
                                         @endforeach
                                     </div>
+
+                                    @if($transaksi->preorder == 1 && $transaksi->requestWarna && $transaksi->requestWarna->kodeWarnaRequests->count() > 0)
+                                        <div style="background: #f8f9fa; border-radius: 10px; padding: 20px; margin: 20px 0; border-left: 4px solid #7fad39;">
+                                            <h5 style="color: #495057; margin-bottom: 15px; font-weight: 600;">
+                                                <i class="fa fa-palette"></i> Kustome warna yang Diminta:
+                                            </h5>
+                                            <div style="display: flex; flex-wrap: wrap; gap: 12px;">
+                                                @foreach($transaksi->requestWarna->kodeWarnaRequests as $index => $kodeWarna)
+                                                    <div style="background: white; padding: 10px 15px; border-radius: 20px; border: 1px solid #dee2e6; display: flex; align-items: center; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+                                                        <div style="width: 25px; height: 25px; background-color: {{ $kodeWarna->kode_warna }}; border: 2px solid #333; border-radius: 50%; margin-right: 10px; box-shadow: 0 1px 3px rgba(0,0,0,0.3);"></div>
+                                                        <span style="font-size: 13px; color: #495057; font-weight: 500;">{{ $kodeWarna->kode_warna }}</span>
+                                                    </div>
+                                                @endforeach
+                                            </div>
+                                            <p style="margin: 15px 0 0 0; font-size: 13px; color: #6c757d; font-style: italic;">
+                                                <i class="fa fa-info-circle"></i> Tim produksi akan mencocokkan warna sesuai dengan kode yang Anda pilih.
+                                            </p>
+                                        </div>
+                                    @endif
 
                                     <div class="order-info">
                                         <span>Subtotal:</span>

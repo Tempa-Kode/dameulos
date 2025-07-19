@@ -1,7 +1,7 @@
 @php
     use Illuminate\Support\Facades\Auth;
     $keranjang = 0; // Default value
-    if (Auth::check() && Auth::user()->role == 'pelanggan') {
+    if (Auth::check()) {
         $keranjang = App\Models\Keranjang::where('user_id', Auth::user()->id)->count();
     }
 @endphp
