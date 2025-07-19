@@ -59,7 +59,7 @@ class AksesPelangganController extends Controller
 
     public function produkBySlug(Produk $produk)
     {
-        $produk->load(['katalog', 'ukuran', 'jenisWarnaProduk', 'warnaProduk']);
+        $produk->load(['katalog', 'ukuran', 'jenisWarnaProduk', 'warnaProduk', 'fotoProduk']);
         $produkTerkait = Produk::where('katalog_id', $produk->katalog_id)
             ->where('id', '!=', $produk->id)
             ->limit(4)

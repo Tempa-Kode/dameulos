@@ -148,7 +148,7 @@
                         </button>
                     </div>
                     <div class="form-group">
-                        <label for="gambar" class="form-label">Gambar Produk</label>
+                        <label for="gambar" class="form-label">Gambar Utama Produk</label>
                         <input class="form-control @error('gambar') is-invalid @enderror"
                                type="file"
                                id="gambar"
@@ -157,6 +157,33 @@
                         @error('gambar')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
+                    </div>
+
+                    <div class="form-group">
+                        <label for="foto_produk" class="form-label">Foto Produk Tambahan</label>
+                        <div id="fotoProdukContainer">
+                            <div class="foto-item mb-2">
+                                <div class="input-group">
+                                    <input class="form-control @error('foto_produk.0') is-invalid @enderror"
+                                           type="file"
+                                           name="foto_produk[]"
+                                           accept="image/*">
+                                    <button type="button" class="btn btn-danger hapus-foto" style="display: none;">
+                                        <i class="ti ti-trash"></i>
+                                    </button>
+                                </div>
+                                @error('foto_produk.0')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
+                        <button type="button" id="tambahFoto" class="btn btn-secondary mt-2">
+                            <i class="ti ti-plus me-1"></i>Tambah Foto
+                        </button>
+                        <small class="form-text text-muted">
+                            <i class="ti ti-info-circle me-1"></i>
+                            Format yang didukung: JPEG, PNG, JPG, GIF. Maksimal 10MB per file.
+                        </small>
                     </div>
 
                     <button type="submit" class="btn btn-success float-end">
@@ -173,12 +200,15 @@
             let jenisWarnaIndex = 1;
             let ukuranIndex = 1;
             let warnaIndex = 1;
+            let fotoIndex = 1;
             const tambahJenisWarnaBtn = document.getElementById('tambahjenisWarna');
             const tambahUkuranBtn = document.getElementById('tambahUkuran');
             const tambahWarnaBtn = document.getElementById('tambahWarna');
+            const tambahFotoBtn = document.getElementById('tambahFoto');
             const jenisWarnaContainer = document.getElementById('jenisWarnaContainer');
             const ukuranContainer = document.getElementById('ukuranContainer');
             const warnaContainer = document.getElementById('warnaContainer');
+            const fotoProdukContainer = document.getElementById('fotoProdukContainer');
 
             // Function untuk menambah jenis warna
             tambahJenisWarnaBtn.addEventListener('click', function() {
@@ -249,6 +279,29 @@
                 updateHapusWarnaButtons();
             });
 
+            // Function untuk menambah foto
+            tambahFotoBtn.addEventListener('click', function() {
+                const newFotoItem = document.createElement('div');
+                newFotoItem.className = 'foto-item mb-2';
+                newFotoItem.innerHTML = `
+                    <div class="input-group">
+                        <input class="form-control"
+                            type="file"
+                            name="foto_produk[]"
+                            accept="image/*">
+                        <button type="button" class="btn btn-danger hapus-foto">
+                            <i class="ti ti-trash"></i>
+                        </button>
+                    </div>
+                `;
+
+                fotoProdukContainer.appendChild(newFotoItem);
+                fotoIndex++;
+
+                // Show hapus button untuk semua item jika ada lebih dari 1
+                updateHapusFotoButtons();
+            });
+
             // Function untuk menghapus jenis warna
             jenisWarnaContainer.addEventListener('click', function(e) {
                 if (e.target.classList.contains('hapus-jenisWarna') || e.target.closest('.hapus-jenisWarna')) {
@@ -273,6 +326,15 @@
                     const warnaItem = e.target.closest('.warna-item');
                     warnaItem.remove();
                     updateHapusWarnaButtons();
+                }
+            });
+
+            // Function untuk menghapus foto
+            fotoProdukContainer.addEventListener('click', function(e) {
+                if (e.target.classList.contains('hapus-foto') || e.target.closest('.hapus-foto')) {
+                    const fotoItem = e.target.closest('.foto-item');
+                    fotoItem.remove();
+                    updateHapusFotoButtons();
                 }
             });
 
@@ -308,6 +370,19 @@
                 warnaItems.forEach(function(item, index) {
                     const hapusBtn = item.querySelector('.hapus-warna');
                     if (warnaItems.length > 1) {
+                        hapusBtn.style.display = 'block';
+                    } else {
+                        hapusBtn.style.display = 'none';
+                    }
+                });
+            }
+
+            // Function untuk update visibility tombol hapus foto
+            function updateHapusFotoButtons() {
+                const fotoItems = fotoProdukContainer.querySelectorAll('.foto-item');
+                fotoItems.forEach(function(item, index) {
+                    const hapusBtn = item.querySelector('.hapus-foto');
+                    if (fotoItems.length > 1) {
                         hapusBtn.style.display = 'block';
                     } else {
                         hapusBtn.style.display = 'none';

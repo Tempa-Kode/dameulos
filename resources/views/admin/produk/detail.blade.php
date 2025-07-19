@@ -29,14 +29,33 @@
                             @if($produk->gambar)
                                 <img src="{{ asset($produk->gambar) }}"
                                     alt="{{ $produk->nama }}"
-                                    class="img-fluid rounded shadow-sm"
+                                    class="img-fluid rounded shadow-sm mb-3"
                                     style="width: 100%; max-height: 400px; object-fit: cover;">
                             @else
-                                <div class="no-image-placeholder bg-light rounded d-flex align-items-center justify-content-center"
+                                <div class="no-image-placeholder bg-light rounded d-flex align-items-center justify-content-center mb-3"
                                      style="height: 400px;">
                                     <div class="text-center text-muted">
                                         <i class="ti ti-photo-off" style="font-size: 3rem;"></i>
-                                        <p class="mt-2 mb-0">Tidak ada gambar</p>
+                                        <p class="mt-2 mb-0">Tidak ada gambar utama</p>
+                                    </div>
+                                </div>
+                            @endif
+
+                            <!-- Galeri Foto Produk -->
+                            @if($produk->fotoProduk && $produk->fotoProduk->count() > 0)
+                                <div class="foto-produk-gallery">
+                                    <h6 class="mb-3">Galeri Foto</h6>
+                                    <div class="row">
+                                        @foreach($produk->fotoProduk as $foto)
+                                            <div class="col-6 mb-2">
+                                                <img src="{{ asset($foto->foto) }}"
+                                                     alt="Foto Produk {{ $loop->iteration }}"
+                                                     class="img-fluid rounded shadow-sm"
+                                                     style="width: 100%; height: 120px; object-fit: cover; cursor: pointer;"
+                                                     data-bs-toggle="modal"
+                                                     data-bs-target="#fotoModal{{ $foto->id }}">
+                                            </div>
+                                        @endforeach
                                     </div>
                                 </div>
                             @endif
@@ -196,6 +215,28 @@
         </div>
     </div>
 
+    <!-- Modal untuk Foto Produk -->
+    @if($produk->fotoProduk && $produk->fotoProduk->count() > 0)
+        @foreach($produk->fotoProduk as $foto)
+            <div class="modal fade" id="fotoModal{{ $foto->id }}" tabindex="-1" aria-labelledby="fotoModalLabel{{ $foto->id }}" aria-hidden="true">
+                <div class="modal-dialog modal-lg modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="fotoModalLabel{{ $foto->id }}">Foto Produk {{ $loop->iteration }}</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body text-center">
+                            <img src="{{ asset($foto->foto) }}"
+                                 alt="Foto Produk {{ $loop->iteration }}"
+                                 class="img-fluid rounded"
+                                 style="max-height: 80vh; width: auto;">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        @endforeach
+    @endif
+
     <!-- Modal Konfirmasi Hapus -->
     <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -257,6 +298,16 @@
             background-color: #f8f9fa;
             padding: 1rem;
             border-radius: 0.375rem;
+        }
+
+        .foto-produk-gallery h6 {
+            font-weight: 600;
+            color: #495057;
+        }
+
+        .foto-produk-gallery img:hover {
+            transform: scale(1.05);
+            transition: transform 0.3s ease;
         }
 
         @media (max-width: 768px) {

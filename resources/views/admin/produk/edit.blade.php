@@ -229,7 +229,7 @@
                     </div>
 
                     <div class="form-group">
-                        <label for="gambar" class="form-label">Gambar Produk</label>
+                        <label for="gambar" class="form-label">Gambar Utama Produk</label>
 
                         @if($produk->gambar)
                             <div class="current-image mb-3">
@@ -248,6 +248,59 @@
                         @error('gambar')
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
+                    </div>
+
+                    <!-- Foto Produk Tambahan -->
+                    <div class="form-group">
+                        <label class="form-label">Foto Produk Tambahan</label>
+
+                        @if($produk->fotoProduk && $produk->fotoProduk->count() > 0)
+                            <div class="current-photos mb-3">
+                                <p class="mb-2"><strong>Foto Saat Ini:</strong></p>
+                                <div class="row">
+                                    @foreach($produk->fotoProduk as $foto)
+                                        <div class="col-md-3 mb-3">
+                                            <div class="position-relative">
+                                                <img src="{{ asset($foto->foto) }}" alt="Foto Produk"
+                                                     class="img-thumbnail" style="width: 100%; height: 150px; object-fit: cover;">
+                                                <div class="position-absolute top-0 end-0 p-1">
+                                                    <input type="checkbox" name="hapus_foto[]" value="{{ $foto->id }}"
+                                                           class="form-check-input" id="hapus_foto_{{ $foto->id }}">
+                                                    <label for="hapus_foto_{{ $foto->id }}" class="form-check-label text-danger small">
+                                                        <i class="ti ti-trash"></i> Hapus
+                                                    </label>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                </div>
+                                <p class="text-muted"><small><i class="ti ti-info-circle me-1"></i>Centang foto yang ingin dihapus</small></p>
+                            </div>
+                        @endif
+
+                        <div id="fotoProdukContainer">
+                            <div class="foto-item mb-2">
+                                <div class="input-group">
+                                    <input class="form-control @error('foto_produk.0') is-invalid @enderror"
+                                           type="file"
+                                           name="foto_produk[]"
+                                           accept="image/*">
+                                    <button type="button" class="btn btn-danger hapus-foto" style="display: none;">
+                                        <i class="ti ti-trash"></i>
+                                    </button>
+                                </div>
+                                @error('foto_produk.0')
+                                    <div class="invalid-feedback">{{ $message }}</div>
+                                @enderror
+                            </div>
+                        </div>
+                        <button type="button" id="tambahFoto" class="btn btn-secondary mt-2">
+                            <i class="ti ti-plus me-1"></i>Tambah Foto
+                        </button>
+                        <small class="form-text text-muted">
+                            <i class="ti ti-info-circle me-1"></i>
+                            Format yang didukung: JPEG, PNG, JPG, GIF. Maksimal 10MB per file.
+                        </small>
                     </div>
 
                     <div class="d-flex gap-2 justify-content-end">
@@ -276,16 +329,19 @@
             let jenisWarnaIndex = {{ $jenisWarnaCount }};
             let ukuranIndex = {{ $ukuranCount }};
             let warnaIndex = {{ $warnaCount }};
+            let fotoIndex = 1;
             const tambahJenisWarnaBtn = document.getElementById('tambahjenisWarna');
             const tambahUkuranBtn = document.getElementById('tambahUkuran');
             const tambahWarnaBtn = document.getElementById('tambahWarna');
+            const tambahFotoBtn = document.getElementById('tambahFoto');
             const jenisWarnaContainer = document.getElementById('jenisWarnaContainer');
             const ukuranContainer = document.getElementById('ukuranContainer');
             const warnaContainer = document.getElementById('warnaContainer');
+            const fotoProdukContainer = document.getElementById('fotoProdukContainer');
 
             // Periksa apakah semua element ditemukan
             if (!tambahJenisWarnaBtn || !tambahUkuranBtn || !tambahWarnaBtn ||
-                !jenisWarnaContainer || !ukuranContainer || !warnaContainer) {
+                !jenisWarnaContainer || !ukuranContainer || !warnaContainer || !fotoProdukContainer) {
                 return;
             }
 
@@ -358,6 +414,29 @@
                 updateHapusWarnaButtons();
             });
 
+            // Function untuk menambah foto
+            tambahFotoBtn.addEventListener('click', function() {
+                const newFotoItem = document.createElement('div');
+                newFotoItem.className = 'foto-item mb-2';
+                newFotoItem.innerHTML = `
+                    <div class="input-group">
+                        <input class="form-control"
+                            type="file"
+                            name="foto_produk[]"
+                            accept="image/*">
+                        <button type="button" class="btn btn-danger hapus-foto">
+                            <i class="ti ti-trash"></i>
+                        </button>
+                    </div>
+                `;
+
+                fotoProdukContainer.appendChild(newFotoItem);
+                fotoIndex++;
+
+                // Show hapus button untuk semua item jika ada lebih dari 1
+                updateHapusFotoButtons();
+            });
+
             // Function untuk menghapus jenis warna
             jenisWarnaContainer.addEventListener('click', function(e) {
                 if (e.target.classList.contains('hapus-jenisWarna') || e.target.closest('.hapus-jenisWarna')) {
@@ -382,6 +461,15 @@
                     const warnaItem = e.target.closest('.warna-item');
                     warnaItem.remove();
                     updateHapusWarnaButtons();
+                }
+            });
+
+            // Function untuk menghapus foto
+            fotoProdukContainer.addEventListener('click', function(e) {
+                if (e.target.classList.contains('hapus-foto') || e.target.closest('.hapus-foto')) {
+                    const fotoItem = e.target.closest('.foto-item');
+                    fotoItem.remove();
+                    updateHapusFotoButtons();
                 }
             });
 
@@ -424,10 +512,24 @@
                 });
             }
 
+            // Function untuk update visibility tombol hapus foto
+            function updateHapusFotoButtons() {
+                const fotoItems = fotoProdukContainer.querySelectorAll('.foto-item');
+                fotoItems.forEach(function(item, index) {
+                    const hapusBtn = item.querySelector('.hapus-foto');
+                    if (fotoItems.length > 1) {
+                        hapusBtn.style.display = 'block';
+                    } else {
+                        hapusBtn.style.display = 'none';
+                    }
+                });
+            }
+
             // Initialize buttons visibility
             updateHapusJenisWarnaButtons();
             updateHapusUkuranButtons();
             updateHapusWarnaButtons();
+            updateHapusFotoButtons();
         });
     </script>
 @endsection

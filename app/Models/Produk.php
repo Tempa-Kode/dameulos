@@ -42,4 +42,9 @@ class Produk extends Model
     {
         return $this->hasMany(DetailTransaksi::class, 'produk_id', 'id');
     }
+
+    public function fotoProduk()
+    {
+        return $this->hasMany(FotoProduk::class);
+    }
 }

@@ -34,9 +34,26 @@
                     <div class="col-lg-6 col-md-9">
                         <div class="tab-pane active" id="tabs-1" role="tabpanel">
                             <div class="product__details__pic__item">
-                                <img src="{{ asset($produk->gambar) }}" alt="{{ $produk->nama }}">
+                                <img src="{{ asset($produk->gambar ?? 'images/no-image.png') }}" alt="{{ $produk->nama }}" id="mainImage">
                             </div>
                         </div>
+                        @if($produk->fotoProduk && $produk->fotoProduk->count() > 0)
+                            <div class="product__details__pic__slider owl-carousel mt-3">
+                                <!-- Gambar utama sebagai slide pertama -->
+                                <img src="{{ asset($produk->gambar ?? 'images/no-image.png') }}"
+                                     alt="{{ $produk->nama }}"
+                                     class="gallery-thumb"
+                                     onclick="changeMainImage('{{ asset($produk->gambar ?? 'images/no-image.png') }}')">
+
+                                <!-- Foto produk tambahan -->
+                                @foreach($produk->fotoProduk as $foto)
+                                    <img src="{{ asset($foto->foto) }}"
+                                         alt="Foto Produk {{ $loop->iteration }}"
+                                         class="gallery-thumb"
+                                         onclick="changeMainImage('{{ asset($foto->foto) }}')">
+                                @endforeach
+                            </div>
+                        @endif
                     </div>
                     <div class="col-lg-6 col-md-9">
                         <div class="product__details__text">
@@ -466,4 +483,80 @@
         //     });
         // });
     </script>
+
+    <script>
+        // Function untuk mengganti gambar utama
+        function changeMainImage(imageSrc) {
+            document.getElementById('mainImage').src = imageSrc;
+        }
+
+        // Initialize galeri jika ada
+        $(document).ready(function() {
+            @if($produk->fotoProduk && $produk->fotoProduk->count() > 0)
+                $('.product__details__pic__slider').owlCarousel({
+                    loop: false,
+                    margin: 10,
+                    nav: true,
+                    dots: false,
+                    responsive: {
+                        0: {
+                            items: 3
+                        },
+                        600: {
+                            items: 4
+                        },
+                        1000: {
+                            items: 4
+                        }
+                    }
+                });
+            @endif
+        });
+    </script>
+@endpush
+
+@push('styles')
+    <style>
+        .gallery-thumb {
+            cursor: pointer;
+            border: 2px solid transparent;
+            transition: border 0.3s ease;
+            border-radius: 8px;
+            height: 80px;
+            object-fit: cover;
+        }
+
+        .gallery-thumb:hover {
+            border: 2px solid #ca1515;
+        }
+
+        .product__details__pic__slider {
+            margin-top: 15px;
+        }
+
+        .product__details__pic__slider .owl-nav {
+            margin-top: 0;
+        }
+
+        .product__details__pic__slider .owl-nav button {
+            position: absolute;
+            top: 50%;
+            transform: translateY(-50%);
+            background: rgba(0,0,0,0.5) !important;
+            color: white !important;
+            border: none !important;
+            border-radius: 3px;
+            width: 30px;
+            height: 30px;
+            line-height: 30px;
+        }
+
+        .product__details__pic__slider .owl-nav .owl-prev {
+            left: -15px;
+        }
+
+        .product__details__pic__slider .owl-nav .owl-next {
+            right: -15px;
+        }
+    </style>
 @endpush

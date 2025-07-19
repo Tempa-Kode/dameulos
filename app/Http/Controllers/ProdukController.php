@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\FotoProduk;
 use App\Models\JenisWarnaProduk;
 use App\Models\Katalog;
 use App\Models\Produk;
@@ -40,7 +41,9 @@ class ProdukController extends Controller
             'ukuran.*' => 'nullable|string|max:50',
             'warna' => 'nullable|min:1',
             'warna.*' => 'nullable|string|max:50',
-            'gambar' => 'required|image|mimes:jpeg,png,jpg,gif|max:10240'
+            'gambar' => 'required|image|mimes:jpeg,png,jpg,gif|max:10240',
+            'foto_produk' => 'nullable|array',
+            'foto_produk.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:10240'
         ], [
             'katalog_id.required' => 'Katalog harus dipilih.',
             'nama.required' => 'Nama produk harus diisi.',
@@ -67,7 +70,10 @@ class ProdukController extends Controller
             'gambar.required' => 'Gambar produk harus diunggah.',
             'gambar.image' => 'File yang diunggah harus berupa gambar.',
             'gambar.mimes' => 'Gambar harus berformat jpeg, png, jpg, atau gif.',
-            'gambar.max' => 'Ukuran gambar tidak boleh lebih dari 10mb.'
+            'gambar.max' => 'Ukuran gambar tidak boleh lebih dari 10mb.',
+            'foto_produk.*.image' => 'File foto produk harus berupa gambar.',
+            'foto_produk.*.mimes' => 'Foto produk harus berformat jpeg, png, jpg, atau gif.',
+            'foto_produk.*.max' => 'Ukuran foto produk tidak boleh lebih dari 10mb.'
         ]);
 
         try {
@@ -124,6 +130,20 @@ class ProdukController extends Controller
                 ]);
             }
 
+            // Handle upload foto produk tambahan
+            if ($request->hasFile('foto_produk')) {
+                foreach ($request->file('foto_produk') as $foto) {
+                    $fotoName = time() . '_' . uniqid() . '_' . $foto->getClientOriginalName();
+                    $foto->move(public_path('images/produk'), $fotoName);
+                    $fotoPath = 'images/produk/' . $fotoName;
+
+                    FotoProduk::create([
+                        'produk_id' => $produk->id,
+                        'foto' => $fotoPath
+                    ]);
+                }
+            }
+
             return redirect()->route('produk.index')
                 ->with('success', 'Produk berhasil ditambahkan!');
 
@@ -136,14 +156,14 @@ class ProdukController extends Controller
 
     public function show(Produk $produk)
     {
-        $produk->load(['katalog', 'ukuran', 'warnaProduk', 'jenisWarnaProduk']);
+        $produk->load(['katalog', 'ukuran', 'warnaProduk', 'jenisWarnaProduk', 'fotoProduk']);
 
         return view('admin.produk.detail', compact('produk'));
     }
 
     public function edit(Produk $produk)
     {
-        $produk->load(['katalog', 'ukuran', 'warnaProduk', 'jenisWarnaProduk']);
+        $produk->load(['katalog', 'ukuran', 'warnaProduk', 'jenisWarnaProduk', 'fotoProduk']);
 
         $katalog = Katalog::all();
         return view('admin.produk.edit', compact('produk', 'katalog'));
@@ -163,7 +183,11 @@ class ProdukController extends Controller
             'ukuran.*' => 'nullable|string|max:50',
             'warna' => 'nullable|min:1',
             'warna.*' => 'nullable|string|max:50',
-            'gambar' => 'image|mimes:jpeg,png,jpg,gif|max:10240'
+            'gambar' => 'image|mimes:jpeg,png,jpg,gif|max:10240',
+            'foto_produk' => 'nullable|array',
+            'foto_produk.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:10240',
+            'hapus_foto' => 'nullable|array',
+            'hapus_foto.*' => 'nullable|integer|exists:foto_produk,id'
         ], [
             'katalog_id.required' => 'Katalog harus dipilih.',
             'nama.required' => 'Nama produk harus diisi.',
@@ -189,7 +213,10 @@ class ProdukController extends Controller
             'warna.*.max' => 'Warna tidak boleh lebih dari 50 karakter.',
             'gambar.image' => 'File yang diunggah harus berupa gambar.',
             'gambar.mimes' => 'Gambar harus berformat jpeg, png, jpg, atau gif.',
-            'gambar.max' => 'Ukuran gambar tidak boleh lebih dari 10mb.'
+            'gambar.max' => 'Ukuran gambar tidak boleh lebih dari 10mb.',
+            'foto_produk.*.image' => 'File foto produk harus berupa gambar.',
+            'foto_produk.*.mimes' => 'Foto produk harus berformat jpeg, png, jpg, atau gif.',
+            'foto_produk.*.max' => 'Ukuran foto produk tidak boleh lebih dari 10mb.'
         ]);
 
         try {
@@ -261,6 +288,36 @@ class ProdukController extends Controller
                 ]);
             }
 
+            // Handle penghapusan foto produk yang dipilih
+            if ($request->has('hapus_foto') && is_array($request->hapus_foto)) {
+                $fotoHapus = FotoProduk::whereIn('id', $request->hapus_foto)
+                    ->where('produk_id', $produk->id)
+                    ->get();
+
+                foreach ($fotoHapus as $foto) {
+                    // Hapus file fisik
+                    if ($foto->foto && file_exists(public_path($foto->foto))) {
+                        unlink(public_path($foto->foto));
+                    }
+                    // Hapus record dari database
+                    $foto->delete();
+                }
+            }
+
+            // Handle upload foto produk baru
+            if ($request->hasFile('foto_produk')) {
+                foreach ($request->file('foto_produk') as $foto) {
+                    $fotoName = time() . '_' . uniqid() . '_' . $foto->getClientOriginalName();
+                    $foto->move(public_path('images/produk'), $fotoName);
+                    $fotoPath = 'images/produk/' . $fotoName;
+
+                    FotoProduk::create([
+                        'produk_id' => $produk->id,
+                        'foto' => $fotoPath
+                    ]);
+                }
+            }
+
             return redirect()->route('produk.index')
                 ->with('success', 'Produk berhasil diperbarui!');
 
@@ -277,9 +334,18 @@ class ProdukController extends Controller
     public function destroy(Produk $produk)
     {
         try {
-            // Hapus gambar jika ada
+            // Hapus gambar utama jika ada
             if ($produk->gambar && file_exists(public_path($produk->gambar))) {
                 unlink(public_path($produk->gambar));
+            }
+
+            // Hapus foto produk tambahan
+            $fotoProduk = FotoProduk::where('produk_id', $produk->id)->get();
+            foreach ($fotoProduk as $foto) {
+                if ($foto->foto && file_exists(public_path($foto->foto))) {
+                    unlink(public_path($foto->foto));
+                }
+                $foto->delete();
             }
 
             // Hapus relasi dengan ukuran dan warna (akan otomatis terhapus karena onDelete cascade)
@@ -294,6 +360,35 @@ class ProdukController extends Controller
         } catch (\Exception $e) {
             return redirect()->back()
                 ->with('error', 'Terjadi kesalahan saat menghapus produk: ' . $e->getMessage());
+        }
+    }
+
+    /**
+     * Hapus foto produk individual
+     */
+    public function hapusFoto($id)
+    {
+        try {
+            $foto = FotoProduk::findOrFail($id);
+
+            // Hapus file fisik
+            if ($foto->foto && file_exists(public_path($foto->foto))) {
+                unlink(public_path($foto->foto));
+            }
+
+            // Hapus record dari database
+            $foto->delete();
+
+            return response()->json([
+                'success' => true,
+                'message' => 'Foto berhasil dihapus!'
+            ]);
+
+        } catch (\Exception $e) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Terjadi kesalahan saat menghapus foto: ' . $e->getMessage()
+            ], 500);
         }
     }
 }

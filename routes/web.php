@@ -50,6 +50,7 @@ Route::prefix('dashboard')->middleware(['auth', 'adminManajer'])->group(function
     Route::patch('/profile/password', [AdminProfileController::class, 'updatePassword'])->name('admin.profile.password.update');
 
     Route::resource('produk', ProdukController::class)->middleware(['auth', 'adminManajer']);
+    Route::delete('/produk-foto/{id}', [ProdukController::class, 'hapusFoto'])->name('produk.foto.hapus')->middleware(['auth', 'adminManajer']);
     Route::resource('katalog', KatalogController::class)->middleware(['auth', 'adminManajer']);    // Route khusus untuk transaksi harus sebelum resource
     Route::get('/transaksi/download-report', [TransaksiController::class, 'downloadReport'])->name('transaksi.download.report');
     Route::get('/transaksi/preview-report', [TransaksiController::class, 'previewReport'])->name('transaksi.preview.report');
