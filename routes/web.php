@@ -7,6 +7,7 @@ use App\Http\Controllers\CustomerProfileController;
 use App\Http\Controllers\KatalogController;
 use App\Http\Controllers\PembayaranController;
 use App\Http\Controllers\PengirimanController;
+use App\Http\Controllers\PreOrderController;
 use App\Http\Controllers\ProdukController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TransaksiController;
@@ -53,7 +54,6 @@ Route::prefix('dashboard')->middleware(['auth', 'adminManajer'])->group(function
     Route::delete('/produk-foto/{id}', [ProdukController::class, 'hapusFoto'])->name('produk.foto.hapus')->middleware(['auth', 'adminManajer']);
     Route::resource('katalog', KatalogController::class)->middleware(['auth', 'adminManajer']);    // Route khusus untuk transaksi harus sebelum resource
     Route::get('/transaksi/download-report', [TransaksiController::class, 'downloadReport'])->name('transaksi.download.report');
-    Route::get('/transaksi/preview-report', [TransaksiController::class, 'previewReport'])->name('transaksi.preview.report');
     Route::resource('transaksi', TransaksiController::class)->middleware(['auth', 'adminManajer']);
 
     // Route khusus untuk pengiriman harus sebelum resource
@@ -64,6 +64,10 @@ Route::prefix('dashboard')->middleware(['auth', 'adminManajer'])->group(function
     Route::resource('admin', \App\Http\Controllers\AdminController::class)->middleware(['auth', 'adminManajer']);
     Route::resource('manajer', \App\Http\Controllers\ManajerController::class)->middleware(['auth', 'adminManajer']);
     Route::resource('pelanggan', \App\Http\Controllers\PelangganController::class)->middleware(['auth', 'adminManajer']);
+
+    // Pre-order routes
+    Route::get('/preorder', [PreOrderController::class, 'index'])->name('preorder.index')->middleware(['auth', 'adminManajer']);
+    Route::get('/preorder/download-report', [PreOrderController::class, 'downloadReport'])->name('preorder.download.report');
 });
 
 Route::get('/', [AksesPelangganController::class, 'index'])->name('pelanggan.home');

@@ -42,6 +42,7 @@
                             <h6 class="text-muted">Informasi Pelanggan</h6>
                             <p class="mb-1"><strong>Nama:</strong> {{ $transaksi->user->name }}</p>
                             <p class="mb-1"><strong>Email:</strong> {{ $transaksi->user->email }}</p>
+                            <p class="mb-1"><strong>No Telp:</strong> {{ $transaksi->user->no_telp }}</p>
                             <p class="mb-1"><strong>Alamat Pengiriman:</strong> {{ $transaksi->alamat_pengiriman }}</p>
                         </div>
                     </div>

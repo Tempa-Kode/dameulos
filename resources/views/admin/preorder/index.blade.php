@@ -1,65 +1,10 @@
 @extends('layouts.app')
 
-@section('halaman', 'Transaksi')
+@section('halaman', 'Pre-Order')
 
-@section('judul', 'Data Transaksi')
+@section('judul', 'Data Pre-Order')
 
 @section('content')
-    <div class="row mb-4">
-        <div class="col-md-12">
-            <div class="row">
-                <div class="col-md-2">
-                    <div class="card text-center">
-                        <div class="card-body">
-                            <h5 class="text-muted">Total</h5>
-                            <h3 class="text-primary">{{ $data->count() }}</h3>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-2">
-                    <div class="card text-center">
-                        <div class="card-body">
-                            <h5 class="text-muted">Pending</h5>
-                            <h3 class="text-secondary">{{ $data->where('status', 'pending')->count() }}</h3>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-2">
-                    <div class="card text-center">
-                        <div class="card-body">
-                            <h5 class="text-muted">Dibayar</h5>
-                            <h3 class="text-info">{{ $data->where('status', 'dibayar')->count() }}</h3>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-2">
-                    <div class="card text-center">
-                        <div class="card-body">
-                            <h5 class="text-muted">Diproses</h5>
-                            <h3 class="text-warning">{{ $data->where('status', 'diproses')->count() }}</h3>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-2">
-                    <div class="card text-center">
-                        <div class="card-body">
-                            <h5 class="text-muted">Dikirim</h5>
-                            <h3 class="text-success">{{ $data->where('status', 'dikirim')->count() }}</h3>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-2">
-                    <div class="card text-center">
-                        <div class="card-body">
-                            <h5 class="text-muted">Batal</h5>
-                            <h3 class="text-danger">{{ $data->where('status', 'batal')->count() }}</h3>
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-
     <div class="col-sm-12">
         <div class="card">
             <div class="card-header d-flex justify-content-between align-items-center">
@@ -163,13 +108,13 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="downloadModalLabel">Download Laporan Transaksi PDF</h5>
+                    <h5 class="modal-title" id="downloadModalLabel">Download Laporan Pre-Order PDF</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
-                <form action="{{ route('transaksi.download.report') }}" method="GET">
+                <form action="{{ route('preorder.download.report') }}" method="GET">
                     <div class="modal-body">
                         <div class="mb-3">
-                            <label for="status" class="form-label">Filter Status Transaksi</label>
+                            <label for="status" class="form-label">Filter Status Pre-Order</label>
                             <select class="form-select" id="status" name="status">
                                 <option value="all">Semua Status</option>
                                 <option value="pending">Pending</option>
@@ -182,7 +127,7 @@
                         </div>
                         <div class="alert alert-info">
                             <i class="ti ti-info-circle me-2"></i>
-                            Laporan akan berisi detail transaksi lengkap dengan informasi produk, pelanggan, dan status dalam format PDF yang siap untuk dicetak atau dibagikan.
+                            Laporan akan berisi detail Pre-Order lengkap dengan informasi produk, pelanggan, dan status dalam format PDF yang siap untuk dicetak atau dibagikan.
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -216,6 +161,7 @@
             }
         }
     }
+
 
     // Handle download form submission
     document.querySelector('#downloadModal form').addEventListener('submit', function(e) {

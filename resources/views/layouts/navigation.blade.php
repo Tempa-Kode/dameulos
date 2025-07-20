@@ -39,6 +39,12 @@
                      </a>
                  </li>
                  <li class="pc-item">
+                     <a href="{{ route('preorder.index') }}" class="pc-link">
+                         <span class="pc-micon"><i class="ti ti-cash"></i></span>
+                         <span class="pc-mtext">Pre-Order</span>
+                     </a>
+                 </li>
+                 <li class="pc-item">
                      <a href="{{ route('pengiriman.index') }}" class="pc-link">
                          <span class="pc-micon"><i class="ti ti-brand-telegram"></i></span>
                          <span class="pc-mtext">Pengiriman</span>

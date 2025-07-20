@@ -13,7 +13,7 @@ class TransaksiController extends Controller
 {
     public function index()
     {
-        $data = Transaksi::with('user')->get();
+        $data = Transaksi::where('preorder', false)->with('user')->get();
         return view('admin.transaksi.index', compact('data'));
     }
 
@@ -243,7 +243,7 @@ class TransaksiController extends Controller
         $status = $request->input('status');
 
         // Query transaksi berdasarkan status
-        $query = Transaksi::with([
+        $query = Transaksi::where('preorder', false)->with([
             'user',
             'detailTransaksi.produk.katalog',
             'detailTransaksi.ukuranProduk',
@@ -280,49 +280,5 @@ class TransaksiController extends Controller
 
         // Return PDF download
         return $pdf->download($filename);
-    }
-
-    /**
-     * Preview report transaksi dalam browser sebelum download
-     */
-    public function previewReport(Request $request)
-    {
-        $status = $request->input('status');
-
-        // Query transaksi berdasarkan status
-        $query = Transaksi::with([
-            'user',
-            'detailTransaksi.produk.katalog',
-            'detailTransaksi.ukuranProduk',
-            'detailTransaksi.jenisWarnaProduk'
-        ]);
-
-        if ($status && $status !== 'all') {
-            $query->where('status', $status);
-        }
-
-        $transaksi = $query->orderBy('created_at', 'desc')->get();
-
-        // Jika tidak ada data
-        if ($transaksi->isEmpty()) {
-            return redirect()->route('transaksi.index')
-                ->with('warning', 'Tidak ada data transaksi untuk status yang dipilih.');
-        }
-
-        // Tentukan nama status untuk file
-        $statusText = $status && $status !== 'all' ? ucfirst($status) : 'Semua Status';
-
-        // Generate PDF
-        $pdf = Pdf::loadView('admin.transaksi.report-pdf', [
-            'transaksi' => $transaksi,
-            'statusText' => $statusText,
-            'status' => $status
-        ]);
-
-        // Set paper size dan orientation
-        $pdf->setPaper('A4', 'landscape');
-
-        // Return PDF untuk preview di browser
-        return $pdf->stream('preview_laporan_transaksi.pdf');
     }
 }
