@@ -52,6 +52,7 @@ Route::prefix('dashboard')->middleware(['auth', 'adminManajer'])->group(function
 
     Route::resource('produk', ProdukController::class)->middleware(['auth', 'adminManajer']);
     Route::delete('/produk-foto/{id}', [ProdukController::class, 'hapusFoto'])->name('produk.foto.hapus')->middleware(['auth', 'adminManajer']);
+    Route::delete('/produk-ulasan/{id}', [ProdukController::class, 'hapusUlasan'])->name('produk.ulasan.hapus')->middleware(['auth', 'adminManajer']);
     Route::resource('katalog', KatalogController::class)->middleware(['auth', 'adminManajer']);    // Route khusus untuk transaksi harus sebelum resource
     Route::get('/transaksi/download-report', [TransaksiController::class, 'downloadReport'])->name('transaksi.download.report');
     Route::resource('transaksi', TransaksiController::class)->middleware(['auth', 'adminManajer']);
@@ -98,6 +99,17 @@ Route::post('/checkout/bayar', [PembayaranController::class, 'bayar'])->middlewa
 
 Route::get('/transaksi', [TransaksiController::class, 'transaksiSaya'])->middleware(['auth'])->name('pelanggan.transaksi');
 Route::post('/transaksi/update-status/{kode_transaksi}', [TransaksiController::class, 'updateStatus'])->middleware(['auth'])->name('transaksi.update-status');
+
+// Ulasan routes
+Route::middleware(['auth'])->group(function () {
+    Route::get('/ulasan', [\App\Http\Controllers\UlasanController::class, 'index'])->name('pelanggan.ulasan.index');
+    Route::get('/ulasan/create', [\App\Http\Controllers\UlasanController::class, 'create'])->name('pelanggan.ulasan.create');
+    Route::post('/ulasan', [\App\Http\Controllers\UlasanController::class, 'store'])->name('pelanggan.ulasan.store');
+    Route::get('/ulasan/{ulasan}', [\App\Http\Controllers\UlasanController::class, 'show'])->name('pelanggan.ulasan.show');
+    Route::get('/ulasan/{ulasan}/edit', [\App\Http\Controllers\UlasanController::class, 'edit'])->name('pelanggan.ulasan.edit');
+    Route::put('/ulasan/{ulasan}', [\App\Http\Controllers\UlasanController::class, 'update'])->name('pelanggan.ulasan.update');
+    Route::delete('/ulasan/{ulasan}', [\App\Http\Controllers\UlasanController::class, 'destroy'])->name('pelanggan.ulasan.destroy');
+});
 
 
 require __DIR__.'/auth.php';

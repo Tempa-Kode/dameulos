@@ -156,12 +156,13 @@ class ProdukController extends Controller
 
     public function show(Produk $produk)
     {
-        $produk->load(['katalog', 'ukuran', 'warnaProduk', 'jenisWarnaProduk', 'fotoProduk']);
+        $produk->load(['katalog', 'ukuran', 'warnaProduk', 'jenisWarnaProduk', 'fotoProduk', 'ulasan.user']);
 
-        return view('admin.produk.detail', compact('produk'));
-    }
+        // Load ulasan dengan pagination dan relasi
+        $ulasan = $produk->ulasan()->with(['user', 'transaksi'])->orderBy('created_at', 'desc')->paginate(10);
 
-    public function edit(Produk $produk)
+        return view('admin.produk.detail', compact('produk', 'ulasan'));
+    }    public function edit(Produk $produk)
     {
         $produk->load(['katalog', 'ukuran', 'warnaProduk', 'jenisWarnaProduk', 'fotoProduk']);
 
@@ -389,6 +390,40 @@ class ProdukController extends Controller
                 'success' => false,
                 'message' => 'Terjadi kesalahan saat menghapus foto: ' . $e->getMessage()
             ], 500);
+        }
+    }
+
+    /**
+     * Hapus ulasan produk (khusus admin)
+     */
+    public function hapusUlasan($ulasanId)
+    {
+        try {
+            $ulasan = \App\Models\Ulasan::findOrFail($ulasanId);
+            $produkId = $ulasan->produk_id;
+
+            $ulasan->delete();
+
+            if (request()->ajax()) {
+                return response()->json([
+                    'success' => true,
+                    'message' => 'Ulasan berhasil dihapus.'
+                ]);
+            }
+
+            return redirect()->route('produk.show', $produkId)
+                ->with('success', 'Ulasan berhasil dihapus.');
+
+        } catch (\Exception $e) {
+            if (request()->ajax()) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Terjadi kesalahan saat menghapus ulasan: ' . $e->getMessage()
+                ], 500);
+            }
+
+            return redirect()->back()
+                ->with('error', 'Terjadi kesalahan saat menghapus ulasan: ' . $e->getMessage());
         }
     }
 }

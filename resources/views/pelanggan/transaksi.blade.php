@@ -26,6 +26,25 @@
     <div class="container">
         <div class="row">
             <div class="col-lg-12">
+                @if(session('success'))
+                    <div class="alert alert-success alert-dismissible fade show" role="alert">
+                        <i class="fa fa-check-circle me-2"></i>
+                        {{ session('success') }}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                @endif
+
+                @if(session('error'))
+                    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+                        <i class="fa fa-exclamation-triangle me-2"></i>
+                        {{ session('error') }}
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                @endif
                 @if($transaksi->isEmpty())
                     <div class="alert alert-info text-center">
                         <i class="fa fa-info-circle"></i>
@@ -84,6 +103,13 @@
                                                                             | Warna: {{ $detail->jenisWarnaProduk->warna }}
                                                                         @endif
                                                                     </p>
+                                                                    @if ($item->status == 'diterima')
+                                                                        <a href="{{ route('pelanggan.ulasan.create', ['transaksi_id' => $item->id, 'produk_id' => $detail->produk->id]) }}"
+                                                                           class="btn btn-success btn-sm">
+                                                                            <i class="fa fa-comments mr-2"></i>
+                                                                            Beri Ulasan Produk
+                                                                        </a>
+                                                                    @endif
                                                                 </div>
                                                             </td>
                                                             <td>{{ $detail->jumlah }}</td>
@@ -176,7 +202,9 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <button id="terima-pesanan" data-id="{{ $item->id }}" class="primary-btn mt-2">Terima Pesanan</button>
+                                        @if ($item->status == 'dikirim')
+                                        <button data-id="{{ $item->id }}" class="primary-btn mt-2 terima-pesanan">Terima Pesanan</button>
+                                        @endif
                                     @endif
                                 </div>
                             </div>
@@ -393,7 +421,7 @@ function updateStatus(kodeTransaksi) {
     });
 }
 
-$('#terima-pesanan').on('click', function() {
+$('.terima-pesanan').on('click', function() {
     const transaksiId = $(this).data('id');
     Swal.fire({
         title: 'Konfirmasi',

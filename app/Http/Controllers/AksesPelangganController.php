@@ -59,12 +59,16 @@ class AksesPelangganController extends Controller
 
     public function produkBySlug(Produk $produk)
     {
-        $produk->load(['katalog', 'ukuran', 'jenisWarnaProduk', 'warnaProduk', 'fotoProduk']);
+        $produk->load(['katalog', 'ukuran', 'jenisWarnaProduk', 'warnaProduk', 'fotoProduk', 'ulasan.user']);
         $produkTerkait = Produk::where('katalog_id', $produk->katalog_id)
             ->where('id', '!=', $produk->id)
             ->limit(4)
             ->get();
-        return view('pelanggan.produk-detail', compact('produk', 'produkTerkait'));
+        
+        // Load ulasan dengan pagination
+        $ulasan = $produk->ulasan()->with('user')->orderBy('created_at', 'desc')->paginate(5);
+        
+        return view('pelanggan.produk-detail', compact('produk', 'produkTerkait', 'ulasan'));
     }
 
     public function tentangKami()

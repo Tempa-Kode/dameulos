@@ -16,7 +16,7 @@
                         <h4>Detail Produk</h4>
                         <div class="breadcrumb__links">
                             <a href="{{ route('pelanggan.home') }}">Home</a>
-                            <a href="{{ route('pelanggan.katalog') }}">Katalog</a>
+                                 <a href="{{ route('pelanggan.katalog') }}">Katalog</a>
                             <span>{{ $produk->nama }}</span>
                         </div>
                     </div>
@@ -147,7 +147,104 @@
                                 </div>
                                 <div class="tab-pane" id="tabs-7" role="tabpanel">
                                     <div class="product__details__tab__content">
-                                        <p class="note">Belum ada ulasan untuk produk ini.</p>
+                                        @if($ulasan && $ulasan->count() > 0)
+                                            <!-- Rating Summary -->
+                                            <div class="reviews-summary mb-4">
+                                                <div class="row">
+                                                    <div class="col-md-4 text-center">
+                                                        <div class="rating-overview">
+                                                            <h3 class="rating-score text-primary">{{ number_format($produk->ulasan->avg('rating'), 1) }}/5</h3>
+                                                            <div class="stars mb-2">
+                                                                @for($i = 1; $i <= 5; $i++)
+                                                                    @if($i <= floor($produk->ulasan->avg('rating')))
+                                                                        <i class="fa fa-star text-warning"></i>
+                                                                    @elseif($i <= ceil($produk->ulasan->avg('rating')))
+                                                                        <i class="fa fa-star-half-o text-warning"></i>
+                                                                    @else
+                                                                        <i class="fa fa-star-o text-muted"></i>
+                                                                    @endif
+                                                                @endfor
+                                                            </div>
+                                                            <p class="text-muted">{{ $produk->ulasan->count() }} ulasan</p>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-8">
+                                                        <div class="rating-breakdown">
+                                                            @for($i = 5; $i >= 1; $i--)
+                                                                @php
+                                                                    $count = $produk->ulasan->where('rating', $i)->count();
+                                                                    $percentage = $produk->ulasan->count() > 0 ? ($count / $produk->ulasan->count()) * 100 : 0;
+                                                                @endphp
+                                                                <div class="rating-bar d-flex align-items-center mb-2">
+                                                                    <span class="rating-label">{{ $i }} bintang</span>
+                                                                    <div class="progress flex-grow-1 mx-3" style="height: 10px;">
+                                                                        <div class="progress-bar bg-warning" style="width: {{ $percentage }}%"></div>
+                                                                    </div>
+                                                                    <span class="rating-count text-muted">{{ $count }}</span>
+                                                                </div>
+                                                            @endfor
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <!-- Reviews List -->
+                                            <div class="reviews-list">
+                                                <h5 class="mb-4">Semua Ulasan</h5>
+                                                @foreach($ulasan as $review)
+                                                    <div class="review-item border-bottom pb-4 mb-4">
+                                                        <div class="row">
+                                                            <div class="col-md-8">
+                                                                <div class="reviewer-info mb-2">
+                                                                    <strong>{{ $review->user->name }}</strong>
+                                                                    <div class="rating-stars">
+                                                                        @for($i = 1; $i <= 5; $i++)
+                                                                            <i class="fa fa-star {{ $i <= $review->rating ? 'text-warning' : 'text-muted' }}"></i>
+                                                                        @endfor
+                                                                        <span class="text-muted ml-2">{{ $review->rating }}/5</span>
+                                                                    </div>
+                                                                    <small class="text-muted">{{ $review->created_at->format('d M Y, H:i') }}</small>
+                                                                    @if($review->updated_at != $review->created_at)
+                                                                        <small class="text-muted">(diedit)</small>
+                                                                    @endif
+                                                                </div>
+                                                                <p class="review-text">{{ $review->ulasan }}</p>
+                                                            </div>
+                                                            <div class="col-md-4 text-right">
+                                                                @auth
+                                                                    @if($review->user_id == Auth::id())
+                                                                        <div class="review-actions">
+                                                                            <a href="{{ route('pelanggan.ulasan.edit', $review) }}"
+                                                                               class="btn btn-outline-warning btn-sm">
+                                                                                <i class="fa fa-edit"></i> Edit
+                                                                            </a>
+                                                                            <button type="button"
+                                                                                    class="btn btn-outline-danger btn-sm"
+                                                                                    onclick="confirmDeleteReview({{ $review->id }})">
+                                                                                <i class="fa fa-trash"></i> Hapus
+                                                                            </button>
+                                                                        </div>
+                                                                    @endif
+                                                                @endauth
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                @endforeach
+
+                                                <!-- Pagination -->
+                                                @if($ulasan->hasPages())
+                                                    <div class="d-flex justify-content-center">
+                                                        {{ $ulasan->appends(request()->query())->fragment('tabs-7')->links() }}
+                                                    </div>
+                                                @endif
+                                            </div>
+                                        @else
+                                            <div class="text-center py-5">
+                                                <i class="fa fa-star-o fa-3x text-muted mb-3"></i>
+                                                <p class="note text-muted">Belum ada ulasan untuk produk ini.</p>
+                                                <p class="text-muted">Jadilah yang pertama memberikan ulasan!</p>
+                                            </div>
+                                        @endif
                                     </div>
                                 </div>
                             </div>
@@ -236,6 +333,33 @@
             </div>
         </div>
     </div>
+    <!-- Modal Request Warna -->
+
+    <!-- Delete Review Confirmation Modal -->
+    <div class="modal fade" id="deleteReviewModal" tabindex="-1" role="dialog" aria-labelledby="deleteReviewModalLabel" aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteReviewModalLabel">Konfirmasi Hapus Ulasan</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    Apakah Anda yakin ingin menghapus ulasan ini? Tindakan ini tidak dapat dibatalkan.
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+                    <form id="deleteReviewForm" method="POST" style="display: inline;">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="btn btn-danger">Hapus Ulasan</button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Modal Request Warna -->
 @endsection
 
@@ -510,8 +634,200 @@
             @endif
         });
     </script>
+
+   <script>
+
+        // Function untuk konfirmasi hapus ulasan
+        function confirmDeleteReview(reviewId) {
+            $('#deleteReviewForm').attr('action', `/ulasan/${reviewId}`);
+            $('#deleteReviewModal').modal('show');
+        }
+
+        // Handle delete review form submission
+        $('#deleteReviewForm').on('submit', function(e) {
+            e.preventDefault();
+
+            const form = this;
+            const actionUrl = $(form).attr('action');
+
+            $.ajax({
+                url: actionUrl,
+                method: 'POST',
+                data: $(form).serialize(),
+                success: function(response) {
+                    $('#deleteReviewModal').modal('hide');
+
+                    if (response.success) {
+                        // Show success message
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Berhasil!',
+                            text: 'Ulasan berhasil dihapus.',
+                            timer: 2000,
+                            showConfirmButton: false
+                        }).then(() => {
+                            // Reload page to refresh reviews
+                            window.location.reload();
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: response.message || 'Terjadi kesalahan saat menghapus ulasan.'
+                        });
+                    }
+                },
+                error: function(xhr) {
+                    $('#deleteReviewModal').modal('hide');
+
+                    let errorMessage = 'Terjadi kesalahan saat menghapus ulasan.';
+                    if (xhr.responseJSON && xhr.responseJSON.message) {
+                        errorMessage = xhr.responseJSON.message;
+                    }
+
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: errorMessage
+                    });
+                }
+            });
+        });
+
+    </script>
 @endpush
 
 @push('styles')
 <link rel="stylesheet" href="{{ asset('home/css/produkdetail.css') }}">
+<style>
+    /* Reviews Styling */
+    .reviews-summary {
+        background-color: #f8f9fa;
+        padding: 20px;
+        border-radius: 8px;
+        margin-bottom: 30px;
+    }
+
+    .rating-score {
+        font-size: 2.5rem;
+        font-weight: bold;
+        margin-bottom: 10px;
+    }
+
+    .stars {
+        font-size: 1.5rem;
+    }
+
+    .rating-breakdown {
+        padding-left: 20px;
+    }
+
+    .rating-bar {
+        min-height: 30px;
+    }
+
+    .rating-label {
+        width: 80px;
+        font-size: 0.9rem;
+    }
+
+    .progress {
+        height: 8px;
+        background-color: #e9ecef;
+        border-radius: 4px;
+    }
+
+    .progress-bar {
+        background-color: #ffc107 !important;
+    }
+
+    .rating-count {
+        width: 30px;
+        text-align: right;
+        font-size: 0.9rem;
+    }
+
+    .review-item {
+        padding: 20px 0;
+    }
+
+    .review-item:last-child {
+        border-bottom: none !important;
+    }
+
+    .reviewer-info strong {
+        color: #333;
+        font-size: 1.1rem;
+    }
+
+    .rating-stars {
+        margin: 5px 0;
+    }
+
+    .rating-stars .fa {
+        font-size: 1rem;
+    }
+
+    .review-text {
+        color: #555;
+        line-height: 1.6;
+        margin-top: 10px;
+        font-size: 0.95rem;
+    }
+
+    .review-actions .btn {
+        width: 80px;
+        font-size: 0.85rem;
+        padding: 5px 10px;
+    }
+
+    .review-actions .btn-outline-primary {
+        color: #ca1515;
+        border-color: #ca1515;
+    }
+
+    .review-actions .btn-outline-primary:hover {
+        background-color: #ca1515;
+        border-color: #ca1515;
+    }
+
+    .review-actions .btn-outline-danger:hover {
+        background-color: #dc3545;
+        border-color: #dc3545;
+    }
+
+    .text-primary {
+        color: #ca1515 !important;
+    }
+
+    /* Empty state styling */
+    .text-center.py-5 {
+        padding: 3rem 0 !important;
+    }
+
+    .text-center.py-5 .fa-3x {
+        font-size: 3rem !important;
+    }
+
+    /* Pagination styling */
+    .pagination {
+        justify-content: center;
+    }
+
+    .page-link {
+        color: #ca1515;
+        border-color: #dee2e6;
+    }
+
+    .page-link:hover {
+        background-color: #ca1515;
+        border-color: #ca1515;
+        color: white;
+    }
+
+    .page-item.active .page-link {
+        background-color: #ca1515;
+        border-color: #ca1515;
+    }
+</style>
 @endpush

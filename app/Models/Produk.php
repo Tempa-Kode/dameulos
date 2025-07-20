@@ -47,4 +47,9 @@ class Produk extends Model
     {
         return $this->hasMany(FotoProduk::class);
     }
+
+    public function ulasan()
+    {
+        return $this->hasMany(Ulasan::class, 'produk_id', 'id');
+    }
 }

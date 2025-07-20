@@ -211,6 +211,101 @@
                         </div>
                     </div>
                 </div>
+
+                <!-- Section Ulasan Produk -->
+                <div class="row mt-5">
+                    <div class="col-12">
+                        <div class="card">
+                            <div class="card-header d-flex justify-content-between align-items-center">
+                                <h5 class="mb-0">
+                                    <i class="ti ti-star me-2"></i>Ulasan Produk
+                                    @if($ulasan && $ulasan->count() > 0)
+                                        <span class="badge bg-primary ms-2">{{ $ulasan->total() }} ulasan</span>
+                                    @endif
+                                </h5>
+                                @if($produk->ulasan && $produk->ulasan->count() > 0)
+                                    <div class="rating-summary text-end">
+                                        <div class="d-flex align-items-center">
+                                            <span class="me-2">Rating rata-rata:</span>
+                                            <h5 class="mb-0 me-2 text-warning">{{ number_format($produk->ulasan->avg('rating'), 1) }}/5</h5>
+                                            <div class="stars">
+                                                @for($i = 1; $i <= 5; $i++)
+                                                    @if($i <= floor($produk->ulasan->avg('rating')))
+                                                        <i class="ti ti-star-filled text-warning"></i>
+                                                    @elseif($i <= ceil($produk->ulasan->avg('rating')))
+                                                        <i class="ti ti-star-half-filled text-warning"></i>
+                                                    @else
+                                                        <i class="ti ti-star text-muted"></i>
+                                                    @endif
+                                                @endfor
+                                            </div>
+                                        </div>
+                                    </div>
+                                @endif
+                            </div>
+                            <div class="card-body">
+                                @if($ulasan && $ulasan->count() > 0)
+                                    <!-- Ulasan List -->
+                                    <div class="ulasan-list">
+                                        @foreach($ulasan as $review)
+                                            <div class="ulasan-item border rounded p-3 mb-3" id="ulasan-{{ $review->id }}">
+                                                <div class="row">
+                                                    <div class="col-md-8">
+                                                        <div class="reviewer-info mb-2">
+                                                            <div class="d-flex align-items-center mb-1">
+                                                                <h6 class="mb-0 me-3">{{ $review->user->name }}</h6>
+                                                                <div class="rating-stars">
+                                                                    @for($i = 1; $i <= 5; $i++)
+                                                                        <i class="ti ti-star{{ $i <= $review->rating ? '-filled' : '' }} {{ $i <= $review->rating ? 'text-warning' : 'text-muted' }}"></i>
+                                                                    @endfor
+                                                                    <span class="text-muted ms-2">({{ $review->rating }}/5)</span>
+                                                                </div>
+                                                            </div>
+                                                            <small class="text-muted">
+                                                                <i class="ti ti-calendar me-1"></i>{{ $review->created_at->format('d M Y, H:i') }}
+                                                                @if($review->updated_at != $review->created_at)
+                                                                    <span class="text-info ms-2">(diedit pada {{ $review->updated_at->format('d M Y, H:i') }})</span>
+                                                                @endif
+                                                            </small>
+                                                        </div>
+                                                        <div class="review-text">
+                                                            <p class="mb-0">{{ $review->ulasan }}</p>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-4 text-end">
+                                                        <div class="review-actions">
+                                                            <button type="button"
+                                                                    class="btn btn-outline-danger btn-sm"
+                                                                    onclick="confirmDeleteUlasan({{ $review->id }}, '{{ $review->user->name }}')">
+                                                                <i class="ti ti-trash me-1"></i>Hapus Ulasan
+                                                            </button>
+                                                            <small class="text-muted d-block mt-2">
+                                                                ID Transaksi: {{ $review->transaksi->kode_transaksi ?? 'N/A' }}
+                                                            </small>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        @endforeach
+
+                                        <!-- Pagination -->
+                                        @if($ulasan->hasPages())
+                                            <div class="d-flex justify-content-center mt-4">
+                                                {{ $ulasan->appends(request()->query())->links() }}
+                                            </div>
+                                        @endif
+                                    </div>
+                                @else
+                                    <div class="text-center py-5">
+                                        <i class="ti ti-star-off" style="font-size: 3rem; color: #6c757d;"></i>
+                                        <h6 class="mt-3 text-muted">Belum Ada Ulasan</h6>
+                                        <p class="text-muted mb-0">Produk ini belum memiliki ulasan dari pelanggan.</p>
+                                    </div>
+                                @endif
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -256,6 +351,32 @@
                         @method('DELETE')
                         <button type="submit" class="btn btn-danger">
                             <i class="ti ti-trash me-1"></i>Ya, Hapus
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Modal Konfirmasi Hapus Ulasan -->
+    <div class="modal fade" id="deleteUlasanModal" tabindex="-1" aria-labelledby="deleteUlasanModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="deleteUlasanModalLabel">Konfirmasi Hapus Ulasan</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Apakah Anda yakin ingin menghapus ulasan dari <strong id="reviewerName"></strong>?</p>
+                    <p class="text-danger"><small><i class="ti ti-alert-triangle me-1"></i>Tindakan ini tidak dapat dibatalkan dan akan menghapus ulasan secara permanen.</small></p>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Batal</button>
+                    <form id="deleteUlasanForm" method="POST" style="display: inline;">
+                        @csrf
+                        @method('DELETE')
+                        <button type="submit" class="btn btn-danger">
+                            <i class="ti ti-trash me-1"></i>Ya, Hapus Ulasan
                         </button>
                     </form>
                 </div>
@@ -310,11 +431,146 @@
             transition: transform 0.3s ease;
         }
 
+        /* Ulasan Styles */
+        .ulasan-item {
+            background-color: #f8f9fa;
+            transition: all 0.3s ease;
+        }
+
+        .ulasan-item:hover {
+            background-color: #e9ecef;
+            border-color: #adb5bd !important;
+        }
+
+        .rating-stars {
+            font-size: 1rem;
+        }
+
+        .review-text {
+            line-height: 1.6;
+            color: #495057;
+        }
+
+        .review-actions .btn {
+            font-size: 0.875rem;
+        }
+
+        .rating-summary .stars {
+            font-size: 1.1rem;
+        }
+
+        .ulasan-item .reviewer-info h6 {
+            color: #212529;
+            font-weight: 600;
+        }
+
         @media (max-width: 768px) {
             .product-image-container {
                 position: static;
                 margin-bottom: 2rem;
             }
+
+            .review-actions {
+                text-align: left !important;
+                margin-top: 1rem;
+            }
         }
     </style>
+@endpush
+
+@push('scripts')
+    <script>
+        function confirmDeleteUlasan(ulasanId, reviewerName) {
+            document.getElementById('reviewerName').textContent = reviewerName;
+            document.getElementById('deleteUlasanForm').action = `/dashboard/produk-ulasan/${ulasanId}`;
+
+            var modal = new bootstrap.Modal(document.getElementById('deleteUlasanModal'));
+            modal.show();
+        }
+
+        // Handle delete ulasan form submission with AJAX
+        document.getElementById('deleteUlasanForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const form = this;
+            const actionUrl = form.action;
+            const formData = new FormData(form);
+
+            // Show loading state
+            const submitBtn = form.querySelector('button[type="submit"]');
+            const originalText = submitBtn.innerHTML;
+            submitBtn.innerHTML = '<span class="spinner-border spinner-border-sm me-2"></span>Menghapus...';
+            submitBtn.disabled = true;
+
+            fetch(actionUrl, {
+                method: 'POST',
+                body: formData,
+                headers: {
+                    'X-Requested-With': 'XMLHttpRequest'
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                // Hide modal
+                bootstrap.Modal.getInstance(document.getElementById('deleteUlasanModal')).hide();
+
+                if (data.success) {
+                    // Show success alert
+                    showAlert('success', data.message);
+
+                    // Remove the review item from DOM with animation
+                    const ulasanElement = document.querySelector(`#ulasan-${actionUrl.split('/').pop()}`);
+                    if (ulasanElement) {
+                        ulasanElement.style.transition = 'opacity 0.5s ease';
+                        ulasanElement.style.opacity = '0';
+                        setTimeout(() => {
+                            ulasanElement.remove();
+
+                            // Check if no more reviews left
+                            const remainingReviews = document.querySelectorAll('.ulasan-item');
+                            if (remainingReviews.length === 0) {
+                                location.reload(); // Reload to show "no reviews" state
+                            }
+                        }, 500);
+                    }
+                } else {
+                    showAlert('danger', data.message || 'Terjadi kesalahan saat menghapus ulasan.');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showAlert('danger', 'Terjadi kesalahan jaringan.');
+
+                // Hide modal
+                bootstrap.Modal.getInstance(document.getElementById('deleteUlasanModal')).hide();
+            })
+            .finally(() => {
+                // Reset button state
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
+            });
+        });
+
+        function showAlert(type, message) {
+            // Create alert element
+            const alertDiv = document.createElement('div');
+            alertDiv.className = `alert alert-${type} alert-dismissible fade show`;
+            alertDiv.innerHTML = `
+                <i class="ti ti-${type === 'success' ? 'check' : 'alert-triangle'} me-2"></i>
+                ${message}
+                <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+            `;
+
+            // Insert alert at the top of card body
+            const cardBody = document.querySelector('.card-body');
+            cardBody.insertBefore(alertDiv, cardBody.firstChild);
+
+            // Auto hide after 5 seconds
+            setTimeout(() => {
+                if (alertDiv.parentNode) {
+                    alertDiv.remove();
+                }
+            }, 5000);
+        }
+    </script>
 @endpush
