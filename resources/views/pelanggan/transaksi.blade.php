@@ -107,7 +107,7 @@
                                                             <span class="badge badge-info">Diproses</span>
                                                         @elseif($item->status == 'dikirim')
                                                             <span class="badge badge-primary">Dikirim</span>
-                                                        @elseif($item->status == 'dikirim')
+                                                        @elseif($item->status == 'diterima')
                                                             <span class="badge badge-success">Selesai</span>
                                                         @elseif($item->status == 'gagal')
                                                             <span class="badge badge-danger">Dibatalkan</span>
@@ -176,6 +176,7 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        <button id="terima-pesanan" data-id="{{ $item->id }}" class="primary-btn mt-2">Terima Pesanan</button>
                                     @endif
                                 </div>
                             </div>
@@ -391,5 +392,54 @@ function updateStatus(kodeTransaksi) {
         button.disabled = false;
     });
 }
+
+$('#terima-pesanan').on('click', function() {
+    const transaksiId = $(this).data('id');
+    Swal.fire({
+        title: 'Konfirmasi',
+        text: "Apakah Anda yakin telah menerima pesanan ini?",
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Ya, sudah',
+        cancelButtonText: 'Tidak'
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // Send AJAX request to update status
+            $.ajax({
+                url: `pengiriman/${transaksiId}/terima-pesanan`,
+                type: 'PUT',
+                data: {
+                    _token: $('meta[name="csrf-token"]').attr('content')
+                },
+                success: function(data) {
+                    if (data.success) {
+                        Swal.fire({
+                            icon: 'success',
+                            title: 'Berhasil!',
+                            text: data.message,
+                            timer: 1500,
+                            showConfirmButton: false
+                        });
+                        location.reload();
+                    } else {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Error!',
+                            text: data.message || 'Terjadi kesalahan saat menerima pesanan'
+                        });
+                    }
+                },
+                error: function(xhr, status, error) {
+                    console.error('Error:', error);
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Error!',
+                        text: 'Terjadi kesalahan jaringan'
+                    });
+                }
+            });
+        }
+    });
+});
 </script>
 @endpush

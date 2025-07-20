@@ -70,6 +70,8 @@ Route::prefix('dashboard')->middleware(['auth', 'adminManajer'])->group(function
     Route::get('/preorder/download-report', [PreOrderController::class, 'downloadReport'])->name('preorder.download.report');
 });
 
+Route::put('/pengiriman/{transaksi:id}/terima-pesanan', [PengirimanController::class, 'terimaPesanan'])->name('pengiriman.terima.pesanan');
+
 Route::get('/', [AksesPelangganController::class, 'index'])->name('pelanggan.home');
 Route::get('/katalog', [AksesPelangganController::class, 'katalog'])->name('pelanggan.katalog');
 Route::get('/katalog/{katalog:slug}', [AksesPelangganController::class, 'katalogBySlug'])->name('pelanggan.katalogBySlug');

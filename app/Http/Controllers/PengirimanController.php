@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Transaksi;
 use App\Models\Pengiriman;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
 use Barryvdh\DomPDF\Facade\Pdf as PDF;
 
@@ -160,5 +162,26 @@ class PengirimanController extends Controller
         $pdf = PDF::loadView('admin.pengiriman.report-pdf', compact('data', 'totalPengiriman', 'totalOngkir', 'totalBerat', 'statusStats'));
 
         return $pdf->stream('laporan_pengiriman_' . now()->format('Y-m-d_H-i-s') . '.pdf');
+    }
+
+    public function terimaPesanan(Transaksi $transaksi)
+    {
+        DB::beginTransaction();
+        try{
+            // Update status pengiriman
+            $transaksi->update(['status' => 'diterima']);
+
+            DB::commit();
+            return response()->json([
+                'success' => true,
+                'message' => 'Pesanan berhasil diterima.'
+            ]);
+        } catch (\Exception $e) {
+            DB::rollBack();
+            return response()->json([
+                'success' => false,
+                'message' => 'Terjadi kesalahan saat menerima pesanan: ' . $e->getMessage()
+            ], 500);
+        }
     }
 }

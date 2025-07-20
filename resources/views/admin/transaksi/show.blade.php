@@ -31,6 +31,8 @@
                                     <span class="badge text-bg-secondary">Diproses</span>
                                 @elseif ($transaksi->status == 'dikirim')
                                     <span class="badge text-bg-success">Dikirim</span>
+                                @elseif ($transaksi->status == 'diterima')
+                                    <span class="badge text-bg-success">Diterima/Selesai</span>
                                 @else
                                     <span class="badge text-bg-danger">Batal</span>
                                 @endif

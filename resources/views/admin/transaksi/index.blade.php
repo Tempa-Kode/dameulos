@@ -70,7 +70,7 @@
                         <option value="dibayar">Dibayar</option>
                         <option value="dikonfirmasi">Dikonfirmasi</option>
                         <option value="diproses">Diproses</option>
-                        <option value="dikirim">Dikirim</option>
+                        <option value="diterima">diterima</option>
                         <option value="batal">Batal</option>
                     </select>
                 </div>
@@ -113,6 +113,8 @@
                                             <span class="badge text-bg-secondary">Diproses</span>
                                         @elseif ($item->status == 'dikirim')
                                             <span class="badge text-bg-success">Dikirim</span>
+                                        @elseif ($item->status == 'diterima')
+                                            <span class="badge text-bg-success">Diterima</span>
                                         @else
                                             <span class="badge text-bg-danger">Batal</span>
                                         @endif
@@ -176,6 +178,7 @@
                                 <option value="dibayar">Dibayar</option>
                                 <option value="dikonfirmasi">Dikonfirmasi</option>
                                 <option value="diproses">Diproses</option>
+                                <option value="dikirim">Dikirim</option>
                                 <option value="dikirim">Dikirim</option>
                                 <option value="batal">Batal</option>
                             </select>
