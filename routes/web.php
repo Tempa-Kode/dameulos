@@ -89,6 +89,7 @@ Route::get('/checkout/success/{kode_transaksi}', [CheckoutController::class, 'su
 Route::get('/keranjang', [\App\Http\Controllers\KeranjangController::class, 'index'])->name('pelanggan.keranjang.index');
 Route::post('/keranjang', [\App\Http\Controllers\KeranjangController::class, 'create'])->name('pelanggan.keranjang.create');
 Route::delete('/keranjang/{keranjang:id}', [\App\Http\Controllers\KeranjangController::class, 'destroy'])->name('pelanggan.keranjang.destroy');
+Route::put('/keranjang/{keranjang:id}/qty/{produkId}', [\App\Http\Controllers\KeranjangController::class, 'updateJumlahQty'])->name('pelanggan.keranjang.update');
 
 // API Cek Lokasi Pengiriman
 Route::get('/api/proxy/destination', [PengirimanController::class, 'cekDestinasiTujuan'])->name('proxy.destination');

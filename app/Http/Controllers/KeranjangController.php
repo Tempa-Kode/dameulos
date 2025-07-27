@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Models\Keranjang;
+use App\Models\Produk;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class KeranjangController extends Controller
 {
@@ -107,5 +109,33 @@ class KeranjangController extends Controller
             'message' => 'Produk berhasil dihapus dari keranjang.',
             'keranjang_count' => Keranjang::where('user_id', auth()->id())->count(),
         ]);
+    }
+
+    /*
+     * fungsi untuk mengupdate jumlah qty produk
+     */
+    public function updateJumlahQty(Request $request, Keranjang $keranjang, $produkId){
+        $request->validate([
+            'jumlah' => 'required|integer|min:1',
+        ]);
+
+        DB::beginTransaction();
+        try {
+            $keranjang->where('produk_id', $produkId)
+                ->update(['jumlah' => $request->jumlah]);
+            DB::commit();
+            return response()->json([
+                'success' => true,
+                'message' => 'Jumlah produk berhasil diperbarui.',
+                'keranjang_count' => Keranjang::where('id', $keranjang->id)->where('produk_id', $produkId)->count(),
+            ]);
+        } catch (\Throwable $th) {
+            DB::rollBack();
+            return response()->json([
+                'success' => false,
+                'message' => 'Gagal memperbarui jumlah produk: ' . $th->getMessage(),
+            ], 500);
+        }
+
     }
 }
