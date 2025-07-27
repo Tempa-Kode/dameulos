@@ -89,6 +89,7 @@ let colorIndex = 0;
 // Event listener untuk color picker yang sudah ada
 document.addEventListener('change', function(e) {
     if (e.target.classList.contains('color-picker')) {
+        updateLabels();
         const hexValue = e.target.value;
         const hexSpan = e.target.closest('.color-item').querySelector('.hex-value');
         hexSpan.textContent = hexValue;

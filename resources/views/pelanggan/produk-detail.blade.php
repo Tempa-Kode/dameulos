@@ -97,13 +97,13 @@
                                 <button id="checkout" class="primary-btn">
                                     <span class="btn-text">Beli Sekarang</span>
                                 </button>
-                                <button id="requestWarna" class="primary-outline-btn" data-toggle="modal" data-target="#exampleModal" data-placement="top" title="Request Warna">
-                                    <i class="fa-solid fa-palette"></i>
-                                </button>
                                 <button id="keranjang" class="primary-outline-btn"><i class="fa-solid fa-cart-plus"></i></button>
                             </div>
                             <div class="product__details__btns__option">
                                 <a href="{{ route('pelanggan.katalogBySlug', $produk->katalog->slug) }}">Kategori: <span>{{ $produk->katalog->nama }}</a>
+                            </div>
+                            <div class="product__details__btns__option">
+                                <button class="primary-outline-btn" data-toggle="modal" data-target="#exampleModal"><i class="fa-solid fa-palette mr-2"></i>Request Warna ?</button>
                             </div>
                             @else
                                 <div class="alert alert-warning" role="alert">
@@ -302,29 +302,33 @@
                 </button>
             </div>
             <div class="modal-body">
-                <div id="colorContainer">
-                    <div class="color-item" data-index="0">
-                        <div class="form-group">
-                            <label for="colorPicker_0">Pilih Warna 1:</label>
-                            <div class="input-group">
-                                <input type="color" name="warna_custom[]" id="colorPicker_0" class="form-control color-picker" value="#000000">
-                                <div class="input-group-append">
-                                    <button type="button" class="btn btn-danger remove-color" disabled>
-                                        <i class="fa fa-trash"></i>
-                                    </button>
-                                </div>
-                            </div>
-                            <small class="form-text text-muted">Kode Hex: <span class="hex-value">#000000</span></small>
+                <div class="alert alert-warning mb-3" style="border-left: 4px solid #ffc107; background: linear-gradient(135deg, #fff3cd 0%, #ffeaa7 100%);">
+                    <div class="d-flex align-items-center">
+                        <i class="fa fa-clock fa-2x text-warning mr-3"></i>
+                        <div>
+                            <h6 class="alert-heading mb-1 font-weight-bold">
+                                <i class="fa fa-info-circle"></i> Pre-Order
+                            </h6>
+                            <p class="mb-0 small">
+                                Pesanan ini merupakan item <strong>pre-order</strong> dengan kostume warna.
+                                Estimasi pengerjaan <strong>7-14 hari kerja</strong> setelah pembayaran dikonfirmasi.
+                            </p>
                         </div>
                     </div>
                 </div>
-
-                <div class="text-center mt-3">
-                    <button type="button" class="btn btn-primary" id="addColor">
-                        <i class="fa fa-plus"></i> Tambah Warna
-                    </button>
+                <div id="colorContainer">
+                    <div class="color-item" data-index="0">
+                        @foreach($produk->warnaProduk as $warna)
+                        <div class="form-group">
+                            <label for="colorPicker_{{ $loop->index }}">Pilih Warna {{ $loop->iteration }}:</label>
+                            <div class="input-group">
+                                <input type="color" name="warna_custom[]" id="colorPicker_{{ $loop->index }}" class="form-control color-picker" value="#{{ $warna->kode_warna }}">
+                            </div>
+                            {{-- <small class="form-text text-muted">Kode Hex: <span class="hex-value">#{{ $warna->kode_warna }}</span></small> --}}
+                        </div>
+                        @endforeach
+                    </div>
                 </div>
-
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn primary-outline-btn" data-dismiss="modal">Batal</button>
