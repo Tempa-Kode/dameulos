@@ -47,7 +47,7 @@
             display: block;
         }
         .dropdown-item {
-            color: #333;
+            color: black;
             padding: 12px 16px;
             text-decoration: none;
             display: block;
@@ -72,9 +72,9 @@
         .header__menu ul li a {
             color: #fff;
         }
-        .header__nav__option a {
+        .header__nav__option > .dropdown-menu > a {
             margin-right: 15px;
-            color: #fff;
+            color: #111;
             font-size: 16px;
             text-decoration: none;
         }
@@ -132,7 +132,7 @@
         </div>
         <div class="offcanvas__nav__option">
             <a href="#" class="search-switch"><img src="{{ asset('home/img/icon/search.png') }}" alt=""></a>
-            <a href="{{ route('pelanggan.keranjang.index') }}"><i class="fa-solid fa-cart-shopping"></i> <span></span></a>
+            <a class="text-decoration-none text-black" href="{{ route('pelanggan.keranjang.index') }}"><i class="fa-solid fa-cart-shopping"></i> <span></span></a>
         </div>
 
         <!-- Mobile Menu User Options -->
@@ -154,7 +154,7 @@
                 </a>
                 <form method="POST" action="{{ route('logout') }}" style="margin: 0;">
                     @csrf
-                    <button type="submit" class="mobile-menu-item">
+                    <button type="submit" class="btn btn-danger w-full mobile-menu-item text-white">
                         <i class="fa fa-sign-out"></i> Logout
                     </button>
                 </form>
@@ -194,23 +194,23 @@
                 </div>
                 <div class="col-lg-3 col-md-3">
                     <div class="header__nav__option">
-                        <a href="{{ route('pelanggan.keranjang.index') }}"><i class="fa-solid fa-cart-shopping"></i><span></span></a>
+                        <a class="text-decoration-none text-white" href="{{ route('pelanggan.keranjang.index') }}"><i class="fa-solid fa-cart-shopping"></i><span></span></a>
                         @if(Auth::check())
                             <div class="dropdown" style="display: inline-block;">
-                                <a href="#" class="dropdown-toggle" id="userDropdown" style="text-decoration: none;">
+                                <a href="#" class="dropdown-toggle text-decoration-none text-white" id="userDropdown" style="text-decoration: none;">
                                     <i class="fa fa-user"></i> {{ Auth::user()->name }}
                                 </a>
                                 <div class="dropdown-menu" id="userDropdownMenu">
                                     @if(Auth::user()->role == 'pelanggan')
-                                        <a class="dropdown-item" href="{{ route('pelanggan.transaksi') }}">
+                                        <a class="dropdown-item text-black" href="{{ route('pelanggan.transaksi') }}">
                                             <i class="fa fa-file-text-o"></i> Transaksi Saya
                                         </a>
-                                        <a class="dropdown-item" href="{{ route('pelanggan.ulasan.index') }}">
+                                        <a class="dropdown-item text-black" href="{{ route('pelanggan.ulasan.index') }}">
                                             <i class="fa fa-star-o"></i> Ulasan Saya
                                         </a>
                                         <div class="dropdown-divider"></div>
                                     @endif
-                                    <a class="dropdown-item" href="{{ route('customer.profile.edit') }}">
+                                    <a class="dropdown-item text-black" href="{{ route('customer.profile.edit') }}">
                                         <i class="fa fa-user-circle-o"></i> Profile
                                     </a>
                                     <div class="dropdown-divider"></div>
