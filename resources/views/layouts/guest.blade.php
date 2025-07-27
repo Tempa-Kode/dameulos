@@ -1,10 +1,3 @@
-@php
-    use Illuminate\Support\Facades\Auth;
-    $keranjang = 0; // Default value
-    if (Auth::check()) {
-        $keranjang = App\Models\Keranjang::where('user_id', Auth::user()->id)->count();
-    }
-@endphp
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
@@ -76,9 +69,12 @@
             background-color: #e9ecef;
             margin: 8px 0;
         }
+        .header__menu ul li a {
+            color: #fff;
+        }
         .header__nav__option a {
             margin-right: 15px;
-            color: #333;
+            color: #fff;
             font-size: 16px;
             text-decoration: none;
         }
@@ -101,7 +97,7 @@
         .mobile-menu-item {
             display: block;
             padding: 10px 15px;
-            color: #333;
+            color: #111;
             text-decoration: none;
             border-bottom: 1px solid #eee;
             font-size: 14px;
@@ -136,9 +132,7 @@
         </div>
         <div class="offcanvas__nav__option">
             <a href="#" class="search-switch"><img src="{{ asset('home/img/icon/search.png') }}" alt=""></a>
-            <a href="#"><img src="{{ asset('home/img/icon/heart.png') }}" alt=""></a>
-            <a href="{{ route('pelanggan.keranjang.index') }}"><img src="{{ asset('home/img/icon/cart.png') }}" alt=""> <span>{{ $keranjang }}</span></a>
-            <div class="price">$0.00</div>
+            <a href="{{ route('pelanggan.keranjang.index') }}"><i class="fa-solid fa-cart-shopping"></i> <span></span></a>
         </div>
 
         <!-- Mobile Menu User Options -->
@@ -181,16 +175,16 @@
     <!-- Offcanvas Menu End -->
 
     <!-- Header Section Begin -->
-    <header class="header">
+    <header class="header fixed-top" style="background-color: #111111;">
         <div class="container">
-            <div class="row">
+            <div class="row align-items-center">
                 <div class="col-lg-3 col-md-3">
                     <div class="header__logo">
-                        <a href="/"><img src="{{ asset('images/logo-dameulos.png') }}" alt="logo dameulos" class="w-25"></a>
+                        <a href="/"><img src="{{ asset('images/logo-dameulos.png') }}" alt="logo dameulos" style="width: 80px"></a>
                     </div>
                 </div>
                 <div class="col-lg-6 col-md-6">
-                    <nav class="header__menu mobile-menu">
+                    <nav class="header__menu mobile-menu ">
                         <ul>
                             <li class="{{ Route::currentRouteName() == 'pelanggan.home' ? 'active' : '' }}"><a href="/">Home</a></li>
                             <li class="{{ Route::currentRouteName() == 'pelanggan.katalog' ? 'active' : '' }}"><a href="{{ route('pelanggan.katalog') }}">Katalog</a></li>
@@ -200,7 +194,7 @@
                 </div>
                 <div class="col-lg-3 col-md-3">
                     <div class="header__nav__option">
-                        <a href="{{ route('pelanggan.keranjang.index') }}"><img src="{{ asset('home/img/icon/cart.png') }}" alt=""><span>{{ $keranjang }}</span></a>
+                        <a href="{{ route('pelanggan.keranjang.index') }}"><i class="fa-solid fa-cart-shopping"></i><span></span></a>
                         @if(Auth::check())
                             <div class="dropdown" style="display: inline-block;">
                                 <a href="#" class="dropdown-toggle" id="userDropdown" style="text-decoration: none;">
@@ -234,7 +228,7 @@
                     </div>
                 </div>
             </div>
-            <div class="canvas__open"><i class="fa fa-bars"></i></div>
+            <div class="canvas__open text-white"><i class="fa fa-bars"></i></div>
         </div>
     </header>
     <!-- Header Section End -->
@@ -251,6 +245,32 @@
                             <a href="/"><img src="{{ asset('images/logo-dameulos.png') }}" class="w-50" alt="logo dameulos"></a>
                         </div>
                         <p>Jl. Gereja Dame, Saitnihuta, Huta Toruan I.Tarutung, Tapanuli Utara, Sumatera Utara.Indonesia, 22411.</p>
+                    </div>
+                </div>
+                <div class="col-lg-2 offset-lg-1 col-md-3 col-sm-6">
+                    <div class="footer__widget">
+                        <h6>Tautan</h6>
+                        <ul>
+                            <li><a href="/">Home</a></li>
+                            <li><a href="{{ route('pelanggan.katalog') }}">Katalog</a></li>
+                            <li><a href="{{ route('pelanggan.tentang-kami') }}">Tentang Kami</a></li>
+                            <li><a href="{{ route('pelanggan.keranjang.index') }}">Keranjang</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-lg-2 col-md-3 col-sm-6">
+                    <div class="footer__widget">
+                        <h6>Kontak</h6>
+                        <ul>
+                            <li><a href="#"><i class="fa-solid fa-phone mr-2"></i>+62 xxx xxx xxxx</a></li>
+                            <li><a href="https://www.instagram.com/dameulos/"><i class="fa-brands fa-instagram mr-2"></i>@dameulos</a></li>
+                            <li><a href="https://www.tiktok.com/@dameulos"><i class="fa-brands fa-tiktok mr-2"></i>@dameulos</a></li>
+                        </ul>
+                    </div>
+                </div>
+                <div class="col-lg-3 offset-lg-1 col-md-6 col-sm-6">
+                    <div class="footer__widget">
+                        <iframe class="w-100" src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d4039.293627132542!2d98.97371517502651!3d2.0054015979765216!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x302e6ffebb2f78df%3A0xd9b82ef76bdfcc5b!2sGALERI%20DAME%20ULOS!5e1!3m2!1sen!2sid!4v1753597225419!5m2!1sen!2sid" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
                     </div>
                 </div>
             </div>

@@ -19,7 +19,7 @@
             <div class="row justify-content-around">
                 @forelse($produkTerlaris as $item)
                     <div class="col-lg-3 col-md-6 col-sm-6">
-                        <div class="product__item">
+                        <div class="product__item card p-3">
                             <div class="product__item__pic" style="height: 250px; overflow: hidden; display: flex; align-items: center; justify-content: center; background-color: #f8f9fa;">
                                 <div class="product__label">
                                 <span class="sale">Terlaris</span>
@@ -34,6 +34,7 @@
                                 <h5>Rp {{ number_format($item->harga, 0, ',', '.') }}</h5>
                                 <span class="badge badge-light">{{ $item->katalog->nama ?? 'Tidak ada kategori' }}</span>
                             </div>
+                            <span class="badge badge-secondary">Stok : {{ $item->stok ?? 'Stok kosong' }}</span>
                             <a href="{{ route('pelanggan.produkBySlug', $item->slug) }}" class="primary-btn text-center">Beli Sekarang</a>
                         </div>
                     </div>
@@ -62,7 +63,7 @@
                     </div>
                 </div>
             </div>
-            <div class="row row-cols-1 row-cols-md-3">
+            <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4">
             @forelse($produk as $item)
                 <div class="col">
                     <div class="product__item card p-3">
@@ -77,6 +78,7 @@
                             <h5>Rp {{ number_format($item->harga ?? 0, 0, ',', '.') }}</h5>
                             <span class="badge badge-light">{{ $item->katalog->nama ?? 'Tidak ada kategori' }}</span>
                         </div>
+                        <span class="badge badge-secondary">Stok : {{ $item->stok ?? 'Stok kosong' }}</span>
                         <a href="{{ route('pelanggan.produkBySlug', $item->slug) }}" class="primary-btn text-center">Beli Sekarang</a>
                     </div>
                 </div>

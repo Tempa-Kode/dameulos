@@ -1,4 +1,4 @@
-<div id="carouselExampleControls" class="carousel slide carousel-fade" data-ride="carousel">
+<div id="carouselExampleControls" class="carousel slide carousel-fade" style="margin-top: 95px;" data-ride="carousel">
     <div class="carousel-inner">
         <div class="carousel-item active" style="position: relative;">
             <img class="d-block w-100" src="{{ asset('home/img/hero/1.jpg') }}" alt="First slide">
