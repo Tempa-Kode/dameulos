@@ -30,12 +30,18 @@ class PengirimanController extends Controller
 
     public function cekOngkir(Request $request)
     {
+        // Validasi input jumlah/berat
+        $request->validate([
+            'jumlah' => 'required|numeric|min:1',
+            'destination' => 'required'
+        ]);
+
         $response = Http::withHeaders([
             'key' => env('KOMERCE_API_KEY', "ew0ZJZz513ba1d44c4878df9wHk40hkr"),
         ])->asForm()->post('https://rajaongkir.komerce.id/api/v1/calculate/domestic-cost', [
             'origin' => env('ORIGIN_LOCATION_ID', "28400"),
             'destination' => $request->destination,
-            'weight' => env('KOMERCE_WEIGHT', 10),
+            'weight' => (int) $request->jumlah,
             'courier' => env('KOMERCE_COURIER', 'jnt'),
         ]);
 

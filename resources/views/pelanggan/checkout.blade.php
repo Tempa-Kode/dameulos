@@ -287,7 +287,7 @@
 @endpush
 @section('content')
     <!-- Breadcrumb Section Begin -->
-    <section class="breadcrumb-option">
+    <section class="breadcrumb-option" style="margin-top: 110px;">
         <div class="container">
             <div class="row">
                 <div class="col-lg-12">
@@ -320,7 +320,7 @@
                                 <div class="col-12">
                                     <div class="checkout__input">
                                         <p>Nama<span>*</span></p>
-                                        <input type="text" name="nama_depan" value="{{ old('nama_depan', Auth::user()->name) }}" readonly required>
+                                        <input type="text" class="font-weight-bold text-dark" name="nama_depan" value="{{ old('nama_depan', Auth::user()->name) }}" readonly required>
                                     </div>
                                 </div>
                             </div>
@@ -329,25 +329,25 @@
                                 <select name="destination" id="destination" class="form-control d-none" style="width: 100%">
                                     <option value="">Cari tujuan domestik...</option>
                                 </select>
-                                <input type="text" name="alamat" placeholder="alamat lengkap (cth : Jl. Setia Budi)" required style="margin-top: 10px;">
+                                <input type="text" name="alamat" class="text-dark" placeholder="alamat lengkap (cth : Jl. Setia Budi)" required style="margin-top: 10px;">
                             </div>
                             <div class="checkout__input" style="margin-top: 10px;">
                                 <p>Provinsi<span>*</span></p>
-                                <input type="text" name="provinsi" id="province_name" value="{{ old('provinsi') }}" required>
+                                <input type="text" name="provinsi" id="province_name" class="text-dark" value="{{ old('provinsi') }}" required>
                                 @error('provinsi')
                                     <span class="text-danger small">{{ $message }}</span>
                                 @enderror
                             </div>
                             <div class="checkout__input">
                                 <p>Kabupaten/Kota<span>*</span></p>
-                                <input type="text" name="kota" id="city_name" value="{{ old('kota') }}" required>
+                                <input type="text" name="kota" id="city_name" class="text-dark" value="{{ old('kota') }}" required>
                                 @error('kota')
                                     <span class="text-danger small">{{ $message }}</span>
                                 @enderror
                             </div>
                             <div class="checkout__input">
                                 <p>Kode Pos<span>*</span></p>
-                                <input type="text" name="kode_pos" id="zip_code" value="{{ old('kode_pos') }}" required>
+                                <input type="text" name="kode_pos" id="zip_code" class="text-dark" value="{{ old('kode_pos') }}" required>
                                 @error('kode_pos')
                                     <span class="text-danger small">{{ $message }}</span>
                                 @enderror
@@ -356,7 +356,7 @@
                                 <div class="col-lg-6">
                                     <div class="checkout__input">
                                         <p>No Handphone<span>*</span></p>
-                                        <input type="text" name="telepon" value="{{ old('telepon') }}" required>
+                                        <input type="text" name="telepon" class="text-dark" value="{{ old('telepon') }}" required>
                                         @error('telepon')
                                             <span class="text-danger small">{{ $message }}</span>
                                         @enderror
@@ -365,7 +365,7 @@
                                 <div class="col-lg-6">
                                     <div class="checkout__input">
                                         <p>Email<span>*</span></p>
-                                        <input type="email" name="email" value="{{ old('email', auth()->user()->email ?? '') }}" required>
+                                        <input type="email" name="email" class="text-dark" value="{{ old('email', auth()->user()->email ?? '') }}" required>
                                         @error('email')
                                             <span class="text-danger small">{{ $message }}</span>
                                         @enderror
@@ -374,7 +374,7 @@
                             </div>
                             <div class="checkout__input">
                                 <p>Catatan Pesanan</p>
-                                <input type="text" name="catatan" placeholder="Contoh: Mohon bungkus dengan rapi (optional)" value="{{ old('catatan') }}">
+                                <input type="text" name="catatan" class="text-dark" placeholder="Contoh: Mohon bungkus dengan rapi (optional)" value="{{ old('catatan') }}">
                                 @error('catatan')
                                     <span class="text-danger small">{{ $message }}</span>
                                 @enderror
@@ -413,14 +413,15 @@
                                         <div class="checkout__order__product d-flex justify-content-between align-items-start p-3 mb-3 border-bottom">
                                             <div class="checkout__order__product__info flex-grow-1">
                                                 <div class="d-flex align-items-center mb-2">
+                                                    <img class="img-thumbnail" src="{{ asset($item['produk']->gambar) }}" style="aspect-ratio: 1/1; object-fit: cover; width: 50px; height: 50px;" alt="">
                                                     <h6 class="mb-0 font-weight-bold">{{ $item['produk']->nama }}</h6>
+                                                </div>
+                                                <div class="product-details">
                                                     @if(isset($item['pre_order']) && $item['pre_order'] == true)
                                                         <span class="badge badge-warning ml-2 px-2 py-1">
                                                             <i class="fa fa-clock"></i> PRE-ORDER
                                                         </span>
                                                     @endif
-                                                </div>
-                                                <div class="product-details">
                                                     <p class="text-muted mb-1 small">Uk :{{ $item['ukuran']->ukuran ?? '' }}</p>
                                                     <p class="text-muted mb-1 small">{{ $item['warna']->warna ?? '' }}</p>
 
@@ -566,6 +567,7 @@
                     method: 'POST',
                     data: {
                         destination: data.id,
+                        jumlah: {{ $item['jumlah'] }},
                     },
                     success: function (response) {
                         console.log('Ongkir Response:', response);
