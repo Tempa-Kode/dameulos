@@ -223,7 +223,7 @@
                                 </div>
                             </div>
                         @else
-                            <a href="{{ route('login') }}" style="margin-left: 10px;">Login</a>
+                            <a class="text-decoration-none text-white" href="{{ route('login') }}" style="margin-left: 10px;"><i class="fa fa-sign-in"></i> Login</a>
                         @endif
                     </div>
                 </div>
