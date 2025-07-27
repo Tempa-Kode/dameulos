@@ -20,7 +20,7 @@ class DashboardController extends Controller
         $totalPelanggan = User::where('role', 'pelanggan')->count();
         $totalJenisProduk = Produk::count();
         $totalTransaksi = Transaksi::count();
-        $totalPendapatan = Pembayaran::where('status', 'berhasil')->sum('total_pembayaran');
+        $totalPendapatan = Pembayaran::where('status', 'dibayar')->sum('total_pembayaran');
 
         // Data tambahan
         $totalKeranjang = Keranjang::count();
@@ -85,18 +85,30 @@ class DashboardController extends Controller
 
         $thisMonthPendapatan = Pembayaran::whereMonth('created_at', $thisMonth->month)
             ->whereYear('created_at', $thisMonth->year)
-            ->where('status', 'berhasil')
+            ->where('status', 'dibayar')
             ->sum('total_pembayaran');
         $lastMonthPendapatan = Pembayaran::whereMonth('created_at', $lastMonth->month)
             ->whereYear('created_at', $lastMonth->year)
-            ->where('status', 'berhasil')
+            ->where('status', 'dibayar')
             ->sum('total_pembayaran');
 
-        // Hitung persentase perubahan
-        $transaksiGrowth = $lastMonthTransaksi > 0 ?
-            (($thisMonthTransaksi - $lastMonthTransaksi) / $lastMonthTransaksi) * 100 : 0;
-        $pendapatanGrowth = $lastMonthPendapatan > 0 ?
-            (($thisMonthPendapatan - $lastMonthPendapatan) / $lastMonthPendapatan) * 100 : 0;
+        // Hitung pertumbuhan pendapatan (growth)
+        if ($lastMonthPendapatan > 0) {
+            $pendapatanGrowth = (($thisMonthPendapatan - $lastMonthPendapatan) / $lastMonthPendapatan) * 100;
+        } else if ($thisMonthPendapatan > 0) {
+            $pendapatanGrowth = 100;
+        } else {
+            $pendapatanGrowth = 0;
+        }
+
+        // Hitung pertumbuhan transaksi (growth)
+        if ($lastMonthTransaksi > 0) {
+            $transaksiGrowth = (($thisMonthTransaksi - $lastMonthTransaksi) / $lastMonthTransaksi) * 100;
+        } else if ($thisMonthTransaksi > 0) {
+            $transaksiGrowth = 100;
+        } else {
+            $transaksiGrowth = 0;
+        }
 
         // Tambahan analisis untuk insights
         $avgTransaksiPerDay = $thisMonthTransaksi > 0 ? $thisMonthTransaksi / now()->day : 0;

@@ -12,6 +12,7 @@ use App\Models\Warna;
 use App\Models\WarnaProduk;
 use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use Barryvdh\DomPDF\Facade\Pdf;
 
 class ProdukController extends Controller
 {
@@ -425,5 +426,22 @@ class ProdukController extends Controller
             return redirect()->back()
                 ->with('error', 'Terjadi kesalahan saat menghapus ulasan: ' . $e->getMessage());
         }
+    }
+
+    public function downloadReport(){
+        $produkData = Produk::with('katalog')->withCount(['detailTransaksi as jumlah_terjual' => function ($query) {
+            $query->select(\DB::raw('COALESCE(SUM(jumlah),0)'));
+        }])->get();
+        // Generate filename
+        $filename = 'laporan_produk_' . date('Y-m-d_H-i-s') . '.pdf';
+
+        // Generate PDF
+        $pdf = Pdf::loadView('admin.produk.report-pdf', compact('produkData'));
+
+        // Set paper size dan orientation
+        $pdf->setPaper('A4', 'landscape');
+
+        // Return PDF download
+        return $pdf->stream($filename);
     }
 }

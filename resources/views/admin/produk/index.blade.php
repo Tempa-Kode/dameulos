@@ -7,9 +7,13 @@
 @section('content')
     <div class="col-sm-12">
         <div class="card">
-            <div class="card-header">
+            <div class="card-header d-flex justify-content-between align-items-center">
                 <a href="{{ route('produk.create') }}" class="btn btn-primary">
                     <span class="pc-micon"><i class="ti ti-circle-plus me-2"></i></span> Tambah Produk
+                </a>
+                <a href="{{ route('produk.report') }}" class="btn btn-success">
+                    <span class="pc-micon"><i class="ti ti-file-download me-2"></i></span>
+                    Download Report
                 </a>
             </div>
             <div class="card-body">

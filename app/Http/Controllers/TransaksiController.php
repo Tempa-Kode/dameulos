@@ -13,7 +13,14 @@ class TransaksiController extends Controller
 {
     public function index()
     {
-        $data = Transaksi::where('preorder', false)->with('user')->get();
+        $data = Transaksi::where('preorder', false)
+            ->with(['user' => function ($query) {
+                $query->withCount(['transaksi as transaksi_count' => function ($q) {
+                    $q->where('preorder', false);
+                }]);
+            }])
+            ->orderBy('created_at', 'desc')
+            ->get();
         return view('admin.transaksi.index', compact('data'));
     }
 
@@ -240,6 +247,11 @@ class TransaksiController extends Controller
      */
     public function downloadReport(Request $request)
     {
+        $request->validate([
+            'status' => 'nullable',
+            'start' => 'nullable',
+            'end' => 'nullable',
+        ]);
         $status = $request->input('status');
 
         // Query transaksi berdasarkan status
@@ -252,6 +264,12 @@ class TransaksiController extends Controller
 
         if ($status && $status !== 'all') {
             $query->where('status', $status);
+        }
+
+        if ($request->filled('start') && $request->filled('end')) {
+            $startDate = $request->input('start');
+            $endDate = $request->input('end');
+            $query->whereBetween('created_at', [$startDate, $endDate]);
         }
 
         $transaksi = $query->orderBy('created_at', 'desc')->get();
@@ -279,6 +297,6 @@ class TransaksiController extends Controller
         $pdf->setPaper('A4', 'landscape');
 
         // Return PDF download
-        return $pdf->download($filename);
+        return $pdf->stream($filename);
     }
 }

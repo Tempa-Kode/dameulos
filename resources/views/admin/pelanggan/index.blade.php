@@ -8,10 +8,10 @@
     <div class="col-sm-12">
         <div class="card">
             <div class="card-header">
-                <button class="btn btn-success">
+                <a href="{{ route('pelanggan.report') }}" class="btn btn-success">
                     <span class="pc-micon"><i class="ti ti-download me-2"></i></span>
                     Download Report
-                </button>
+                </a>
             </div>
             <div class="card-body">
                 {{-- Include komponen alert --}}

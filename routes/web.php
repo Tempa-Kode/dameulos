@@ -51,6 +51,7 @@ Route::prefix('dashboard')->middleware(['auth', 'adminManajer'])->group(function
     Route::patch('/profile/password', [AdminProfileController::class, 'updatePassword'])->name('admin.profile.password.update');
 
     Route::resource('produk', ProdukController::class)->middleware(['auth', 'adminManajer']);
+    Route::get('/produk-report', [ProdukController::class, 'downloadReport'])->name('produk.report')->middleware(['auth', 'adminManajer']);
     Route::delete('/produk-foto/{id}', [ProdukController::class, 'hapusFoto'])->name('produk.foto.hapus')->middleware(['auth', 'adminManajer']);
     Route::delete('/produk-ulasan/{id}', [ProdukController::class, 'hapusUlasan'])->name('produk.ulasan.hapus')->middleware(['auth', 'adminManajer']);
     Route::resource('katalog', KatalogController::class)->middleware(['auth', 'adminManajer']);    // Route khusus untuk transaksi harus sebelum resource
@@ -64,6 +65,7 @@ Route::prefix('dashboard')->middleware(['auth', 'adminManajer'])->group(function
     Route::resource('pengiriman', PengirimanController::class)->middleware(['auth', 'adminManajer']);
     Route::resource('admin', \App\Http\Controllers\AdminController::class)->middleware(['auth', 'adminManajer']);
     Route::resource('manajer', \App\Http\Controllers\ManajerController::class)->middleware(['auth', 'adminManajer']);
+    Route::get('/pelanggan/download-report', [\App\Http\Controllers\PelangganController::class, 'downloadReport'])->name('pelanggan.report');
     Route::resource('pelanggan', \App\Http\Controllers\PelangganController::class)->middleware(['auth', 'adminManajer']);
 
     // Pre-order routes

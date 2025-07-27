@@ -1,4 +1,7 @@
- <!-- [ Sidebar Menu ] start -->
+@php
+$transaksiBaru = \App\Models\Transaksi::whereIn('status', ['pending', 'dibayar'])->count();
+@endphp
+<!-- [ Sidebar Menu ] start -->
  <nav class="pc-sidebar">
      <div class="navbar-wrapper">
          <div class="p-3">
@@ -35,7 +38,7 @@
                  <li class="pc-item">
                      <a href="{{ route('transaksi.index') }}" class="pc-link">
                          <span class="pc-micon"><i class="ti ti-cash"></i></span>
-                         <span class="pc-mtext">Transaksi</span>
+                         <span class="pc-mtext">Transaksi <span class="badge bg-light-info">+{{ $transaksiBaru }}</span></span>
                      </a>
                  </li>
                  <li class="pc-item">

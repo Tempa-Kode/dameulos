@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Laporan Transaksi - {{ $statusText }}</title>
+    <title>Laporan Pelanggan</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -164,105 +164,41 @@
                 </td>
                 <td style="text-align: center; border: none;">
                     <div style="font-size: 20px; font-weight: bold; color: #2c3e50;">DAME ULOS</div>
-                    <h2 style="margin: 0; color: #34495e;">Laporan Transaksi</h2>
-                    <p style="margin: 0; font-size: 12px;">
-                        <strong>Filter Status:</strong> {{ $statusText }} &nbsp;|&nbsp; <strong>Tanggal:</strong> {{ date('d-m-Y H:i') }}
-                    </p>
+                    <h2 style="margin: 0; color: #34495e;">Laporan Data Pelanggan</h2>
                 </td>
             </tr>
         </table>
     </div>
 
-    <div class="info-section">
-        <div class="info-item">
-            <strong>Total Transaksi:</strong> {{ $transaksi->count() }}
-        </div>
-        <div class="info-item">
-            <strong>Total Pendapatan:</strong> Rp {{ number_format($transaksi->sum('total'), 0, ',', '.') }}
-        </div>
-        <div class="info-item">
-            <strong>Periode:</strong> {{ $transaksi->min('created_at') ? $transaksi->min('created_at')->format('d-m-Y') : '-' }} s/d {{ $transaksi->max('created_at') ? $transaksi->max('created_at')->format('d-m-Y') : '-' }}
-        </div>
-    </div>
-
-    @if($transaksi->count() > 0)
+    @if($data->count() > 0)
     <table>
         <thead>
             <tr>
-                <th width="3%">No</th>
-                <th width="10%">Kode Transaksi</th>
-                <th width="12%">Pelanggan</th>
-                <th width="8%">Status</th>
-                <th width="15%">Produk</th>
-                <th width="8%">Kategori</th>
-                <th width="6%">Ukuran</th>
-                <th width="6%">Warna</th>
-                <th width="4%">Qty</th>
-                <th width="10%">Harga Satuan</th>
-                <th width="10%">Total</th>
-                <th width="8%">Tanggal</th>
+                <th width="4%">No</th>
+                <th width="20%">Nama</th>
+                <th width="28%">Email</th>
+                <th width="18%">No Hp</th>
+                <th width="15%">Jlh Transaksi</th>
             </tr>
         </thead>
         <tbody>
             @php $no = 1; $itemCount = 0; @endphp
-            @foreach($transaksi as $item)
-                @foreach($item->detailTransaksi as $detail)
+            @foreach($data as $item)
                 <tr>
                     <td class="text-center">{{ $no }}</td>
-                    <td>{{ $item->kode_transaksi }}</td>
-                    <td>{{ $item->user->name }}</td>
-                    <td class="text-center">
-                        <span class="status-badge status-{{ $item->status }}">
-                            {{ ucfirst($item->status) }}
-                        </span>
-                    </td>
-                    <td>{{ $detail->produk->nama }}</td>
-                    <td>{{ $detail->produk->katalog->nama ?? '-' }}</td>
-                    <td class="text-center">{{ $detail->ukuranProduk->ukuran ?? '-' }}</td>
-                    <td class="text-center">{{ $detail->jenisWarnaProduk->warna  ?? '-' }}</td>
-                    <td class="text-center">{{ $detail->jumlah }}</td>
-                    <td class="text-right">Rp {{ number_format($detail->harga_satuan, 0, ',', '.') }}</td>
-                    <td class="text-right">Rp {{ number_format($detail->total_harga, 0, ',', '.') }}</td>
-                    <td class="text-center">{{ $item->created_at->format('d-m-Y') }}</td>
+                    <td>{{ $item->name }}</td>
+                    <td>{{ $item->email }}</td>
+                    <td>{{ $item->no_telp }}</td>
+                    <td>{{ $item->jumlah_transaksi }}</td>
                 </tr>
                 @php
                     $no++;
                     $itemCount++;
                 @endphp
-                @if($itemCount % 30 == 0 && !$loop->last)
-                    </tbody>
-                    </table>
-                    <div class="page-break"></div>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th width="3%">No</th>
-                                <th width="10%">Kode Transaksi</th>
-                                <th width="12%">Pelanggan</th>
-                                <th width="8%">Status</th>
-                                <th width="15%">Produk</th>
-                                <th width="8%">Kategori</th>
-                                <th width="6%">Ukuran</th>
-                                <th width="6%">Warna</th>
-                                <th width="4%">Qty</th>
-                                <th width="10%">Harga Satuan</th>
-                                <th width="10%">Total</th>
-                                <th width="8%">Tanggal</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                @endif
-                @endforeach
             @endforeach
         </tbody>
     </table>
 
-    <div class="summary-cards" style="margin-top: 30px;">
-        <div class="summary-card">
-            <h3>Total Pendapatan</h3>
-            <div class="value">Rp {{ number_format($transaksi->sum('total'), 0, ',', '.') }}</div>
-        </div>
-    </div>
     @else
     <div style="text-align: center; padding: 50px; color: #6c757d;">
         <h3>Tidak ada data transaksi untuk status yang dipilih</h3>

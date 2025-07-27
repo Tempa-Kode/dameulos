@@ -4,6 +4,10 @@
 
 @section('judul', 'Data Transaksi')
 
+@push('styles')
+    <link rel="stylesheet" href="{{ asset('css/plugins/datepicker-bs5.min.css') }}">
+@endpush
+
 @section('content')
     <div class="row mb-4">
         <div class="col-md-12">
@@ -90,6 +94,7 @@
                                 <th>No</th>
                                 <th>Kode Transaksi</th>
                                 <th>Pelanggan</th>
+                                <th>Jlh Transaksi Pelanggan</th>
                                 <th>Status</th>
                                 <th>Total</th>
                                 <th>Tanggal</th>
@@ -98,10 +103,18 @@
                         </thead>
                         <tbody>
                             @foreach ($data as $item)
-                                <tr>
+                                <tr
+                                    @if (
+                                            ($item->status == 'pending') ||
+                                            ($item->status == 'dibayar')
+                                        )
+                                        class="bg-warning text-white"
+                                    @endif
+                                >
                                     <td>{{ $loop->iteration }}</td>
                                     <td>{{ $item->kode_transaksi }}</td>
                                     <td>{{ $item->user->name }}</td>
+                                    <td>x{{ $item->user->transaksi_count }}</td>
                                     <td>
                                         @if ($item->status == 'pending')
                                             <span class="badge text-bg-secondary">Pending</span>
@@ -148,6 +161,7 @@
                                 <th>No</th>
                                 <th>Kode Transaksi</th>
                                 <th>Pelanggan</th>
+                                <th>Jlh Transaksi Pelanggan</th>
                                 <th>Status</th>
                                 <th>Total</th>
                                 <th>Tanggal</th>
@@ -170,6 +184,10 @@
                 </div>
                 <form action="{{ route('transaksi.download.report') }}" method="GET">
                     <div class="modal-body">
+                        <div class="alert alert-info">
+                            <i class="ti ti-info-circle me-2"></i>
+                            Laporan akan berisi detail transaksi lengkap dengan informasi produk, pelanggan, dan status dalam format PDF yang siap untuk dicetak atau dibagikan.
+                        </div>
                         <div class="mb-3">
                             <label for="status" class="form-label">Filter Status Transaksi</label>
                             <select class="form-select" id="status" name="status">
@@ -183,9 +201,13 @@
                                 <option value="batal">Batal</option>
                             </select>
                         </div>
-                        <div class="alert alert-info">
-                            <i class="ti ti-info-circle me-2"></i>
-                            Laporan akan berisi detail transaksi lengkap dengan informasi produk, pelanggan, dan status dalam format PDF yang siap untuk dicetak atau dibagikan.
+                        <div>
+                            <label class="form-label">Pilih rentang tanggal (optional)</label>
+                            <div class="input-daterange input-group" id="pc-datepicker-5">
+                                <input type="date" class="form-control text-left" placeholder="mulai tanggal" name="start">
+                                <span class="input-group-text">sampai</span>
+                                <input type="date" class="form-control text-end" placeholder="sampai tanggal" name="end">
+                            </div>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -201,6 +223,7 @@
 @endsection
 
 @push('scripts')
+    <script src="{{ asset('js/plugins/datepicker-full.min.js') }}"></script>
 <script>
     function filterTable() {
         const filter = document.getElementById('statusFilter').value.toLowerCase();
@@ -208,7 +231,7 @@
         const rows = table.getElementsByTagName('tbody')[0].getElementsByTagName('tr');
 
         for (let i = 0; i < rows.length; i++) {
-            const statusCell = rows[i].getElementsByTagName('td')[3]; // Status column
+            const statusCell = rows[i].getElementsByTagName('td')[4]; // Status column
             if (statusCell) {
                 const statusText = statusCell.textContent.toLowerCase();
                 if (filter === '' || statusText.includes(filter)) {
