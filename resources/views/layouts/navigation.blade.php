@@ -60,6 +60,29 @@ $transaksiBaru = \App\Models\Transaksi::whereIn('status', ['pending', 'dibayar']
                      </a>
                  </li>
 
+                <li class="pc-item pc-caption">
+                    <label>Konten Manajemen Sistem</label>
+                    <i class="ti ti-news"></i>
+                </li>
+                <li class="pc-item">
+                    <a href="{{ route('promosi.index') }}" class="pc-link">
+                        <span class="pc-micon"><i class="ti ti-ad"></i></span>
+                        <span class="pc-mtext">Promosi</span>
+                    </a>
+                </li>
+                <li class="pc-item">
+                    <a href="" class="pc-link">
+                        <span class="pc-micon"><i class="ti ti-news"></i></span>
+                        <span class="pc-mtext">Berita/Kegiatan</span>
+                    </a>
+                </li>
+                <li class="pc-item">
+                    <a href="" class="pc-link">
+                        <span class="pc-micon"><i class="ti ti-certificate"></i></span>
+                        <span class="pc-mtext">Piagam / Sertifikat</span>
+                    </a>
+                </li>
+
                  <li class="pc-item pc-caption">
                      <label>Pengguna</label>
                      <i class="ti ti-news"></i>

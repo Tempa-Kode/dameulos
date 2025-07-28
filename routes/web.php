@@ -74,6 +74,7 @@ Route::prefix('dashboard')->middleware(['auth', 'adminManajer'])->group(function
     Route::resource('manajer', \App\Http\Controllers\ManajerController::class)->middleware(['auth', 'adminManajer']);
     Route::get('/pelanggan/download-report', [\App\Http\Controllers\PelangganController::class, 'downloadReport'])->name('pelanggan.report');
     Route::resource('pelanggan', \App\Http\Controllers\PelangganController::class)->middleware(['auth', 'adminManajer']);
+    Route::resource('promosi', \App\Http\Controllers\PromosiController::class)->middleware(['auth', 'adminManajer']);
 
     // Pre-order routes
     Route::get('/preorder', [PreOrderController::class, 'index'])->name('preorder.index')->middleware(['auth', 'adminManajer']);
@@ -111,6 +112,7 @@ Route::get('/transaksi', [TransaksiController::class, 'transaksiSaya'])->middlew
 Route::post('/transaksi/update-status/{kode_transaksi}', [TransaksiController::class, 'updateStatus'])->middleware(['auth'])->name('transaksi.update-status');
 
 Route::post('/bukti-pembayaran/{id}/upload-bukti', [PembayaranController::class, 'uploadBuktiPembayaran'])->middleware(['auth'])->name('pembayaran.upload.bukti');
+
 
 // Ulasan routes
 Route::middleware(['auth'])->group(function () {
