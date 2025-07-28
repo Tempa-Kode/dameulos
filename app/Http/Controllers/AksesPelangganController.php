@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Produk;
 use App\Models\Katalog;
+use App\Models\Promosi;
 use Illuminate\Http\Request;
 use App\Models\KategoriProduk;
 use App\Models\DetailTransaksi;
@@ -52,8 +53,9 @@ class AksesPelangganController extends Controller
         }
 
         $kategori = KategoriProduk::all();
+        $promosi = Promosi::all();
 
-        return view('pelanggan.index', compact('produkTerlaris', 'produk', 'kategori'));
+        return view('pelanggan.index', compact('produkTerlaris', 'produk', 'kategori', 'promosi'));
     }
 
     public function katalog(Request $request)

@@ -8,6 +8,16 @@
                 <p class="text-white">Temukan keindahan dan keunikan kain ulos tradisional yang memikat hati. Belanja sekarang dan jadikan bagian dari budaya Batak sebagai milik Anda.</p>
             </div>
         </div>
+        @foreach ($promosi as $item)
+            <div class="carousel-item" style="position: relative;">
+                <img class="d-block w-100" src="{{ asset($item->gambar) }}" alt="{{ $item->judul }}">
+                <div style="position: absolute; bottom: 0; width: 100%; height: 50%; background: linear-gradient(to top, rgba(0, 0, 0, 1), transparent);"></div>
+                <div class="carousel-caption d-none d-md-block">
+                    <h5 class="text-white">{{ $item->judul }}</h5>
+                    <p class="text-white">{{ $item->deskripsi }}</p>
+                </div>
+            </div>
+        @endforeach
         <div class="carousel-item" style="position: relative;">
             <img class="d-block w-100" src="{{ asset('home/img/hero/2.jpg') }}" alt="Second slide">
             <div style="position: absolute; bottom: 0; width: 100%; height: 50%; background: linear-gradient(to top, rgba(0, 0, 0, 1), transparent);"></div>
