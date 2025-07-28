@@ -10,6 +10,7 @@ class Produk extends Model
 
     protected $fillable = [
         'katalog_id',
+        'kategori_produk_id',
         'nama',
         'slug',
         'deskripsi',
@@ -56,5 +57,10 @@ class Produk extends Model
     public function videoProduk()
     {
         return $this->hasMany(VideoProduk::class, 'produk_id', 'id');
+    }
+
+    public function kategoriProduk()
+    {
+        return $this->belongsTo(KategoriProduk::class, 'kategori_produk_id', 'id');
     }
 }

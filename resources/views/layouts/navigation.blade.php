@@ -36,6 +36,12 @@ $transaksiBaru = \App\Models\Transaksi::whereIn('status', ['pending', 'dibayar']
                      </a>
                  </li>
                  <li class="pc-item">
+                     <a href="{{ route('kategori.index') }}" class="pc-link">
+                         <span class="pc-micon"><i class="ti ti-package"></i></span>
+                         <span class="pc-mtext">Kategori</span>
+                     </a>
+                 </li>
+                 <li class="pc-item">
                      <a href="{{ route('transaksi.index') }}" class="pc-link">
                          <span class="pc-micon"><i class="ti ti-cash"></i></span>
                          <span class="pc-mtext">Transaksi <span class="badge bg-light-info">+{{ $transaksiBaru }}</span></span>

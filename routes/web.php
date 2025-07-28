@@ -58,6 +58,8 @@ Route::prefix('dashboard')->middleware(['auth', 'adminManajer'])->group(function
     Route::get('/transaksi/download-report', [TransaksiController::class, 'downloadReport'])->name('transaksi.download.report');
     Route::resource('transaksi', TransaksiController::class)->middleware(['auth', 'adminManajer']);
 
+    Route::resource('kategori', \App\Http\Controllers\KategoriProdukController::class)->middleware(['auth', 'adminManajer']);
+
     // Route untuk mengelola video produk
     Route::get('/video-produk/tambah/{produk:id}', [\App\Http\Controllers\ProdukController::class, 'tambahVideoProduk'])->name('video-produk.tambah')->middleware(['auth', 'adminManajer']);
     Route::post('/video-produk/simpan/{produk:id}', [\App\Http\Controllers\ProdukController::class, 'simpanVideoProduk'])->name('video-produk.store')->middleware(['auth', 'adminManajer']);
