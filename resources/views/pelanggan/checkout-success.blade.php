@@ -316,6 +316,14 @@
                         <div class="row">
                             <!-- Order Details Column -->
                             <div class="col-lg-12" id="order-details-col">
+                                @if ($transaksi->status == 'dikonfirmasi' && $transaksi->preorder == 1)
+                                    <div class="alert alert-info alert-dismissible fade show" role="alert">
+                                        <strong>Pesanan Pre-Order Telah Dikonfirmasi!</strong> Silahkan lakukan pembayaran.
+                                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                                            <span aria-hidden="true">&times;</span>
+                                        </button>
+                                    </div>
+                                @endif
                                 <div class="order-details">
                                     <h4>Detail Pesanan</h4>
 
@@ -424,7 +432,12 @@
                             <a href="{{ route('pelanggan.katalog') }}" class="btn-outline-primary">
                                 <i class="fa fa-shopping-bag"></i> Lanjut Belanja
                             </a>
-                            @if ($transaksi->status == 'pending')
+                            @if ($transaksi->status == 'pending' && $transaksi->preorder == 0)
+                            <button id="bayar" class="primary-btn">
+                                <i class="fa-solid fa-money-bill-wave mr-2"></i>Bayar
+                            </button>
+                            @endif
+                            @if ($transaksi->status == 'dikonfirmasi' && $transaksi->preorder == 1)
                             <button id="bayar" class="primary-btn">
                                 <i class="fa-solid fa-money-bill-wave mr-2"></i>Bayar
                             </button>

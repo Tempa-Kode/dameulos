@@ -129,6 +129,8 @@
                                                             <span class="badge badge-warning">Menunggu</span>
                                                         @elseif($item->status == 'dibayar')
                                                             <span class="badge badge-info">Dibayar</span>
+                                                        @elseif($item->status == 'dikonfirmasi')
+                                                            <span class="badge badge-info">Dikonfirmasi</span>
                                                         @elseif($item->status == 'diproses')
                                                             <span class="badge badge-info">Diproses</span>
                                                         @elseif($item->status == 'dikirim')
@@ -139,7 +141,7 @@
                                                             <span class="badge badge-danger">Dibatalkan</span>
                                                         @endif
                                                         <br>
-                                                        @if ($item->status == 'pending')
+                                                        @if ($item->status == 'pending' || $item->status == 'dikonfirmasi')
                                                         <small>
                                                             <button type="button" class="btn btn-sm btn-outline-primary mt-2" onclick="updateStatus('{{ $item->kode_transaksi }}')">
                                                                 <i class="fa fa-refresh"></i> Update Status

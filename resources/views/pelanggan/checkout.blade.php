@@ -491,7 +491,7 @@
                                 </div> --}}
 
                                 <button type="submit" class="site-btn w-100 mt-3" id="checkout-btn">
-                                    <span class="btn-text">Lakukan Pembayaran</span>
+                                    <span class="btn-text">{{ $hasPreOrder ? 'Lakukan Pesanan Pre-Order' : 'Lakukan Pembayaran' }}</span>
                                     <span class="btn-loading d-none">
                                         <i class="fa fa-spinner fa-spin"></i> Memproses...
                                     </span>

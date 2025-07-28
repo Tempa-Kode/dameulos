@@ -30,8 +30,14 @@ class AksesPelangganController extends Controller
                 $join->on('detail_transaksi.transaksi_id', '=', 'transaksi.id')
                      ->whereNotIn('transaksi.status', ['pending', 'dibatalkan']); // Exclude pending and cancelled
             })
-            ->groupBy('produk.id')
-            ->having('total_terjual', '>', 0) // Only show products that have been sold
+            ->groupBy([
+                'produk.id',
+                'produk.nama',
+                'produk.katalog_id',
+                'produk.harga',
+                'produk.stok',
+            ])
+            ->having('total_terjual', '>', 0)
             ->orderBy('total_terjual', 'desc')
             ->limit(8) // Show top 8 best-selling products
             ->get();

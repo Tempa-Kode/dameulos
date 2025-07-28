@@ -296,6 +296,18 @@ class CheckoutController extends Controller
             // Clear checkout session data
             session()->forget(['checkout_data', 'checkout_totals', 'checkout_source']);
 
+            if($isPreOrder) {
+                if (request()->ajax()) {
+                    return response()->json([
+                        'success' => true,
+                        'redirect' => route('pelanggan.transaksi'),
+                        'message' => 'Pesanan berhasil dibuat!'
+                    ]);
+                }
+                return redirect()->route('pelanggan.transaksi')
+                    ->with('success', 'Pesanan pre-order berhasil dibuat! Silakan tunggu konfirmasi dari admin.');
+            }
+
             if (request()->ajax()) {
                 return response()->json([
                     'success' => true,
@@ -303,7 +315,6 @@ class CheckoutController extends Controller
                     'message' => 'Pesanan berhasil dibuat!'
                 ]);
             }
-
             return redirect()->route('pelanggan.checkout.success', $transaksi->kode_transaksi)
                 ->with('success', 'Pesanan berhasil dibuat!');
 
