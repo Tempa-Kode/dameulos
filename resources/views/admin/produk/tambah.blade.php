@@ -32,6 +32,20 @@
                         @enderror
                     </div>
                     <div class="form-group">
+                        <label for="kategori_produk_id" class="form-label">Nama Kategori</label>
+                        <select class="form-control @error('kategori_produk_id') is-invalid @enderror" name="kategori_produk_id" id="kategori_produk_id">
+                            <option value="" selected hidden>Pilih Kategori</option>
+                            @foreach ($kategori as $k)
+                                <option value="{{ $k->id }}" {{ old('kategori_produk_id') == $k->id ? 'selected' : '' }}>
+                                    {{ $k->nama_kategori }}
+                                </option>
+                            @endforeach
+                        </select>
+                        @error('kategori_produk_id')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
+                    <div class="form-group">
                         <label for="nama" class="form-label">Nama Produk</label>
                         <input class="form-control @error('nama') is-invalid @enderror"
                             type="text"

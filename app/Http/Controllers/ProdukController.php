@@ -2,36 +2,39 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\FotoProduk;
-use App\Models\JenisWarnaProduk;
-use App\Models\Katalog;
+use App\Models\Warna;
 use App\Models\Produk;
 use App\Models\Ukuran;
-use App\Models\UkuranProduk;
-use App\Models\Warna;
+use App\Models\Katalog;
+use App\Models\FotoProduk;
 use App\Models\WarnaProduk;
-use Illuminate\Http\Request;
 use Illuminate\Support\Str;
+use App\Models\UkuranProduk;
+use Illuminate\Http\Request;
+use App\Models\KategoriProduk;
 use Barryvdh\DomPDF\Facade\Pdf;
+use App\Models\JenisWarnaProduk;
 
 class ProdukController extends Controller
 {
     public function index()
     {
-        $data = Produk::with(['katalog', 'ukuran', 'warnaProduk'])->get();
+        $data = Produk::with(['katalog', 'ukuran', 'warnaProduk', 'kategoriProduk'])->get();
         return view('admin.produk.index', compact('data'));
     }
 
     public function create()
     {
         $katalog = Katalog::all();
-        return view('admin.produk.tambah', compact('katalog'));
+        $kategori = KategoriProduk::all();
+        return view('admin.produk.tambah', compact('katalog', 'kategori'));
     }
 
     public function store(Request $request)
     {
         $validated = $request->validate([
             'katalog_id' => 'required|exists:katalog,id',
+            'kategori_produk_id' => 'required|exists:kategori_produk,id',
             'nama' => 'required|string|max:50',
             'deskripsi' => 'nullable|string',
             'deskripsi' => 'nullable|string',
@@ -47,6 +50,8 @@ class ProdukController extends Controller
             'foto_produk.*' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:10240'
         ], [
             'katalog_id.required' => 'Katalog harus dipilih.',
+            'kategori_produk_id.required' => 'Kategori produk harus dipilih.',
+            'kategori_produk_id.exists' => 'Kategori produk yang dipilih tidak valid.',
             'nama.required' => 'Nama produk harus diisi.',
             'nama.max' => 'Nama produk tidak boleh lebih dari 50 karakter.',
             'deskripsi.required' => 'Deskripsi produk harus diisi.',
@@ -101,6 +106,7 @@ class ProdukController extends Controller
             // Simpan data produk
             $produk = Produk::create([
                 'katalog_id' => $validated['katalog_id'],
+                'kategori_produk_id' => $validated['kategori_produk_id'],
                 'nama' => $validated['nama'],
                 'slug' => $slug,
                 'deskripsi' => $validated['deskripsi'],
@@ -157,18 +163,21 @@ class ProdukController extends Controller
 
     public function show(Produk $produk)
     {
-        $produk->load(['katalog', 'ukuran', 'warnaProduk', 'jenisWarnaProduk', 'fotoProduk', 'ulasan.user']);
+        $produk->load(['katalog', 'ukuran', 'warnaProduk', 'jenisWarnaProduk', 'fotoProduk', 'ulasan.user', 'kategoriProduk']);
 
         // Load ulasan dengan pagination dan relasi
         $ulasan = $produk->ulasan()->with(['user', 'transaksi'])->orderBy('created_at', 'desc')->paginate(10);
 
         return view('admin.produk.detail', compact('produk', 'ulasan'));
-    }    public function edit(Produk $produk)
+    }
+
+    public function edit(Produk $produk)
     {
-        $produk->load(['katalog', 'ukuran', 'warnaProduk', 'jenisWarnaProduk', 'fotoProduk']);
+        $produk->load(['katalog', 'ukuran', 'warnaProduk', 'jenisWarnaProduk', 'fotoProduk', 'kategoriProduk']);
 
         $katalog = Katalog::all();
-        return view('admin.produk.edit', compact('produk', 'katalog'));
+        $kategori = KategoriProduk::all();
+        return view('admin.produk.edit', compact('produk', 'katalog', 'kategori'));
     }
 
     public function update(Request $request, Produk $produk)
@@ -176,6 +185,7 @@ class ProdukController extends Controller
         // Validasi input
         $validated = $request->validate([
             'katalog_id' => 'required|exists:katalog,id',
+            'kategori_produk_id' => 'required|exists:kategori_produk,id',
             'nama' => 'required|string|max:50',
             'deskripsi' => 'nullable|string',
             'jenisWarna' => 'required|min:1',
@@ -192,6 +202,8 @@ class ProdukController extends Controller
             'hapus_foto.*' => 'nullable|integer|exists:foto_produk,id'
         ], [
             'katalog_id.required' => 'Katalog harus dipilih.',
+            'kategori_produk_id.required' => 'Kategori produk harus dipilih.',
+            'kategori_produk_id.exists' => 'Kategori produk yang dipilih tidak valid.',
             'nama.required' => 'Nama produk harus diisi.',
             'nama.max' => 'Nama produk tidak boleh lebih dari 50 karakter.',
             'deskripsi.required' => 'Deskripsi produk harus diisi.',
@@ -252,6 +264,7 @@ class ProdukController extends Controller
             // Update data produk
             $produk->update([
                 'katalog_id' => $validated['katalog_id'],
+                'kategori_produk_id' => $validated['kategori_produk_id'],
                 'nama' => $validated['nama'],
                 'slug' => $validated['slug'] ?? $produk->slug,
                 'deskripsi' => $validated['deskripsi'],

@@ -112,6 +112,15 @@
 
                                 <div class="row mb-3">
                                     <div class="col-sm-4">
+                                        <strong>Kategori:</strong>
+                                    </div>
+                                    <div class="col-sm-8">
+                                        <span class="badge bg-secondary">{{ $produk->kategoriProduk->nama_kategori }}</span>
+                                    </div>
+                                </div>
+
+                                <div class="row mb-3">
+                                    <div class="col-sm-4">
                                         <strong>Harga:</strong>
                                     </div>
                                     <div class="col-sm-8">

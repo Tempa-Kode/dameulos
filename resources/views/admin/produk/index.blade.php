@@ -28,6 +28,7 @@
                             <tr>
                                 <th>No</th>
                                 <th>Katalog</th>
+                                <th>Kategori</th>
                                 <th>Nama</th>
                                 <th>Harga</th>
                                 <th>Stok</th>
@@ -39,6 +40,7 @@
                                 <tr>
                                     <td>{{ $loop->iteration }}</td>
                                     <td>{{ $item->katalog->nama }}</td>
+                                    <td>{{ $item->kategoriProduk->nama_kategori ?? "-" }}</td>
                                     <td>{{ $item->nama }}</td>
                                     <td>Rp {{ number_format($item->harga, 0, ',', '.') }}</td>
                                     <td>{{ $item->stok }}</td>
@@ -67,6 +69,7 @@
                             <tr>
                                 <th>No</th>
                                 <th>Katalog</th>
+                                <th>Kategori</th>
                                 <th>Nama</th>
                                 <th>Harga</th>
                                 <th>Stok</th>
