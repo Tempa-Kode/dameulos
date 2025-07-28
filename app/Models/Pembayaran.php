@@ -13,6 +13,7 @@ class Pembayaran extends Model
         'kode_transaksi',
         'total_pembayaran',
         'status',
+        'bukti_transfer',
         'snap_token',
         'tanggal_pembayaran',
     ];

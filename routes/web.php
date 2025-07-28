@@ -110,6 +110,8 @@ Route::post('/checkout/bayar', [PembayaranController::class, 'bayar'])->middlewa
 Route::get('/transaksi', [TransaksiController::class, 'transaksiSaya'])->middleware(['auth'])->name('pelanggan.transaksi');
 Route::post('/transaksi/update-status/{kode_transaksi}', [TransaksiController::class, 'updateStatus'])->middleware(['auth'])->name('transaksi.update-status');
 
+Route::post('/bukti-pembayaran/{id}/upload-bukti', [PembayaranController::class, 'uploadBuktiPembayaran'])->middleware(['auth'])->name('pembayaran.upload.bukti');
+
 // Ulasan routes
 Route::middleware(['auth'])->group(function () {
     Route::get('/ulasan', [\App\Http\Controllers\UlasanController::class, 'index'])->name('pelanggan.ulasan.index');

@@ -187,6 +187,30 @@
                                                     <span class="badge badge-danger">Gagal</span>
                                                 @endif
                                             </div>
+                                            @if (!$item->pembayaran->bukti_transfer)
+                                                <form action="{{ route('pembayaran.upload.bukti', ['id' => $item->pembayaran->id]) }}" method="post" enctype="multipart/form-data" class="mt-3 ml-3">
+                                                    @csrf
+                                                    @method('POST')
+                                                    <label for="bukti_transfer" class="form-label font-weight-bold mb-2">
+                                                        <i class="fa fa-upload mr-1"></i> Upload Bukti Pembayaran
+                                                    </label>
+                                                    <div class="custom-file mb-2">
+                                                        <input type="file" name="bukti_transfer" id="bukti_transfer" class="custom-file-input" accept="image/*" required>
+                                                        <label class="custom-file-label" for="bukti_transfer">Pilih file gambar...</label>
+                                                    </div>
+                                                    <small class="form-text text-muted mb-2">
+                                                        Format: JPG, PNG, max 2MB.
+                                                    </small>
+                                                    @error('bukti_transfer')
+                                                        <small class="form-text text-muted text-danger mb-2">
+                                                            {{ $message }}
+                                                        </small>
+                                                    @enderror
+                                                    <button type="submit" class="btn btn-primary btn-sm">
+                                                        <i class="fa fa-paper-plane mr-1"></i> Kirim Bukti
+                                                    </button>
+                                                </form>
+                                            @endif
                                         </div>
                                     @endif
 
@@ -367,6 +391,18 @@
 @endpush
 
 @push('scripts')
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const input = document.getElementById('bukti_transfer');
+        if(input){
+            input.addEventListener('change', function(e){
+                const fileName = e.target.files[0] ? e.target.files[0].name : 'Pilih file gambar...';
+                const label = input.nextElementSibling;
+                if(label) label.innerText = fileName;
+            });
+        }
+    });
+</script>
 <script>
 function updateStatus(kodeTransaksi) {
     // Show loading state

@@ -162,6 +162,9 @@
                     @if($transaksi->pembayaran->tanggal_pembayaran)
                     <p class="mb-1"><strong>Tanggal:</strong> {{ \Carbon\Carbon::parse($transaksi->pembayaran->tanggal_pembayaran)->format('d-m-Y H:i') }}</p>
                     @endif
+                    @if($transaksi->pembayaran->bukti_transfer)
+                    <a href="{{ asset($transaksi->pembayaran->bukti_transfer) }}" target="_blank">Lihat Bukti Transfer</a>
+                    @endif
                 </div>
             </div>
             @else

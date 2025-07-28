@@ -58,6 +58,30 @@ class PembayaranController extends Controller
             ]);
         }
     }
+
+    /**
+     * upload bukti pembayaran berdasarkan kode transaksi
+     */
+    public function uploadBuktiPembayaran(Request $request, $pembayaranId)
+    {
+        $request->validate([
+            'bukti_transfer' => 'required|image|mimes:jpg,jpeg,png|max:2048',
+        ], [
+            'bukti_transfer.required' => 'Bukti pembayaran harus diunggah.',
+            'bukti_transfer.image' => 'File yang diunggah harus berupa gambar.',
+            'bukti_transfer.mimes' => 'File yang diunggah harus berformat jpg, jpeg, atau png.',
+            'bukti_transfer.max' => 'Ukuran file tidak boleh lebih dari 2MB.',
+        ]);
+        $pembayaran = Pembayaran::find($pembayaranId);
+
+        $file = $request->file('bukti_transfer');
+        $filename = time() . '_' . $file->getClientOriginalName();
+        $file->move(public_path('uploads/bukti_transfer'), $filename);
+        $pembayaran->bukti_transfer = 'uploads/bukti_transfer/' . $filename;
+        $pembayaran->save();
+        return redirect()->back()->with('success', 'Bukti transfer berhasil diunggah.');
+    }
+
     /**
      * Display a listing of the resource.
      */
