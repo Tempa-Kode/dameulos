@@ -2,18 +2,26 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Katalog;
 use App\Models\Produk;
-use App\Models\DetailTransaksi;
+use App\Models\Katalog;
 use Illuminate\Http\Request;
+use App\Models\KategoriProduk;
+use App\Models\DetailTransaksi;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 
 class AksesPelangganController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $produk = Produk::with('katalog')->paginate(20);
+        $search = $request->input('cari');
+        $kategori = $request->input('kategori');
+        if ($kategori) {
+            $kategoriId = KategoriProduk::where('slug', $kategori)->value('id');
+        } else {
+            $kategoriId = null;
+        }
+        $produk = Produk::with('katalog')->filter(['cari' => $search, 'kategori' => $kategoriId])->paginate(20);
         // Get best-selling products based on transaction quantity
         // Try all statuses except 'pending' and 'dibatalkan'
         $produkTerlaris = Produk::select('produk.*', DB::raw('COALESCE(SUM(detail_transaksi.jumlah), 0) as total_terjual'))
@@ -37,7 +45,9 @@ class AksesPelangganController extends Controller
             });
         }
 
-        return view('pelanggan.index', compact('produkTerlaris', 'produk'));
+        $kategori = KategoriProduk::all();
+
+        return view('pelanggan.index', compact('produkTerlaris', 'produk', 'kategori'));
     }
 
     public function katalog(Request $request)
@@ -64,10 +74,10 @@ class AksesPelangganController extends Controller
             ->where('id', '!=', $produk->id)
             ->limit(4)
             ->get();
-        
+
         // Load ulasan dengan pagination
         $ulasan = $produk->ulasan()->with('user')->orderBy('created_at', 'desc')->paginate(5);
-        
+
         return view('pelanggan.produk-detail', compact('produk', 'produkTerkait', 'ulasan'));
     }
 

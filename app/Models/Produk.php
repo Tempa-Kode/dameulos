@@ -63,4 +63,15 @@ class Produk extends Model
     {
         return $this->belongsTo(KategoriProduk::class, 'kategori_produk_id', 'id');
     }
+
+    public function scopeFilter($query, $filters)
+    {
+        if (!empty($filters['cari'])) {
+            $query->where('nama', 'like', '%' . $filters['cari'] . '%');
+        }
+        if (!empty($filters['kategori'])) {
+            $query->where('kategori_produk_id', $filters['kategori']);
+        }
+        return $query;
+    }
 }

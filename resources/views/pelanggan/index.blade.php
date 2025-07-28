@@ -53,7 +53,7 @@
     <!-- Best Selling Products Section End -->
 
     {{-- Produk --}}
-    <section class="product spad py-3">
+    <section id="produk-section" class="product spad py-3">
         <div class="container">
             <div class="row">
                 <div class="col-lg-12">
@@ -61,6 +61,32 @@
                         <span>Semua Produk</span>
                         <h2>Produk Lengkap Yang Ditawarkan</h2>
                     </div>
+                </div>
+                <div class="col-12">
+                    <form action="#produk-section" method="get">
+                        @method('GET')
+                        <div class="d-flex flex-wrap align-items-center justify-content-between mb-4 w-100 gap-3 p-3 rounded shadow-sm" style="background: #fff;">
+                            <div class="input-group" style="max-width: 350px;">
+                                <span class="input-group-text bg-white border-end-0" style="font-size: 1.2rem;">
+                                    <i class="fas fa-search text-muted"></i>
+                                </span>
+                                <input type="text" name="cari" id="cari" class="form-control border-start-0" placeholder="Cari produk..." value="{{ request('cari') }}">
+                            </div>
+                            <div class="d-flex align-items-center gap-2" style="min-width: 320px;">
+                                <label for="kategori" class="mb-0 me-2 text-muted" style="font-weight: 500;">
+                                    <i class="fas fa-filter me-1"></i> Kategori
+                                </label>
+                                <select name="kategori" id="kategori" class="form-select w-50" onchange="this.form.submit()">
+                                    <option value="" selected hidden>Pilih Kategori </option>
+                                    @foreach ($kategori as $k)
+                                        <option value="{{ $k->slug }}" {{ request('kategori') == $k->slug ? 'selected' : '' }}>
+                                            {{ $k->nama_kategori }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
+                    </form>
                 </div>
             </div>
             <div class="row row-cols-1 row-cols-md-2 row-cols-lg-4">
