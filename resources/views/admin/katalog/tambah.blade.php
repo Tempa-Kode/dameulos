@@ -29,6 +29,18 @@
                             <div class="invalid-feedback">{{ $message }}</div>
                         @enderror
                     </div>
+                    <div class="form-group">
+                        <label for="link_katalog" class="form-label">Link Katalog</label>
+                        <input class="form-control @error('link_katalog') is-invalid @enderror"
+                               type="text"
+                               id="link_katalog"
+                               name="link_katalog"
+                               value="{{ old('link_katalog') }}"
+                               placeholder="Masukkan link katalog">
+                        @error('link_katalog')
+                            <div class="invalid-feedback">{{ $message }}</div>
+                        @enderror
+                    </div>
                     <button type="submit" class="btn btn-success">
                         <span class="pc-micon"><i class="ti ti-device-floppy me-2"></i></span>
                         Simpan

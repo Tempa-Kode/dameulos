@@ -22,15 +22,18 @@ class KatalogController extends Controller
     {
         $request->validate([
             'nama' => 'required|string|max:50',
+            'link_katalog' => 'nullable|string|max:255',
         ], [
             'nama.required' => 'Nama katalog harus diisi.',
             'nama.max' => 'Nama katalog tidak boleh lebih dari 50 karakter.',
+            'link_katalog.max' => 'Link katalog tidak boleh lebih dari 255 karakter.',
         ]);
 
         try {
             Katalog::create([
                 'nama' => $request->nama,
                 'slug' => Str::slug($request->nama, '-'),
+                'link_katalog' => $request->link_katalog,
             ]);
             return redirect()->route('katalog.index')->with('success', 'Katalog berhasil ditambahkan.');
         } catch (\Exception $e) {
@@ -48,15 +51,18 @@ class KatalogController extends Controller
     {
         $request->validate([
             'nama' => 'required|string|max:50',
+            'link_katalog' => 'nullable|string|max:255',
         ], [
             'nama.required' => 'Nama katalog harus diisi.',
             'nama.max' => 'Nama katalog tidak boleh lebih dari 50 karakter.',
+            'link_katalog.max' => 'Link katalog tidak boleh lebih dari 255 karakter.',
         ]);
 
         try {
             $katalog->update([
                 'nama' => $request->nama,
                 'slug' => Str::slug($request->nama, '-'),
+                'link_katalog' => $request->link_katalog,
             ]);
             return redirect()->route('katalog.index')->with('success', 'Katalog berhasil diperbarui.');
         } catch (\Exception $e) {

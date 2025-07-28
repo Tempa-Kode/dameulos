@@ -11,6 +11,7 @@ class Katalog extends Model
     protected $fillable = [
         'nama',
         'slug',
+        'link_katalog'
     ];
 
     public function produk()
