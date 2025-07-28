@@ -7,11 +7,13 @@
 @section('content')
     <div class="col-sm-12">
         <div class="card">
+            @can('isAdmin')
             <div class="card-header">
                 <a href="{{ route('katalog.create') }}" class="btn btn-primary">
                     <span class="pc-micon"><i class="ti ti-circle-plus me-2"></i></span> Tambah Katalog
                 </a>
             </div>
+            @endcan
             <div class="card-body">
                 {{-- Include komponen alert --}}
                 @include('components.alert')
@@ -23,7 +25,7 @@
                                 <th>No</th>
                                 <th>Nama</th>
                                 <th>Diinput Tanggal</th>
-                                <th>Aksi</th>
+                                @can('isAdmin')<th>Aksi</th>@endcan
                             </tr>
                         </thead>
                         <tbody>
@@ -32,6 +34,7 @@
                                     <td>{{ $loop->iteration }}</td>
                                     <td>{{ $item->nama }}</td>
                                     <td>{{ $item->created_at->format('d-m-Y') }}</td>
+                                    @can('isAdmin')
                                     <td>
                                         <a href="{{ route('katalog.edit', $item->id) }}" class="btn btn-warning btn-sm">
                                             Edit
@@ -45,6 +48,7 @@
                                             </button>
                                         </form>
                                     </td>
+                                    @endcan
                                 </tr>
                             @endforeach
                         </tbody>
@@ -53,7 +57,7 @@
                                 <th>No</th>
                                 <th>Nama</th>
                                 <th>Diinput Tanggal</th>
-                                <th>Aksi</th>
+                                @can('isAdmin')<th>Aksi</th>@endcan
                             </tr>
                         </tfoot>
                     </table>

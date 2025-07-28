@@ -10,9 +10,11 @@
             <div class="card-header d-flex justify-content-between align-items-center">
                 <h4>Detail Manajer: {{ $manajer->name }}</h4>
                 <div>
+                    @can('isAdmin')
                     <a href="{{ route('manajer.edit', $manajer->id) }}" class="btn btn-warning btn-sm">
                         <i class="ti ti-edit me-1"></i>Edit
                     </a>
+                    @endcan
                     <a href="{{ route('manajer.index') }}" class="btn btn-secondary btn-sm">
                         <i class="ti ti-arrow-left me-1"></i>Kembali
                     </a>
@@ -133,6 +135,7 @@
                 <div class="row mt-4">
                     <div class="col-12">
                         <div class="d-flex gap-2 justify-content-end">
+                            @can('isAdmin')
                             <a href="{{ route('admin.edit', $manajer->id) }}" class="btn btn-warning">
                                 <i class="ti ti-edit me-1"></i>Edit Admin
                             </a>
@@ -141,6 +144,7 @@
                                     <i class="ti ti-trash me-1"></i>Hapus Admin
                                 </button>
                             @endif
+                            @endcan
                             <a href="{{ route('admin.index') }}" class="btn btn-secondary">
                                 <i class="ti ti-arrow-left me-1"></i>Kembali ke Daftar
                             </a>

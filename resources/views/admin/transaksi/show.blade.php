@@ -202,6 +202,7 @@
             </div>
             @endif
 
+            @can('isAdmin')
             <!-- Tombol Aksi -->
             <div class="card">
                 <div class="card-header">
@@ -242,6 +243,7 @@
                     </div>
                 </div>
             </div>
+            @endcan
         </div>
     </div>
 

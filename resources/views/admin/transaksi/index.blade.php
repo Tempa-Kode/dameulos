@@ -141,7 +141,7 @@
                                             <i class="ti ti-eye me-1"></i>Detail
                                         </a>
 
-
+                                        @can('isAdmin')
                                         @if($item->status == 'dibayar')
                                         <form action="{{ route('transaksi.update', $item->id) }}" method="POST" class="d-inline">
                                             @csrf
@@ -152,6 +152,7 @@
                                             </button>
                                         </form>
                                         @endif
+                                        @endcan
                                     </td>
                                 </tr>
                             @endforeach

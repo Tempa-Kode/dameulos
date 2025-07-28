@@ -130,11 +130,13 @@
                 <div class="row mt-4">
                     <div class="col-12">
                         <div class="d-flex gap-2 justify-content-end">
+                            @can('isAdmin')
                             @if(Auth::id() != $pelanggan->id)
                                 <button type="button" class="btn btn-danger" data-bs-toggle="modal" data-bs-target="#deleteModal">
                                     <i class="ti ti-trash me-1"></i>Hapus Pelanggan
                                 </button>
                             @endif
+                            @endcan
                             <a href="{{ route('pelanggan.index') }}" class="btn btn-secondary">
                                 <i class="ti ti-arrow-left me-1"></i>Kembali ke Daftar
                             </a>

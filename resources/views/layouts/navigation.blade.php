@@ -54,7 +54,6 @@ $transaksiBaru = \App\Models\Transaksi::whereIn('status', ['pending', 'dibayar']
                      </a>
                  </li>
 
-                 @if (Auth::user()->role == 'admin')
                  <li class="pc-item pc-caption">
                      <label>Pengguna</label>
                      <i class="ti ti-news"></i>
@@ -77,7 +76,6 @@ $transaksiBaru = \App\Models\Transaksi::whereIn('status', ['pending', 'dibayar']
                          <span class="pc-mtext">Pelanggan</span>
                      </a>
                  </li>
-                 @endif
              </ul>
          </div>
      </div>

@@ -8,9 +8,11 @@
     <div class="col-sm-12">
         <div class="card">
             <div class="card-header d-flex justify-content-between align-items-center">
+                @can('isAdmin')
                 <a href="{{ route('produk.create') }}" class="btn btn-primary">
                     <span class="pc-micon"><i class="ti ti-circle-plus me-2"></i></span> Tambah Produk
                 </a>
+                @endcan
                 <a href="{{ route('produk.report') }}" class="btn btn-success">
                     <span class="pc-micon"><i class="ti ti-file-download me-2"></i></span>
                     Download Report
@@ -29,7 +31,7 @@
                                 <th>Nama</th>
                                 <th>Harga</th>
                                 <th>Stok</th>
-                                <th>Aksi</th>
+                                @can('isAdmin') <th>Aksi</th>@endcan
                             </tr>
                         </thead>
                         <tbody>
@@ -40,6 +42,7 @@
                                     <td>{{ $item->nama }}</td>
                                     <td>Rp {{ number_format($item->harga, 0, ',', '.') }}</td>
                                     <td>{{ $item->stok }}</td>
+                                    @can('isAdmin')
                                     <td>
                                         <a href="{{ route('produk.edit', $item->id) }}" class="btn btn-warning btn-sm">
                                             Edit
@@ -56,6 +59,7 @@
                                             </button>
                                         </form>
                                     </td>
+                                    @endcan
                                 </tr>
                             @endforeach
                         </tbody>
@@ -66,7 +70,7 @@
                                 <th>Nama</th>
                                 <th>Harga</th>
                                 <th>Stok</th>
-                                <th>Aksi</th>
+                                @can('isAdmin')<th>Aksi</th>@endcan
                             </tr>
                         </tfoot>
                     </table>

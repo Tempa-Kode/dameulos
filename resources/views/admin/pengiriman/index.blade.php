@@ -69,9 +69,11 @@
                                         <a href="{{ route('pengiriman.show', $item->id) }}" class="btn btn-info btn-sm me-1">
                                             <i class="ti ti-eye me-1"></i>Detail
                                         </a>
+                                        @can('isAdmin')
                                         <a href="{{ route('pengiriman.print.label', $item->id) }}" class="btn btn-warning btn-sm" target="_blank">
                                             <i class="ti ti-printer me-1"></i>Label
                                         </a>
+                                        @endcan
                                     </td>
                                 </tr>
                             @endforeach

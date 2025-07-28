@@ -10,9 +10,11 @@
             <div class="card-header d-flex justify-content-between align-items-center">
                 <h4>Detail Admin: {{ $admin->name }}</h4>
                 <div>
+                    @can('isAdmin')
                     <a href="{{ route('admin.edit', $admin->id) }}" class="btn btn-warning btn-sm">
                         <i class="ti ti-edit me-1"></i>Edit
                     </a>
+                    @endcan
                     <a href="{{ route('admin.index') }}" class="btn btn-secondary btn-sm">
                         <i class="ti ti-arrow-left me-1"></i>Kembali
                     </a>
@@ -27,7 +29,7 @@
                     <div class="col-md-4">
                         <div class="text-center">
                             <div class="profile-image mb-3">
-                                <div class="bg-primary rounded-circle d-flex align-items-center justify-content-center mx-auto" 
+                                <div class="bg-primary rounded-circle d-flex align-items-center justify-content-center mx-auto"
                                      style="width: 120px; height: 120px;">
                                     <i class="ti ti-user text-white" style="font-size: 3rem;"></i>
                                 </div>
@@ -46,7 +48,7 @@
                             <!-- Informasi Dasar -->
                             <div class="mb-4">
                                 <h5 class="border-bottom pb-2 mb-3">Informasi Dasar</h5>
-                                
+
                                 <div class="row mb-3">
                                     <div class="col-sm-4">
                                         <strong>ID Admin:</strong>
@@ -133,6 +135,7 @@
                 <div class="row mt-4">
                     <div class="col-12">
                         <div class="d-flex gap-2 justify-content-end">
+                            @can('isAdmin')
                             <a href="{{ route('admin.edit', $admin->id) }}" class="btn btn-warning">
                                 <i class="ti ti-edit me-1"></i>Edit Admin
                             </a>
@@ -141,6 +144,7 @@
                                     <i class="ti ti-trash me-1"></i>Hapus Admin
                                 </button>
                             @endif
+                            @endcan
                             <a href="{{ route('admin.index') }}" class="btn btn-secondary">
                                 <i class="ti ti-arrow-left me-1"></i>Kembali ke Daftar
                             </a>
@@ -184,15 +188,15 @@
             position: sticky;
             top: 20px;
         }
-        
+
         .admin-details .border-bottom {
             border-color: #e9ecef !important;
         }
-        
+
         .additional-info {
             background-color: #f8f9fa;
         }
-        
+
         @media (max-width: 768px) {
             .profile-image {
                 position: static;

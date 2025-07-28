@@ -7,11 +7,13 @@
 @section('content')
     <div class="col-sm-12">
         <div class="card">
+            @can('isAdmin')
             <div class="card-header">
                 <a href="{{ route('manajer.create') }}" class="btn btn-primary">
                     <span class="pc-micon"><i class="ti ti-circle-plus me-2"></i></span> Tambah Manajer
                 </a>
             </div>
+            @endcan
             <div class="card-body">
                 {{-- Include komponen alert --}}
                 @include('components.alert')
@@ -35,12 +37,15 @@
                                     <td>{{ $item->email }}</td>
                                     <td>{{ $item->created_at->format('d-m-Y') }}</td>
                                     <td>
+                                        @can('isAdmin')
                                         <a href="{{ route('manajer.edit', $item->id) }}" class="btn btn-warning btn-sm">
                                             Edit
                                         </a>
+                                        @endcan
                                         <a href="{{ route('manajer.show', $item->id) }}" class="btn btn-info btn-sm">
                                             Detail
                                         </a>
+                                        @can('isAdmin')
                                         <form action="{{ route('manajer.destroy', $item->id) }}" method="POST" style="display:inline;">
                                             @csrf
                                             @method('DELETE')
@@ -49,6 +54,7 @@
                                                 Hapus
                                             </button>
                                         </form>
+                                        @endcan
                                     </td>
                                 </tr>
                             @endforeach

@@ -39,6 +39,7 @@
                                         <a href="{{ route('pelanggan.show', $item->id) }}" class="btn btn-info btn-sm">
                                             Detail
                                         </a>
+                                        @can('isAdmin')
                                         <form action="{{ route('pelanggan.destroy', $item->id) }}" method="POST" style="display:inline;">
                                             @csrf
                                             @method('DELETE')
@@ -47,6 +48,7 @@
                                                 Hapus
                                             </button>
                                         </form>
+                                        @endcan
                                     </td>
                                 </tr>
                             @endforeach
