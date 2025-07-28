@@ -58,6 +58,11 @@ Route::prefix('dashboard')->middleware(['auth', 'adminManajer'])->group(function
     Route::get('/transaksi/download-report', [TransaksiController::class, 'downloadReport'])->name('transaksi.download.report');
     Route::resource('transaksi', TransaksiController::class)->middleware(['auth', 'adminManajer']);
 
+    // Route untuk mengelola video produk
+    Route::get('/video-produk/tambah/{produk:id}', [\App\Http\Controllers\ProdukController::class, 'tambahVideoProduk'])->name('video-produk.tambah')->middleware(['auth', 'adminManajer']);
+    Route::post('/video-produk/simpan/{produk:id}', [\App\Http\Controllers\ProdukController::class, 'simpanVideoProduk'])->name('video-produk.store')->middleware(['auth', 'adminManajer']);
+    Route::delete('/video-produk/hapus/{videoProduk:id}', [\App\Http\Controllers\ProdukController::class, 'hapusVideoProduk'])->name('video-produk.hapus')->middleware(['auth', 'adminManajer']);
+
     // Route khusus untuk pengiriman harus sebelum resource
     Route::get('/pengiriman/download-report', [PengirimanController::class, 'downloadReport'])->name('pengiriman.download.report');
     Route::get('/pengiriman/preview-report', [PengirimanController::class, 'previewReport'])->name('pengiriman.preview.report');

@@ -1,3 +1,7 @@
+@php
+    use Illuminate\Support\Str;
+@endphp
+
 @extends('layouts.app')
 
 @section('halaman', 'Produk')
@@ -41,21 +45,49 @@
                                 </div>
                             @endif
 
-                            <!-- Galeri Foto Produk -->
-                            @if($produk->fotoProduk && $produk->fotoProduk->count() > 0)
+                            <!-- Galeri Foto & Video Produk -->
+                            @if(($produk->fotoProduk && $produk->fotoProduk->count() > 0) || ($produk->videoProduk && $produk->videoProduk->count() > 0))
                                 <div class="foto-produk-gallery">
-                                    <h6 class="mb-3">Galeri Foto</h6>
+                                    <h6 class="mb-3">Galeri Foto & Video</h6>
                                     <div class="row">
-                                        @foreach($produk->fotoProduk as $foto)
-                                            <div class="col-6 mb-2">
-                                                <img src="{{ asset($foto->foto) }}"
-                                                     alt="Foto Produk {{ $loop->iteration }}"
-                                                     class="img-fluid rounded shadow-sm"
-                                                     style="width: 100%; height: 120px; object-fit: cover; cursor: pointer;"
-                                                     data-bs-toggle="modal"
-                                                     data-bs-target="#fotoModal{{ $foto->id }}">
-                                            </div>
-                                        @endforeach
+                                        @if($produk->fotoProduk && $produk->fotoProduk->count() > 0)
+                                            @foreach($produk->fotoProduk as $foto)
+                                                <div class="col-6 mb-2">
+                                                    <img src="{{ asset($foto->foto) }}"
+                                                         alt="Foto Produk {{ $loop->iteration }}"
+                                                         class="img-fluid rounded shadow-sm"
+                                                         style="width: 100%; height: 120px; object-fit: cover; cursor: pointer;"
+                                                         data-bs-toggle="modal"
+                                                         data-bs-target="#fotoModal{{ $foto->id }}">
+                                                </div>
+                                            @endforeach
+                                        @endif
+                                        @if($produk->videoProduk && $produk->videoProduk->count() > 0)
+                                            @foreach($produk->videoProduk as $video)
+                                                @php
+                                                    $isYoutube = Str::contains($video->link_video, ['youtube.com', 'youtu.be']);
+                                                    $youtubeId = null;
+                                                    if ($isYoutube) {
+                                                        if (Str::contains($video->link_video, 'watch?v=')) {
+                                                            $youtubeId = Str::after($video->link_video, 'watch?v=');
+                                                            $youtubeId = Str::before($youtubeId, '&');
+                                                        } else {
+                                                            $youtubeId = Str::afterLast($video->link_video, '/');
+                                                        }
+                                                    }
+                                                @endphp
+                                                <div class="col-6 mb-2">
+                                                    <div class="video-thumbnail position-relative rounded shadow-sm" style="width: 100%; height: 120px; overflow: hidden; cursor: pointer; background: #000;" data-bs-toggle="modal" data-bs-target="#videoModal{{ $video->id }}">
+                                                        <div class="ratio ratio-16x9">
+                                                            <iframe src="https://www.youtube.com/embed/{{ $youtubeId }}" frameborder="0" allowfullscreen></iframe>
+                                                        </div>
+                                                        <span class="position-absolute top-50 start-50 translate-middle" style="color: #fff; font-size: 2rem; pointer-events: none;">
+                                                            <i class="ti ti-player-play-filled"></i>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                            @endforeach
+                                        @endif
                                     </div>
                                 </div>
                             @endif
@@ -199,6 +231,9 @@
                 <div class="row mt-4">
                     <div class="col-12">
                         <div class="d-flex gap-2 justify-content-end">
+                            <a href="{{ route('video-produk.tambah', $produk->id) }}" class="btn btn-primary">
+                                <i class="ti ti-square-plus me-1"></i>Tambah Video
+                            </a>
                             <a href="{{ route('produk.edit', $produk->id) }}" class="btn btn-warning">
                                 <i class="ti ti-edit me-1"></i>Edit Produk
                             </a>
@@ -325,6 +360,27 @@
                                  alt="Foto Produk {{ $loop->iteration }}"
                                  class="img-fluid rounded"
                                  style="max-height: 80vh; width: auto;">
+                        </div>
+                    </div>
+                </div>
+            </div>
+        @endforeach
+    @endif
+    <!-- Modal untuk Video Produk -->
+    @if($produk->videoProduk && $produk->videoProduk->count() > 0)
+        @foreach($produk->videoProduk as $video)
+            <div class="modal fade" id="videoModal{{ $video->id }}" tabindex="-1" aria-labelledby="videoModalLabel{{ $video->id }}" aria-hidden="true">
+                <div class="modal-dialog modal-lg modal-dialog-centered">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="videoModalLabel{{ $video->id }}">Video Produk {{ $loop->iteration }}</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body text-center">
+                            <video controls style="max-width: 100%; max-height: 80vh;">
+                                <source src="{{ asset($video->video) }}" type="video/mp4">
+                                Browser Anda tidak mendukung video.
+                            </video>
                         </div>
                     </div>
                 </div>

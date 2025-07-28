@@ -52,4 +52,9 @@ class Produk extends Model
     {
         return $this->hasMany(Ulasan::class, 'produk_id', 'id');
     }
+
+    public function videoProduk()
+    {
+        return $this->hasMany(VideoProduk::class, 'produk_id', 'id');
+    }
 }

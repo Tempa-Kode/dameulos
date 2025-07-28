@@ -444,4 +444,54 @@ class ProdukController extends Controller
         // Return PDF download
         return $pdf->stream($filename);
     }
+
+    public function tambahVideoProduk(Produk $produk)
+    {
+        return view('admin.produk.tambah-video', compact('produk'));
+    }
+
+    public function simpanVideoProduk(Request $request, Produk $produk)
+    {
+        $validated = $request->validate([
+            'link_video' => 'required|url|max:255',
+        ], [
+            'link_video.required' => 'Link video harus diisi.',
+            'link_video.url' => 'Link video harus berupa URL yang valid.',
+            'link_video.max' => 'Link video tidak boleh lebih dari 255 karakter.'
+        ]);
+
+        try {
+            // Simpan video produk
+            $video = new \App\Models\VideoProduk();
+            $video->produk_id = $produk->id;
+            $video->link_video = $validated['link_video'];
+            $video->save();
+
+            return redirect()->route('produk.show', $produk->id)
+                ->with('success', 'Video produk berhasil ditambahkan!');
+
+        } catch (\Exception $e) {
+            return redirect()->back()
+                ->withInput()
+                ->with('error', 'Terjadi kesalahan saat menambahkan video produk: ' . $e->getMessage());
+        }
+    }
+
+    public function hapusVideoProduk($id)
+    {
+        try {
+            $video = \App\Models\VideoProduk::findOrFail($id);
+
+            // Hapus record dari database
+            $video->delete();
+
+            return redirect()->route('produk.show', $video->produk_id)
+                ->with('success', 'Video produk berhasil dihapus!');
+
+        } catch (\Exception $e) {
+
+            return redirect()->back()
+                ->with('error', 'Terjadi kesalahan saat menghapus video produk: ' . $e->getMessage());
+        }
+    }
 }
