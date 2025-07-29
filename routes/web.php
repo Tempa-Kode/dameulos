@@ -3,12 +3,6 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\KegiatanController;
 use App\Http\Controllers\UploadController;
-
-Route::resource('kegiatan', KegiatanController::class);
-Route::withoutMiddleware([\Illuminate\Foundation\Http\Middleware\VerifyCsrfToken::class])
-    ->post('/upload-image', [KegiatanController::class, 'uploadImage'])
-    ->name('upload.image');
-
 use App\Http\Controllers\AdminProfileController;
 use App\Http\Controllers\AksesPelangganController;
 use App\Http\Controllers\CheckoutController;
@@ -32,6 +26,8 @@ Route::middleware('auth')->group(function () {
     Route::patch('/customer/profile', [CustomerProfileController::class, 'update'])->name('customer.profile.update');
     Route::patch('/customer/profile/password', [CustomerProfileController::class, 'updatePassword'])->name('customer.profile.password.update');
 });
+
+Route::get('/kegiatan/{slug}', [AksesPelangganController::class, 'kegiatan'])->name('kegiatan.slug')->middleware(['auth', 'adminManajer']);
 
 Route::prefix('dashboard')->middleware(['auth', 'adminManajer'])->group(function () {
     // Test route sederhana
@@ -134,6 +130,11 @@ Route::middleware(['auth'])->group(function () {
     Route::put('/ulasan/{ulasan}', [\App\Http\Controllers\UlasanController::class, 'update'])->name('pelanggan.ulasan.update');
     Route::delete('/ulasan/{ulasan}', [\App\Http\Controllers\UlasanController::class, 'destroy'])->name('pelanggan.ulasan.destroy');
 });
+
+Route::resource('kegiatan', KegiatanController::class);
+Route::withoutMiddleware([\Illuminate\Foundation\Http\Middleware\VerifyCsrfToken::class])
+    ->post('/upload-image', [KegiatanController::class, 'uploadImage'])
+    ->name('upload.image');
 
 
 require __DIR__.'/auth.php';

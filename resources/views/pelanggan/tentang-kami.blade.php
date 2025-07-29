@@ -45,6 +45,36 @@
 </section>
 <!-- About Hero Section End -->
 
+{{-- buatkan di section ini untuk mengampilkan card dari kegiatan --}}
+<section class="about-activities spad">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="section-title">
+                    <span>Kegiatan Dame Ulos</span>
+                    <h2>Jejak Langkah Kami dalam Melestarikan Budaya</h2>
+                </div>
+            </div>
+            @foreach($kegiatan as $item)
+                <div class="col-lg-4 col-md-6 col-sm-12 mb-4 d-flex align-items-stretch">
+                    <div class="card activity-card border-0 shadow-lg w-100" style="border-radius: 18px; overflow: hidden; transition: transform 0.2s; display: flex; flex-direction: column;">
+                        <div class="activity-image" style="height: 220px; background: #f8f9fa; display: flex; align-items: center; justify-content: center; overflow: hidden;">
+                            <img src="{{ asset($item->gambar) }}" alt="{{ $item->judul }}" class="img-fluid" style="width: 100%; height: 100%; object-fit: cover;">
+                        </div>
+                        <div class="card-body activity-content d-flex flex-column justify-content-between p-4" style="flex: 1 1 auto;">
+                            <div>
+                                <h4 class="mb-2 font-weight-bold" style="color: #ca1515;">{{ $item->judul }}</h4>
+                                <p class="mb-3" style="color: #555; font-size: 15px;">{{ Str::limit(strip_tags($item->content), 100) }}</p>
+                            </div>
+                            <a href="{{ route('kegiatan.slug', $item->slug) }}" class="primary-btn mt-auto" style="width: fit-content;">Selengkapnya <i class="fa fa-arrow-right ml-2"></i></a>
+                        </div>
+                    </div>
+                </div>
+            @endforeach
+        </div>
+    </div>
+</section>
+
 <!-- Founder Story Section Begin -->
 <section class="about-story spad">
     <div class="container">

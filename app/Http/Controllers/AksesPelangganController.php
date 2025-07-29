@@ -6,6 +6,7 @@ use App\Models\Piagam;
 use App\Models\Produk;
 use App\Models\Katalog;
 use App\Models\Promosi;
+use App\Models\Kegiatan;
 use Illuminate\Http\Request;
 use App\Models\KategoriProduk;
 use App\Models\DetailTransaksi;
@@ -92,7 +93,14 @@ class AksesPelangganController extends Controller
 
     public function tentangKami()
     {
-        $piagam = Piagam::all();    
-        return view('pelanggan.tentang-kami', compact('piagam'));
+        $piagam = Piagam::all();
+        $kegiatan = Kegiatan::latest()->take(10)->get();
+        return view('pelanggan.tentang-kami', compact('piagam', 'kegiatan'));
+    }
+
+    public function kegiatan($slug)
+    {
+        $kegiatan = Kegiatan::where('slug', $slug)->firstOrFail();
+        return view('pelanggan.kegiatan', compact('kegiatan'));
     }
 }
