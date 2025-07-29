@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Piagam;
 use App\Models\Produk;
 use App\Models\Katalog;
 use App\Models\Promosi;
@@ -91,6 +92,7 @@ class AksesPelangganController extends Controller
 
     public function tentangKami()
     {
-        return view('pelanggan.tentang-kami');
+        $piagam = Piagam::all();    
+        return view('pelanggan.tentang-kami', compact('piagam'));
     }
 }

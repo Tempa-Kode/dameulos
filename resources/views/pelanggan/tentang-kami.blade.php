@@ -139,6 +139,32 @@
 </section>
 <!-- Mission Vision Section End -->
 
+{{-- Piagam Section Begin --}}
+<section class="piagam spad" style="background: #f8f9fa;">
+    <div class="container">
+        <div class="row">
+            <div class="col-lg-12">
+                <div class="section-title">
+                    <span>Piagam Penghargaan</span>
+                    <h2>Penghargaan Dame Ulos</h2>
+                </div>
+            </div>
+        </div>
+        <div class="row d-flex justify-content-center">
+            @foreach($piagam as $item)
+            <div class="col-lg-4 col-md-6 mb-4">
+                <div class="piagam-item" style="background: white; border-radius: 10px; padding: 20px; box-shadow: 0 5px 15px rgba(0,0,0,0.1);">
+                    <img src="{{ asset($item->gambar) }}" alt="{{ $item->judul }}" style="width: 100%; height: auto; border-radius: 10px; margin-bottom: 15px;">
+                    <h4>{{ $item->judul }}</h4>
+                    <p>{{ $item->deskripsi }}</p>
+                </div>
+            </div>
+            @endforeach
+        </div>
+    </div>
+</section>
+{{-- Piagam Section End --}}
+
 <!-- Contact Section Begin -->
 <section class="contact spad">
     <div class="container">
