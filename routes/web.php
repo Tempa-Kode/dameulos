@@ -1,5 +1,14 @@
 <?php
 
+use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\KegiatanController;
+use App\Http\Controllers\UploadController;
+
+Route::resource('kegiatan', KegiatanController::class);
+Route::withoutMiddleware([\Illuminate\Foundation\Http\Middleware\VerifyCsrfToken::class])
+    ->post('/upload-image', [KegiatanController::class, 'uploadImage'])
+    ->name('upload.image');
+
 use App\Http\Controllers\AdminProfileController;
 use App\Http\Controllers\AksesPelangganController;
 use App\Http\Controllers\CheckoutController;
@@ -12,7 +21,6 @@ use App\Http\Controllers\ProdukController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\TransaksiController;
 use App\Models\Katalog;
-use Illuminate\Support\Facades\Route;
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
@@ -76,6 +84,7 @@ Route::prefix('dashboard')->middleware(['auth', 'adminManajer'])->group(function
     Route::resource('pelanggan', \App\Http\Controllers\PelangganController::class)->middleware(['auth', 'adminManajer']);
     Route::resource('promosi', \App\Http\Controllers\PromosiController::class)->middleware(['auth', 'adminManajer']);
     Route::resource('piagam', \App\Http\Controllers\PiagamController::class)->middleware(['auth', 'adminManajer']);
+    Route::resource('kegiatan', \App\Http\Controllers\KegiatanController::class)->middleware(['auth', 'adminManajer']);
 
     // Pre-order routes
     Route::get('/preorder', [PreOrderController::class, 'index'])->name('preorder.index')->middleware(['auth', 'adminManajer']);

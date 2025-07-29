@@ -71,7 +71,7 @@ $transaksiBaru = \App\Models\Transaksi::whereIn('status', ['pending', 'dibayar']
                     </a>
                 </li>
                 <li class="pc-item">
-                    <a href="" class="pc-link">
+                    <a href="{{ route('kegiatan.index') }}" class="pc-link">
                         <span class="pc-micon"><i class="ti ti-news"></i></span>
                         <span class="pc-mtext">Berita/Kegiatan</span>
                     </a>
