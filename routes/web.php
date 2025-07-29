@@ -27,7 +27,7 @@ Route::middleware('auth')->group(function () {
     Route::patch('/customer/profile/password', [CustomerProfileController::class, 'updatePassword'])->name('customer.profile.password.update');
 });
 
-Route::get('/kegiatan/{slug}', [AksesPelangganController::class, 'kegiatan'])->name('kegiatan.slug')->middleware(['auth', 'adminManajer']);
+Route::get('/kegiatan/{slug}', [AksesPelangganController::class, 'kegiatan'])->name('kegiatan.slug');
 
 Route::prefix('dashboard')->middleware(['auth', 'adminManajer'])->group(function () {
     // Test route sederhana
