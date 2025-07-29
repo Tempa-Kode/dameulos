@@ -77,7 +77,7 @@ $transaksiBaru = \App\Models\Transaksi::whereIn('status', ['pending', 'dibayar']
                     </a>
                 </li>
                 <li class="pc-item">
-                    <a href="" class="pc-link">
+                    <a href="{{ route('piagam.index') }}" class="pc-link">
                         <span class="pc-micon"><i class="ti ti-certificate"></i></span>
                         <span class="pc-mtext">Piagam / Sertifikat</span>
                     </a>

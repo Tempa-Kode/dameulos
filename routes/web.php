@@ -75,6 +75,7 @@ Route::prefix('dashboard')->middleware(['auth', 'adminManajer'])->group(function
     Route::get('/pelanggan/download-report', [\App\Http\Controllers\PelangganController::class, 'downloadReport'])->name('pelanggan.report');
     Route::resource('pelanggan', \App\Http\Controllers\PelangganController::class)->middleware(['auth', 'adminManajer']);
     Route::resource('promosi', \App\Http\Controllers\PromosiController::class)->middleware(['auth', 'adminManajer']);
+    Route::resource('piagam', \App\Http\Controllers\PiagamController::class)->middleware(['auth', 'adminManajer']);
 
     // Pre-order routes
     Route::get('/preorder', [PreOrderController::class, 'index'])->name('preorder.index')->middleware(['auth', 'adminManajer']);
