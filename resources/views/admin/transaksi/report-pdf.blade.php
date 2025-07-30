@@ -190,72 +190,53 @@
         <thead>
             <tr>
                 <th width="3%">No</th>
-                <th width="10%">Kode Transaksi</th>
-                <th width="12%">Pelanggan</th>
-                <th width="8%">Status</th>
-                <th width="15%">Produk</th>
-                <th width="8%">Kategori</th>
-                <th width="6%">Ukuran</th>
-                <th width="6%">Warna</th>
-                <th width="4%">Qty</th>
-                <th width="10%">Harga Satuan</th>
-                <th width="10%">Total</th>
-                <th width="8%">Tanggal</th>
+                <th width="15%">Kode Transaksi</th>
+                <th width="20%">Pelanggan</th>
+                <th width="10%">Status</th>
+                <th width="20%">Total Transaksi</th>
+                <th width="12%">Tanggal</th>
             </tr>
         </thead>
         <tbody>
             @php $no = 1; $itemCount = 0; @endphp
             @foreach($transaksi as $item)
-                @foreach($item->detailTransaksi as $detail)
-                <tr>
-                    <td class="text-center">{{ $no }}</td>
-                    <td>{{ $item->kode_transaksi }}</td>
-                    <td>{{ $item->user->name }}</td>
-                    <td class="text-center">
-                        <span class="status-badge status-{{ $item->status }}">
-                            {{ ucfirst($item->status) }}
-                        </span>
-                    </td>
-                    <td>{{ $detail->produk->nama }}</td>
-                    <td>{{ $detail->produk->katalog->nama ?? '-' }}</td>
-                    <td class="text-center">{{ $detail->ukuranProduk->ukuran ?? '-' }}</td>
-                    <td class="text-center">{{ $detail->jenisWarnaProduk->warna  ?? '-' }}</td>
-                    <td class="text-center">{{ $detail->jumlah }}</td>
-                    <td class="text-right">Rp {{ number_format($detail->harga_satuan, 0, ',', '.') }}</td>
-                    <td class="text-right">Rp {{ number_format($detail->total_harga, 0, ',', '.') }}</td>
-                    <td class="text-center">{{ $item->created_at->format('d-m-Y') }}</td>
-                </tr>
-                @php
-                    $no++;
-                    $itemCount++;
-                @endphp
-                @if($itemCount % 30 == 0 && !$loop->last)
-                    </tbody>
-                    </table>
-                    <div class="page-break"></div>
-                    <table>
-                        <thead>
-                            <tr>
-                                <th width="3%">No</th>
-                                <th width="10%">Kode Transaksi</th>
-                                <th width="12%">Pelanggan</th>
-                                <th width="8%">Status</th>
-                                <th width="15%">Produk</th>
-                                <th width="8%">Kategori</th>
-                                <th width="6%">Ukuran</th>
-                                <th width="6%">Warna</th>
-                                <th width="4%">Qty</th>
-                                <th width="10%">Harga Satuan</th>
-                                <th width="10%">Total</th>
-                                <th width="8%">Tanggal</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                @endif
-                @endforeach
+            <tr>
+                <td class="text-center">{{ $no++ }}</td>
+                <td>{{ $item->kode_transaksi }}</td>
+                <td>{{ $item->user->name }}</td>
+                <td class="text-center">
+                    <span class="status-badge status-{{ $item->status }}">
+                        {{ ucfirst($item->status) }}
+                    </span>
+                </td>
+                <td class="text-right">Rp {{ number_format($item->total, 0, ',', '.') }}</td>
+                <td class="text-center">{{ $item->created_at->format('d-m-Y') }}</td>
+            </tr>
+
+            @php $itemCount++; @endphp
+
+            @if($itemCount % 30 == 0 && !$loop->last)
+                </tbody>
+                </table>
+                <div class="page-break"></div>
+                <table>
+                    <thead>
+                        <tr>
+                            <th width="3%">No</th>
+                            <th width="15%">Kode Transaksi</th>
+                            <th width="20%">Pelanggan</th>
+                            <th width="10%">Status</th>
+                            <th width="20%">Total Transaksi</th>
+                            <th width="12%">Tanggal</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+            @endif
+
             @endforeach
         </tbody>
     </table>
+
 
     <div class="summary-cards" style="margin-top: 30px;">
         <div class="summary-card">
