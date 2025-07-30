@@ -16,6 +16,7 @@ class PreOrderController extends Controller
                 'detailTransaksi.produk.katalog',
                 'detailTransaksi.ukuranProduk',
             ])
+            ->latest()
             ->get();
 
         return view('admin.preorder.index', compact('data'));

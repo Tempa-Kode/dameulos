@@ -44,7 +44,14 @@
                         </thead>
                         <tbody>
                             @foreach ($data as $item)
-                                <tr>
+                                <tr
+                                    @if (
+                                            ($item->status == 'pending') ||
+                                            ($item->status == 'dibayar')
+                                        )
+                                        class="bg-warning text-white"
+                                    @endif
+                                >
                                     <td>{{ $loop->iteration }}</td>
                                     <td>{{ $item->kode_transaksi }}</td>
                                     <td>{{ $item->user->name }}</td>

@@ -1,5 +1,6 @@
 @php
-$transaksiBaru = \App\Models\Transaksi::whereIn('status', ['pending', 'dibayar'])->count();
+$transaksiBaru = \App\Models\Transaksi::where('preorder', false)->whereIn('status', ['pending', 'dibayar'])->count();
+$preorderBaru = \App\Models\Transaksi::where('preorder', true)->whereIn('status', ['pending', 'dibayar'])->count();
 @endphp
 <!-- [ Sidebar Menu ] start -->
  <nav class="pc-sidebar">
@@ -50,7 +51,7 @@ $transaksiBaru = \App\Models\Transaksi::whereIn('status', ['pending', 'dibayar']
                  <li class="pc-item">
                      <a href="{{ route('preorder.index') }}" class="pc-link">
                          <span class="pc-micon"><i class="ti ti-cash"></i></span>
-                         <span class="pc-mtext">Pre-Order</span>
+                         <span class="pc-mtext">Pre-Order <span class="badge bg-light-info">+{{ $preorderBaru }}</span></span>
                      </a>
                  </li>
                  <li class="pc-item">
