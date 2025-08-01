@@ -134,6 +134,7 @@
                                 <div class="product__details__btns__option">
                                     <a href="{{ route("pelanggan.katalogBySlug", $produk->katalog->slug) }}">Kategori:
                                         <span>{{ $produk->katalog->nama }}</a>
+                                    <p style="margin-top: 15px">Stok : {{ $produk->stok }}</p>
                                 </div>
                                 <div class="product__details__btns__option">
                                     <button class="primary-outline-btn" data-toggle="modal" data-target="#exampleModal"><i
