@@ -1,3 +1,6 @@
+@php
+    $keranjang = \App\Models\Keranjang::where('user_id', Auth::check() ? Auth::user()->id : null)->count();
+@endphp
 <!DOCTYPE html>
 <html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 
@@ -132,7 +135,7 @@
         </div>
         <div class="offcanvas__nav__option">
             <a href="#" class="search-switch"><img src="{{ asset('home/img/icon/search.png') }}" alt=""></a>
-            <a class="text-decoration-none text-black" href="{{ route('pelanggan.keranjang.index') }}"><i class="fa-solid fa-cart-shopping"></i> <span></span></a>
+            <a class="text-decoration-none text-black" href="{{ route('pelanggan.keranjang.index') }}"><i class="fa-solid fa-cart-shopping"></i><span class="badge badge-info">{{ $keranjang > 0 ? " ($keranjang)" : '' }}</span></a>
         </div>
 
         <!-- Mobile Menu User Options -->
@@ -194,11 +197,11 @@
                 </div>
                 <div class="col-lg-3 col-md-3">
                     <div class="header__nav__option">
-                        <a class="text-decoration-none text-white" href="{{ route('pelanggan.keranjang.index') }}"><i class="fa-solid fa-cart-shopping"></i><span></span></a>
+                        <a class="text-decoration-none text-white" href="{{ route('pelanggan.keranjang.index') }}"><i class="fa-solid fa-cart-shopping"></i>{!! $keranjang > 0 ? '<span class="text-white badge-pill badge-danger">' . $keranjang . '</span>' : '' !!}</a>
                         @if(Auth::check())
                             <div class="dropdown" style="display: inline-block;">
                                 <a href="#" class="dropdown-toggle text-decoration-none text-white" id="userDropdown" style="text-decoration: none;">
-                                    <i class="fa fa-user"></i> {{ Auth::user()->name }}
+                                   <i class="fa fa-user"></i> {{ Auth::user()->name }}
                                 </a>
                                 <div class="dropdown-menu" id="userDropdownMenu">
                                     @if(Auth::user()->role == 'pelanggan')
