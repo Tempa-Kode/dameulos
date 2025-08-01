@@ -8,11 +8,21 @@
     <div class="col-sm-12">
         <div class="card">
             <div class="card-header d-flex justify-content-between align-items-center">
-                @can('isAdmin')
-                <a href="{{ route('produk.create') }}" class="btn btn-primary">
-                    <span class="pc-micon"><i class="ti ti-circle-plus me-2"></i></span> Tambah Produk
-                </a>
-                @endcan
+                <div class="d-flex">
+                    @can('isAdmin')
+                    <a href="{{ route('produk.create') }}" class="btn btn-primary">
+                        <span class="pc-micon"><i class="ti ti-circle-plus me-2"></i></span> Tambah Produk
+                    </a>
+                    @endcan
+                    <form action="" method="get">
+                        <select name="penjualan" id="penjualan" onchange="this.form.submit()" class="form-select ms-2">
+                            <option value="all" {{ request('penjualan') == 'all' ? 'selected' : '' }}>Semua</option>
+                            <option value="terlaris" {{ request('penjualan') == 'terlaris' ? 'selected' : '' }}>Terlaris</option>
+                            <option value="terendah" {{ request('penjualan') == 'terendah' ? 'selected' : '' }}>Terendah</option>
+                            <option value="stok" {{ request('penjualan') == 'stok' ? 'selected' : '' }}>Stok Habis</option>
+                        </select>
+                    </form>
+                </div>
                 <a href="{{ route('produk.report') }}" class="btn btn-success">
                     <span class="pc-micon"><i class="ti ti-file-download me-2"></i></span>
                     Download Report
@@ -32,6 +42,7 @@
                                 <th>Nama</th>
                                 <th>Harga</th>
                                 <th>Stok</th>
+                                <th>Terjual</th>
                                 @can('isAdmin') <th>Aksi</th>@endcan
                             </tr>
                         </thead>
@@ -44,6 +55,7 @@
                                     <td>{{ $item->nama }}</td>
                                     <td>Rp {{ number_format($item->harga, 0, ',', '.') }}</td>
                                     <td>{{ $item->stok }}</td>
+                                    <td>x{{ $item->jumlah_terjual }}</td>
                                     @can('isAdmin')
                                     <td>
                                         <a href="{{ route('produk.edit', $item->id) }}" class="btn btn-warning btn-sm">
@@ -73,6 +85,7 @@
                                 <th>Nama</th>
                                 <th>Harga</th>
                                 <th>Stok</th>
+                                <th>Terjual</th>
                                 @can('isAdmin')<th>Aksi</th>@endcan
                             </tr>
                         </tfoot>

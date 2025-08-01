@@ -14,12 +14,21 @@ use Illuminate\Http\Request;
 use App\Models\KategoriProduk;
 use Barryvdh\DomPDF\Facade\Pdf;
 use App\Models\JenisWarnaProduk;
+use Illuminate\Support\Facades\DB;
 
 class ProdukController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $data = Produk::with(['katalog', 'ukuran', 'warnaProduk', 'kategoriProduk'])->get();
+        $penjualan = $request->input('penjualan', 'all');
+        $data = Produk::with(['katalog', 'ukuran', 'warnaProduk', 'kategoriProduk'])
+        ->filterPenjualan($penjualan)
+            ->withCount([
+                'detailTransaksi as jumlah_terjual' => function ($query) {
+                    $query->select(DB::raw('COALESCE(SUM(jumlah),0)'));
+                }
+            ])
+            ->get();
         return view('admin.produk.index', compact('data'));
     }
 

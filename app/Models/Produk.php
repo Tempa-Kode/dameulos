@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+
+use Illuminate\Support\Facades\DB;
 use Illuminate\Database\Eloquent\Model;
 
 class Produk extends Model
@@ -71,6 +73,26 @@ class Produk extends Model
         }
         if (!empty($filters['kategori'])) {
             $query->where('kategori_produk_id', $filters['kategori']);
+        }
+        return $query;
+    }
+
+    public function scopeFilterPenjualan($query, $penjualan)
+    {
+        if ($penjualan == 'terlaris') {
+            return $query->withCount([
+                'detailTransaksi as jumlah_terjual' => function ($q) {
+                    $q->select(DB::raw('COALESCE(SUM(jumlah),0)'));
+                }
+            ])->orderByDesc('jumlah_terjual');
+        } elseif ($penjualan == 'terendah') {
+            return $query->withCount([
+                'detailTransaksi as jumlah_terjual' => function ($q) {
+                    $q->select(DB::raw('COALESCE(SUM(jumlah),0)'));
+                }
+            ])->orderBy('jumlah_terjual', 'asc');
+        } elseif ($penjualan == 'stok') {
+            return $query->where('stok', 0);
         }
         return $query;
     }
