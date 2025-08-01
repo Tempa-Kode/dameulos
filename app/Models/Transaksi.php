@@ -20,6 +20,14 @@ class Transaksi extends Model
         'alamat_pengiriman',
     ];
 
+    public function scopeStatus($query, $status)
+    {
+        if ($status && $status !== 'all') {
+            return $query->where('status', $status);
+        }
+        return $query;
+    }
+
     public function user()
     {
         return $this->belongsTo(User::class);

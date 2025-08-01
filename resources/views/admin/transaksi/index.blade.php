@@ -68,15 +68,18 @@
         <div class="card">
             <div class="card-header d-flex justify-content-between align-items-center">
                 <div>
-                    <select class="form-select d-inline-block w-auto" id="statusFilter" onchange="filterTable()">
-                        <option value="">Semua Status</option>
-                        <option value="pending">Pending</option>
-                        <option value="dibayar">Dibayar</option>
-                        <option value="dikonfirmasi">Dikonfirmasi</option>
-                        <option value="diproses">Diproses</option>
-                        <option value="diterima">diterima</option>
-                        <option value="batal">Batal</option>
-                    </select>
+                    <form action="" method="get">
+                        <select class="form-select d-inline-block w-auto" name="status" id="statusFilter" onchange="this.form.submit()">
+                            <option value="">Pilih Status</option>
+                            <option value="all">Semua Status</option>
+                            <option value="pending">Pending</option>
+                            <option value="dibayar">Dibayar</option>
+                            <option value="dikonfirmasi">Dikonfirmasi</option>
+                            <option value="diproses">Diproses</option>
+                            <option value="diterima">diterima</option>
+                            <option value="batal">Batal</option>
+                        </select>
+                    </form>
                 </div>
                 <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#downloadModal">
                     <span class="pc-micon"><i class="ti ti-file-download me-2"></i></span>
@@ -189,21 +192,21 @@
                             <i class="ti ti-info-circle me-2"></i>
                             Laporan akan berisi detail transaksi lengkap dengan informasi produk, pelanggan, dan status dalam format PDF yang siap untuk dicetak atau dibagikan.
                         </div>
-                        <div class="mb-3">
+                        <div class="mb-3 d-none">
                             <label for="status" class="form-label">Filter Status Transaksi</label>
                             <select class="form-select" id="status" name="status">
-                                <option value="all">Semua Status</option>
-                                <option value="pending">Pending</option>
-                                <option value="dibayar">Dibayar</option>
-                                <option value="dikonfirmasi">Dikonfirmasi</option>
-                                <option value="diproses">Diproses</option>
-                                <option value="dikirim">Dikirim</option>
-                                <option value="dikirim">Dikirim</option>
-                                <option value="batal">Batal</option>
+                                <option value="all" {{ request()->status == 'all' ? 'selected' : '' }}>Semua Status</option>
+                                <option value="pending" {{ request()->status == 'pending' ? 'selected' : '' }}>Pending</option>
+                                <option value="dibayar" {{ request()->status == 'dibayar' ? 'selected' : '' }}>Dibayar</option>
+                                <option value="dikonfirmasi" {{ request()->status == 'dikonfirmasi' ? 'selected' : '' }}>Dikonfirmasi</option>
+                                <option value="diproses" {{ request()->status == 'diproses' ? 'selected' : '' }}>Diproses</option>
+                                <option value="dikirim" {{ request()->status == 'dikirim' ? 'selected' : '' }}>Dikirim</option>
+                                <option value="dikirim" {{ request()->status == 'dikirim' ? 'selected' : '' }}>Dikirim</option>
+                                <option value="batal" {{ request()->status == 'batal' ? 'selected' : '' }}>Batal</option>
                             </select>
                         </div>
                         <div>
-                            <label class="form-label">Pilih rentang tanggal (optional)</label>
+                            <label class="form-label">Pilih rentang tanggal</label>
                             <div class="input-daterange input-group" id="pc-datepicker-5">
                                 <input type="date" class="form-control text-left" placeholder="mulai tanggal" name="start">
                                 <span class="input-group-text">sampai</span>

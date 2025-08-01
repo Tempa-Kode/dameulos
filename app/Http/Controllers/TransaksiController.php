@@ -11,9 +11,11 @@ use Barryvdh\DomPDF\Facade\Pdf;
 
 class TransaksiController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
+        $status = $request->input('status');
         $data = Transaksi::where('preorder', false)
+            ->status($status)
             ->with(['user' => function ($query) {
                 $query->withCount(['transaksi as transaksi_count' => function ($q) {
                     $q->where('preorder', false);
