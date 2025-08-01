@@ -376,14 +376,26 @@
                     <div id="colorContainer">
                         <div class="color-item" data-index="0">
                             @foreach ($produk->warnaProduk as $warna)
-                                <div class="form-group">
-                                    <label for="colorPicker_{{ $loop->index }}">Pilih Warna
-                                        {{ $loop->iteration }}:</label>
-                                    <div class="input-group">
-                                        <input type="color" name="warna_custom[]" id="colorPicker_{{ $loop->index }}"
-                                            class="form-control color-picker" value="#{{ $warna->kode_warna }}">
+                                <div class="form-group d-flex align-items-center mb-3">
+                                    <label for="colorPicker_{{ $loop->index }}" class="mr-2 mb-0">
+                                        Pilih Warna {{ $loop->iteration }}:
+                                    </label>
+                                    <div class="input-group align-items-center">
+                                        <input
+                                            type="color"
+                                            name="warna_custom[]"
+                                            id="colorPicker_{{ $loop->index }}"
+                                            class="form-control color-picker"
+                                            value="#{{ $warna->kode_warna }}"
+                                            style="width: 40px; height: 40px; padding: 0; border: none; background: transparent;"
+                                            onchange="document.getElementById('colorPreview_{{ $loop->index }}').style.backgroundColor = this.value"
+                                        >
+                                        <span
+                                            id="colorPreview_{{ $loop->index }}"
+                                            class="ml-3"
+                                            style="display: inline-block; width: 32px; height: 32px; border-radius: 50%; border: 2px solid #ccc; background-color: #{{ $warna->kode_warna }};"
+                                        ></span>
                                     </div>
-                                    {{-- <small class="form-text text-muted">Kode Hex: <span class="hex-value">#{{ $warna->kode_warna }}</span></small> --}}
                                 </div>
                             @endforeach
                         </div>
