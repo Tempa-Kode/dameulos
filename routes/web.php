@@ -131,7 +131,7 @@ Route::middleware(['auth'])->group(function () {
     Route::delete('/ulasan/{ulasan}', [\App\Http\Controllers\UlasanController::class, 'destroy'])->name('pelanggan.ulasan.destroy');
 });
 
-Route::resource('kegiatan', KegiatanController::class);
+//Route::resource('kegiatan', KegiatanController::class);
 Route::withoutMiddleware([\Illuminate\Foundation\Http\Middleware\VerifyCsrfToken::class])
     ->post('/upload-image', [KegiatanController::class, 'uploadImage'])
     ->name('upload.image');
