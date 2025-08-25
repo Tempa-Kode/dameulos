@@ -85,6 +85,9 @@ Route::prefix('dashboard')->middleware(['auth', 'adminManajer'])->group(function
     // Pre-order routes
     Route::get('/preorder', [PreOrderController::class, 'index'])->name('preorder.index')->middleware(['auth', 'adminManajer']);
     Route::get('/preorder/download-report', [PreOrderController::class, 'downloadReport'])->name('preorder.download.report');
+
+    // Admin routes untuk Pengembalian Dana
+    Route::resource('pengembalian-dana', \App\Http\Controllers\PengembalianDanaController::class)->except(['create', 'store'])->middleware(['auth', 'adminManajer']);
 });
 
 Route::put('/pengiriman/{transaksi:id}/terima-pesanan', [PengirimanController::class, 'terimaPesanan'])->name('pengiriman.terima.pesanan');
@@ -120,6 +123,14 @@ Route::post('/transaksi/update-status/{kode_transaksi}', [TransaksiController::c
 // Route untuk edit detail transaksi (ukuran dan warna)
 Route::get('/transaksi/{transaksi}/edit-detail', [TransaksiController::class, 'editDetail'])->middleware(['auth'])->name('transaksi.edit-detail');
 Route::put('/transaksi/{transaksi}/update-detail', [TransaksiController::class, 'updateDetail'])->middleware(['auth'])->name('transaksi.update-detail');
+
+// Routes untuk Pengembalian Dana
+Route::middleware(['auth'])->group(function () {
+    Route::get('/pengembalian-dana', [\App\Http\Controllers\PengembalianDanaController::class, 'pelangganIndex'])->name('pelanggan.pengembalian-dana.index');
+    Route::get('/pengembalian-dana/create', [\App\Http\Controllers\PengembalianDanaController::class, 'create'])->name('pengembalian-dana.create');
+    Route::post('/pengembalian-dana', [\App\Http\Controllers\PengembalianDanaController::class, 'store'])->name('pengembalian-dana.store');
+    Route::get('/pengembalian-dana/{pengembalianDana}', [\App\Http\Controllers\PengembalianDanaController::class, 'show'])->name('pengembalian-dana.show');
+});
 
 Route::post('/bukti-pembayaran/{id}/upload-bukti', [PembayaranController::class, 'uploadBuktiPembayaran'])->middleware(['auth'])->name('pembayaran.upload.bukti');
 

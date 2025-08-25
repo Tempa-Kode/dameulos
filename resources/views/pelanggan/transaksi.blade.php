@@ -165,6 +165,29 @@
                                                                     </a>
                                                                 </small>
                                                             @endif
+
+                                                            @if (($item->status == "pending" || $item->status == "dibayar") && !$item->pengembalianDana)
+                                                                <small>
+                                                                    <a href="{{ route("pengembalian-dana.create", ["transaksi_id" => $item->id]) }}"
+                                                                        class="btn btn-sm btn-outline-danger mt-2"
+                                                                        onclick="return confirm('Apakah Anda yakin ingin membatalkan transaksi ini?')">
+                                                                        <i class="fa fa-times"></i> Batalkan Transaksi
+                                                                    </a>
+                                                                </small>
+                                                            @endif
+
+                                                            @if ($item->pengembalianDana)
+                                                                <small>
+                                                                    <span class="badge bg-info mt-2">
+                                                                        Pengembalian Dana:
+                                                                        {{ $item->pengembalianDana->status_text }}
+                                                                    </span>
+                                                                    <a href="{{ route("pengembalian-dana.show", $item->pengembalianDana->id) }}"
+                                                                        class="btn btn-sm btn-outline-info mt-2">
+                                                                        <i class="fa fa-eye"></i> Detail Pengembalian
+                                                                    </a>
+                                                                </small>
+                                                            @endif
                                                         </li>
                                                         <li>Subtotal <span>Rp
                                                                 {{ number_format($item->subtotal, 0, ",", ".") }}</span>

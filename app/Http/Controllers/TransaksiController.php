@@ -125,7 +125,8 @@ class TransaksiController extends Controller
             'detailTransaksi.ukuranProduk',
             'detailTransaksi.jenisWarnaProduk',
             'pembayaran',
-            'pengiriman'
+            'pengiriman',
+            'pengembalianDana'
         ])
         ->where('user_id', $user->id)
         ->orderBy('created_at', 'desc')

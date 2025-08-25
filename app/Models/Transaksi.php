@@ -53,6 +53,11 @@ class Transaksi extends Model
         return $this->hasOne(RequestWarna::class);
     }
 
+    public function pengembalianDana()
+    {
+        return $this->hasOne(PengembalianDana::class);
+    }
+
     /**
      * Cek apakah transaksi dapat diedit ukuran dan warnanya
      * Hanya bisa diedit jika status dibayar atau dikonfirmasi (belum diproses)
@@ -60,5 +65,14 @@ class Transaksi extends Model
     public function canEditDetails()
     {
         return in_array($this->status, ['dibayar', 'dikonfirmasi']);
+    }
+
+    /**
+     * Cek apakah transaksi dapat dibatalkan
+     * Hanya bisa dibatalkan jika status pending atau dibayar
+     */
+    public function canBeCancelled()
+    {
+        return in_array($this->status, ['pending', 'dibayar']);
     }
 }
