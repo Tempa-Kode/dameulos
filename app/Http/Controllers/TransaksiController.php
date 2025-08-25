@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\DB;
 use Barryvdh\DomPDF\Facade\Pdf;
 
 class TransaksiController extends Controller
@@ -300,5 +301,80 @@ class TransaksiController extends Controller
 
         // Return PDF download
         return $pdf->stream($filename);
+    }
+
+    /**
+     * Menampilkan form edit detail transaksi (ukuran dan warna)
+     */
+    public function editDetail(Transaksi $transaksi)
+    {
+        // Pastikan transaksi milik user yang sedang login
+        if ($transaksi->user_id !== Auth::user()->id) {
+            abort(403, 'Unauthorized action.');
+        }
+
+        // Cek apakah transaksi bisa diedit
+        if (!$transaksi->canEditDetails()) {
+            return redirect()->route('pelanggan.transaksi')
+                ->with('error', 'Transaksi dengan status "' . $transaksi->status . '" tidak dapat diedit lagi.');
+        }
+
+        // Load relasi yang diperlukan
+        $transaksi->load([
+            'detailTransaksi.produk.ukuranProduk',
+            'detailTransaksi.produk.jenisWarnaProduk',
+            'detailTransaksi.ukuranProduk',
+            'detailTransaksi.jenisWarnaProduk'
+        ]);
+
+        return view('pelanggan.edit-detail-transaksi', compact('transaksi'));
+    }
+
+    /**
+     * Update detail transaksi (ukuran dan warna)
+     */
+    public function updateDetail(Request $request, Transaksi $transaksi)
+    {
+        // Pastikan transaksi milik user yang sedang login
+        if ($transaksi->user_id !== Auth::user()->id) {
+            abort(403, 'Unauthorized action.');
+        }
+
+        // Cek apakah transaksi bisa diedit
+        if (!$transaksi->canEditDetails()) {
+            return redirect()->route('pelanggan.transaksi')
+                ->with('error', 'Transaksi dengan status "' . $transaksi->status . '" tidak dapat diedit lagi.');
+        }
+
+        $request->validate([
+            'details' => 'required|array',
+            'details.*.ukuran_produk_id' => 'required|exists:ukuran_produk,id',
+            'details.*.jenis_warna_produk_id' => 'required|exists:jenis_warna_produk,id',
+        ]);
+
+        try {
+            DB::beginTransaction();
+
+            foreach ($request->details as $detailId => $data) {
+                $detail = $transaksi->detailTransaksi()->find($detailId);
+
+                if ($detail) {
+                    $detail->update([
+                        'ukuran_produk_id' => $data['ukuran_produk_id'],
+                        'jenis_warna_produk_id' => $data['jenis_warna_produk_id'],
+                    ]);
+                }
+            }
+
+            DB::commit();
+
+            return redirect()->route('pelanggan.transaksi')
+                ->with('success', 'Detail transaksi berhasil diperbarui.');
+
+        } catch (\Exception $e) {
+            DB::rollback();            return redirect()->back()
+                ->with('error', 'Terjadi kesalahan saat memperbarui detail transaksi.')
+                ->withInput();
+        }
     }
 }

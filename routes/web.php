@@ -117,6 +117,10 @@ Route::post('/checkout/bayar', [PembayaranController::class, 'bayar'])->middlewa
 Route::get('/transaksi', [TransaksiController::class, 'transaksiSaya'])->middleware(['auth'])->name('pelanggan.transaksi');
 Route::post('/transaksi/update-status/{kode_transaksi}', [TransaksiController::class, 'updateStatus'])->middleware(['auth'])->name('transaksi.update-status');
 
+// Route untuk edit detail transaksi (ukuran dan warna)
+Route::get('/transaksi/{transaksi}/edit-detail', [TransaksiController::class, 'editDetail'])->middleware(['auth'])->name('transaksi.edit-detail');
+Route::put('/transaksi/{transaksi}/update-detail', [TransaksiController::class, 'updateDetail'])->middleware(['auth'])->name('transaksi.update-detail');
+
 Route::post('/bukti-pembayaran/{id}/upload-bukti', [PembayaranController::class, 'uploadBuktiPembayaran'])->middleware(['auth'])->name('pembayaran.upload.bukti');
 
 

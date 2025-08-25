@@ -52,4 +52,13 @@ class Transaksi extends Model
     {
         return $this->hasOne(RequestWarna::class);
     }
+
+    /**
+     * Cek apakah transaksi dapat diedit ukuran dan warnanya
+     * Hanya bisa diedit jika status dibayar atau dikonfirmasi (belum diproses)
+     */
+    public function canEditDetails()
+    {
+        return in_array($this->status, ['dibayar', 'dikonfirmasi']);
+    }
 }
