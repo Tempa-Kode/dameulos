@@ -88,6 +88,12 @@ Route::prefix('dashboard')->middleware(['auth', 'adminManajer'])->group(function
 
     // Admin routes untuk Pengembalian Dana
     Route::resource('pengembalian-dana', \App\Http\Controllers\PengembalianDanaController::class)->except(['create', 'store'])->middleware(['auth', 'adminManajer']);
+
+    // Admin routes untuk Keluhan
+    Route::get('/keluhan', [\App\Http\Controllers\KeluhanController::class, 'adminIndex'])->name('admin.keluhan.index');
+    Route::get('/keluhan/{keluhan}', [\App\Http\Controllers\KeluhanController::class, 'adminShow'])->name('admin.keluhan.show');
+    Route::post('/keluhan/{keluhan}/reply', [\App\Http\Controllers\KeluhanController::class, 'adminReply'])->name('admin.keluhan.reply');
+    Route::patch('/keluhan/{keluhan}/status', [\App\Http\Controllers\KeluhanController::class, 'updateStatus'])->name('admin.keluhan.status');
 });
 
 Route::put('/pengiriman/{transaksi:id}/terima-pesanan', [PengirimanController::class, 'terimaPesanan'])->name('pengiriman.terima.pesanan');
@@ -144,6 +150,15 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/ulasan/{ulasan}/edit', [\App\Http\Controllers\UlasanController::class, 'edit'])->name('pelanggan.ulasan.edit');
     Route::put('/ulasan/{ulasan}', [\App\Http\Controllers\UlasanController::class, 'update'])->name('pelanggan.ulasan.update');
     Route::delete('/ulasan/{ulasan}', [\App\Http\Controllers\UlasanController::class, 'destroy'])->name('pelanggan.ulasan.destroy');
+});
+
+// Keluhan routes (Customer)
+Route::middleware(['auth'])->group(function () {
+    Route::get('/keluhan', [\App\Http\Controllers\KeluhanController::class, 'index'])->name('pelanggan.keluhan.index');
+    Route::get('/keluhan/create', [\App\Http\Controllers\KeluhanController::class, 'create'])->name('pelanggan.keluhan.create');
+    Route::post('/keluhan', [\App\Http\Controllers\KeluhanController::class, 'store'])->name('pelanggan.keluhan.store');
+    Route::get('/keluhan/{keluhan}', [\App\Http\Controllers\KeluhanController::class, 'show'])->name('pelanggan.keluhan.show');
+    Route::post('/keluhan/{keluhan}/reply', [\App\Http\Controllers\KeluhanController::class, 'reply'])->name('pelanggan.keluhan.reply');
 });
 
 //Route::resource('kegiatan', KegiatanController::class);

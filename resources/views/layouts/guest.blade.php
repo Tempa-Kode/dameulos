@@ -243,6 +243,10 @@
                                             href="{{ route("pelanggan.ulasan.index") }}">
                                             <i class="fa fa-star-o"></i> Ulasan Saya
                                         </a>
+                                        <a class="dropdown-item text-black"
+                                            href="{{ route("pelanggan.keluhan.index") }}">
+                                            <i class="fa fa-exclamation-circle"></i> Keluhan
+                                        </a>
                                         <div class="dropdown-divider"></div>
                                     @endif
                                     <a class="dropdown-item text-black" href="{{ route("customer.profile.edit") }}">

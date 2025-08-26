@@ -72,6 +72,13 @@
                         <span class="pc-mtext">Pengembalian Dana</span>
                     </a>
                 </li>
+                <li class="pc-item">
+                    <a href="{{ route("admin.keluhan.index") }}" class="pc-link">
+                        <span class="pc-micon"><i class="ti ti-message-circle"></i></span>
+                        <span class="pc-mtext">Keluhan <span
+                                class="badge bg-light-warning">+{{ \App\Models\Keluhan::where("status", "buka")->orWhere("status", "dalam_proses")->count() }}</span></span>
+                    </a>
+                </li>
 
                 <li class="pc-item pc-caption">
                     <label>Konten Manajemen Sistem</label>
