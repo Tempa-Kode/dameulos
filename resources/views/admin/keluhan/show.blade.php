@@ -11,7 +11,7 @@
             <div>
                 <h1 class="h3 mb-0 text-gray-800">
                     <i class="fas fa-ticket-alt mr-2"></i>Detail Keluhan
-                    <span class="badge {{ $keluhan->status_badge }} ml-2">{{ $keluhan->status_label }}</span>
+                    <span class="badge bg-secondary ml-2">{{ $keluhan->status_label }}</span>
                 </h1>
                 <nav aria-label="breadcrumb">
                     <ol class="breadcrumb">
@@ -76,19 +76,15 @@
                                     </tr>
                                     <tr>
                                         <td class="font-weight-bold">Kategori:</td>
-                                        <td><span class="badge badge-secondary">{{ $keluhan->kategori_label }}</span></td>
+                                        <td>{{ $keluhan->kategori_label }}</td>
                                     </tr>
                                     <tr>
                                         <td class="font-weight-bold">Prioritas:</td>
-                                        <td><span
-                                                class="badge {{ $keluhan->prioritas_badge }}">{{ $keluhan->prioritas_label }}</span>
-                                        </td>
+                                        <td>{{ $keluhan->prioritas_label }}</td>
                                     </tr>
                                     <tr>
                                         <td class="font-weight-bold">Status:</td>
-                                        <td><span
-                                                class="badge {{ $keluhan->status_badge }}">{{ $keluhan->status_label }}</span>
-                                        </td>
+                                        <td>{{ $keluhan->status_label }}</td>
                                     </tr>
                                     <tr>
                                         <td class="font-weight-bold">Dibuat:</td>
