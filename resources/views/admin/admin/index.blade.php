@@ -35,7 +35,9 @@
                                     <td>{{ $loop->iteration }}</td>
                                     <td>{{ $item->name }}</td>
                                     <td>{{ $item->email }}</td>
-                                    <td>{{ $item->created_at->format('d-m-Y') }}</td>
+                                    <td>
+                                        {{ $item->created_at ? $item->created_at->format('d-m-Y') : '-' }}
+                                    </td>
                                     <td>
                                         @can('isAdmin')
                                         <a href="{{ route('admin.edit', $item->id) }}" class="btn btn-warning btn-sm">
@@ -49,8 +51,7 @@
                                         <form action="{{ route('admin.destroy', $item->id) }}" method="POST" style="display:inline;">
                                             @csrf
                                             @method('DELETE')
-                                            <button type="submit" class="btn btn-danger btn-sm"
-                                                    onclick="return confirm('Apakah Anda yakin ingin menghapus katalog ini?')">
+                                            <button type="submit" class="btn btn-danger btn-sm" onclick="return confirm('Apakah Anda yakin ingin menghapus admin ini?')">
                                                 Hapus
                                             </button>
                                         </form>
